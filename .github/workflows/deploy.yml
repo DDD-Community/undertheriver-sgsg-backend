@@ -1,10 +1,7 @@
 name: gradle CD
 on:
   push:
-    branches: [ chore/2-ci_cd ]
-  pull_request:
-    branches: [ chore/2-ci_cd ]
-
+    branches: [ develop ]
 jobs:
   build:
     runs-on: ubuntu-latest
