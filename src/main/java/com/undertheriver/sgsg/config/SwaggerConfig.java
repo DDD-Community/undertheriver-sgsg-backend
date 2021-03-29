@@ -24,6 +24,7 @@ public class SwaggerConfig {
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
 			.securitySchemes(Lists.newArrayList(apiKey()))
+			.useDefaultResponseMessages(false)
 			.securityContexts(Lists.newArrayList(securityContext()))
 			.select()
 			.apis(RequestHandlerSelectors.any())
