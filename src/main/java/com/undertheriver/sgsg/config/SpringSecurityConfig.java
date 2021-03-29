@@ -11,16 +11,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
-			.antMatchers("/css/**",
-				"/js/**",
-				"/img/**",
-				"/lib/**",
+			.antMatchers(
 				"/h2-console/**",
 				"/v2/**",
-				"/webjars/**",
 				"/swagger**",
-				"/swagger-resources/**",
-				"/member/**");
+				"/swagger-resources/**");
 	}
 
 	@Override
