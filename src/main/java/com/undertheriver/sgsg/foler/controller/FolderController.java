@@ -40,17 +40,14 @@ public class FolderController {
 	@PutMapping("/{id}")
 	public void update(@PathVariable Long id, @RequestBody String title){}
 
-	@ApiOperation("폴더 순서 수정 (의논 필요)")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "order", value = "전체 폴더 ID 리스트", required = true, dataType = "List<Long>", paramType = "body")
-	})
+	@ApiOperation("폴더 순서 수정")
 	@PutMapping("/order")
 	public void updateOrder(@RequestBody List<Long> ids) {}
 
 	@ApiOperation("폴더 조회")
-	@GetMapping
 	@ApiResponses(
 		@ApiResponse(code = 200, message = "[ { 'id' = 1, 'title' = '...' }, {'id' = 2, 'title' = '...' }, .... ] " )
 	)
+	@GetMapping
 	public void read() {}
 }
