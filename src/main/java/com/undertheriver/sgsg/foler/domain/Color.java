@@ -1,5 +1,5 @@
 package com.undertheriver.sgsg.foler.domain;
 
-public enum Color {
+public enum FolderColor {
 	BLACK,WHITE
 }
