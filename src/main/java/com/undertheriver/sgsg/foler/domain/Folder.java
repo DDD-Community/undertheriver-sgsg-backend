@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.memo.domain.Memo;
 
 import lombok.AccessLevel;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Folder {
+public class Folder extends BaseEntity {
 	@Id
 	@GeneratedValue
 	private Long id;
