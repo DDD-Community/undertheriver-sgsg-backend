@@ -22,15 +22,21 @@ import io.swagger.annotations.ApiResponses;
 @RequestMapping("/api/v1/folders")
 @Api(value = "folder")
 public class FolderController {
-
 	@ApiOperation(value = "폴더 생성")
-	@ApiImplicitParam(name = "title", value = "폴더 이름", required = true, dataType = "String", paramType = "body")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "title", value = "폴더 이름", required = true, dataType = "String", paramType = "body"),
+		@ApiImplicitParam(name = "color", value = "폴더 색깔", required = true, dataType = "String", paramType = "body"),
+		@ApiImplicitParam(name = "order", value = "폴더 순서", required = true, dataType = "Integer", paramType = "body")
+	})
+
 	@ApiResponses(value = {
 		@ApiResponse(code = 201, message = "Location: /api/folders/1"),
 		@ApiResponse(code = 406, message = "폴더는 20개까지 생성 가능합니다")
 	})
 	@PostMapping
-	public void save(@RequestBody String title){}
+	public void save(@RequestBody String title) {
+	}
+
 
 	@ApiOperation("폴더 제목 수정")
 	@ApiImplicitParams({
@@ -38,16 +44,19 @@ public class FolderController {
 		@ApiImplicitParam(name = "title", value = "폴더 이름", required = true, dataType = "String", paramType = "body")
 	})
 	@PutMapping("/{id}")
-	public void update(@PathVariable Long id, @RequestBody String title){}
+	public void update(@PathVariable Long id, @RequestBody String title) {
+	}
 
 	@ApiOperation("폴더 순서 수정")
 	@PutMapping("/order")
-	public void updateOrder(@RequestBody List<Long> ids) {}
+	public void updateOrder(@RequestBody List<Long> ids) {
+	}
 
 	@ApiOperation("폴더 조회")
 	@ApiResponses(
-		@ApiResponse(code = 200, message = "[ { 'id' = 1, 'title' = '...' }, {'id' = 2, 'title' = '...' }, .... ] " )
+		@ApiResponse(code = 200, message = "[ { 'id' = 1, 'title' = '...' }, {'id' = 2, 'title' = '...' }, .... ] ")
 	)
 	@GetMapping
-	public void read() {}
+	public void read() {
+	}
 }
