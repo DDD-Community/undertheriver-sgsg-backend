@@ -56,4 +56,47 @@ public class FolderDto {
 		}
 	}
 
+	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class UpdateFolderPositionReq {
+		private Long id;
+		private Integer position;
+
+		@Builder
+		public UpdateFolderPositionReq(Long id, Integer position) {
+			this.id = id;
+			this.position = position;
+		}
+
+		public Folder toEntity() {
+			return Folder.builder()
+				.position(this.position)
+				.build();
+		}
+	}
+
+	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class UpdateFolderReq {
+		private Long id;
+		private String title;
+		private Integer position;
+		private FolderColor color;
+
+		@Builder
+		public UpdateFolderReq(Long id, String title, Integer position, FolderColor color) {
+			this.id = id;
+			this.title = title;
+			this.position = position;
+			this.color = color;
+		}
+
+		public Folder toEntity() {
+			return Folder.builder()
+				.title(this.title)
+				.color(this.color)
+				.position(this.position)
+				.build();
+		}
+	}
 }

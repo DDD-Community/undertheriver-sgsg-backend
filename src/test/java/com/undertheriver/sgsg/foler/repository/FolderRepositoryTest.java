@@ -1,6 +1,8 @@
 package com.undertheriver.sgsg.foler.repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,14 +27,14 @@ class FolderRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 
-	Folder undeletedFolder;
-	Folder deletedFolder;
+	FolderDto.CreateFolderReq createFolderReq1;
+	FolderDto.CreateFolderReq createFolderReq2;
 
-	private static final String TEST_TITLE_VALUE = "테스트 폴더";
+	private static final String TEST_TITLE_VALUE1 = "테스트 폴더";
 	private static final String TEST_TITLE_VALUE2 = "테스트 폴더2";
 	private static final String TEST_TITLE_VALUE3 = "업데이트 테스트 폴더";
 
-	private static final Integer TEST_POSITION_VALUE = 0;
+	private static final Integer TEST_POSITION_VALUE1 = 0;
 	private static final Integer TEST_POSITION_VALUE2 = 1;
 
 	private static final Integer NUMBER_OF_UNDELETED_FOLDERS = 1;
@@ -44,32 +46,29 @@ class FolderRepositoryTest {
 		User user = new User(rawPassword);
 		user = userRepository.save(user);
 
-		final FolderDto.CreateFolderReq req = FolderDto.CreateFolderReq.builder()
+		createFolderReq1 = FolderDto.CreateFolderReq.builder()
 			.user(user)
-			.title(TEST_TITLE_VALUE)
+			.title(TEST_TITLE_VALUE1)
 			.color(FolderColor.BLACK)
-			.position(TEST_POSITION_VALUE)
+			.position(TEST_POSITION_VALUE1)
 			.build();
-		undeletedFolder = req.toEntity();
 
-		final FolderDto.CreateFolderReq req2 = FolderDto.CreateFolderReq.builder()
+		createFolderReq2 = FolderDto.CreateFolderReq.builder()
 			.user(user)
 			.title(TEST_TITLE_VALUE2)
-			.color(FolderColor.BLACK)
+			.color(FolderColor.WHITE)
 			.position(TEST_POSITION_VALUE2)
 			.build();
-		deletedFolder = req2.toEntity();
-		deletedFolder.setDeleted(true);
-
-		undeletedFolder = folderRepository.save(undeletedFolder);
-		deletedFolder = folderRepository.save(deletedFolder);
 	}
 
 	@DisplayName("Folder를 조회할 수 있다.")
 	@Test
 	@Order(0)
 	public void read() {
-		System.out.println("READ 먼저");
+		Folder undeletedFolder = folderRepository.save(createFolderReq1.toEntity());
+		Folder deletedFolder = folderRepository.save(createFolderReq2.toEntity());
+		deletedFolder.setDeleted(true);
+
 		List<Folder> folders = folderRepository.findAll();
 		List<Folder> undeletedFolders = folderRepository.findAllByDeletedIsOrDeletedIs(false, null);
 
@@ -84,9 +83,10 @@ class FolderRepositoryTest {
 	@Test
 	@Order(1)
 	public void save() {
-		System.out.println("SAVE 먼저");
+		Folder savedFolder = folderRepository.save(createFolderReq1.toEntity());
+
 		assertAll(
-			() -> assertThat(undeletedFolder.getTitle()).isEqualTo(TEST_TITLE_VALUE)
+			() -> assertThat(savedFolder.getTitle()).isEqualTo(TEST_TITLE_VALUE1)
 		);
 	}
 
@@ -94,19 +94,31 @@ class FolderRepositoryTest {
 	@Test
 	@Order(2)
 	public void updateTitle() {
-		System.out.println("UPDATE 먼저");
-		final FolderDto.UpdateFolderTitleReq req = FolderDto.UpdateFolderTitleReq.builder()
-			.id(undeletedFolder.getId())
-			.title(TEST_TITLE_VALUE3)
+		Folder beforeFolder1 = folderRepository.save(createFolderReq1.toEntity());
+		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
+
+		final FolderDto.UpdateFolderTitleReq req1 = FolderDto.UpdateFolderTitleReq.builder()
+			.id(beforeFolder1.getId())
+			.title(beforeFolder2.getTitle())
 			.build();
 
-		Folder beforeFolder = folderRepository.findById(req.getId()).get();
-		String beforeTitle = beforeFolder.getTitle();
-		Folder afterFolder = updateFolderTitle(beforeFolder.getId(), req);
-		String afterTitle = afterFolder.getTitle();
+		final FolderDto.UpdateFolderTitleReq req2 = FolderDto.UpdateFolderTitleReq.builder()
+			.id(beforeFolder2.getId())
+			.title(beforeFolder1.getTitle())
+			.build();
+
+		String beforeTitle1 = beforeFolder1.getTitle();
+		String beforeTitle2 = beforeFolder2.getTitle();
+
+		Folder afterFolder1 = updateFolderTitle(beforeFolder1.getId(), req1);
+		String afterTitle1 = afterFolder1.getTitle();
+
+		Folder afterFolder2 = updateFolderTitle(beforeFolder2.getId(), req2);
+		String afterTitle2 = afterFolder2.getTitle();
 
 		assertAll(
-			() -> assertThat(beforeTitle).isNotEqualTo(afterTitle)
+			() -> assertThat(beforeTitle1).isNotEqualTo(afterTitle1),
+			() -> assertThat(beforeTitle2).isNotEqualTo(afterTitle2)
 		);
 	}
 
@@ -116,4 +128,95 @@ class FolderRepositoryTest {
 		folder.updateTitle(dto);
 		return folder;
 	}
+
+	@DisplayName("Folder 순서를 수정할 수 있다.")
+	@Test
+	@Order(3)
+	public void updatePosition() {
+		Folder beforeFolder1 = folderRepository.save(createFolderReq1.toEntity());
+		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
+
+		final FolderDto.UpdateFolderPositionReq req1 = FolderDto.UpdateFolderPositionReq.builder()
+			.id(beforeFolder1.getId())
+			.position(beforeFolder2.getPosition())
+			.build();
+
+		final FolderDto.UpdateFolderPositionReq req2 = FolderDto.UpdateFolderPositionReq.builder()
+			.id(beforeFolder2.getId())
+			.position(beforeFolder1.getPosition())
+			.build();
+
+		List<FolderDto.UpdateFolderPositionReq> updatePositionReqList = new ArrayList<>();
+		updatePositionReqList.add(req1);
+		updatePositionReqList.add(req2);
+
+		Integer beforePosition1 = beforeFolder1.getPosition();
+		Integer beforePosition2 = beforeFolder2.getPosition();
+
+		Folder afterFolder1 = updateFolderPosition(beforeFolder1.getId(), req1);
+		Folder afterFolder2 = updateFolderPosition(beforeFolder2.getId(), req2);
+
+		Integer afterPosition1 = afterFolder1.getPosition();
+		Integer afterPosition2 = afterFolder2.getPosition();
+
+		assertAll(
+			() -> assertThat(beforePosition1).isNotEqualTo(afterPosition1),
+			() -> assertThat(beforePosition2).isNotEqualTo(afterPosition2)
+		);
+	}
+
+	// TODO: MOVE TO FolderService
+	public Folder updateFolderPosition(Long id, FolderDto.UpdateFolderPositionReq dto) {
+		final Folder folder = folderRepository.findById(id).get();
+		folder.updatePosition(dto);
+		return folder;
+	}
+
+	@DisplayName("Folder를 수정할 수 있다")
+	@Test
+	@Order(4)
+	public void updateFolder() {
+		Folder beforeFolder1 = folderRepository.save(createFolderReq1.toEntity());
+		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
+
+		final FolderDto.UpdateFolderReq req1 = FolderDto.UpdateFolderReq.builder()
+			.id(beforeFolder1.getId())
+			.title(beforeFolder2.getTitle())
+			.position(beforeFolder2.getPosition())
+			.color(beforeFolder2.getColor())
+			.build();
+
+		final FolderDto.UpdateFolderReq req2 = FolderDto.UpdateFolderReq.builder()
+			.id(beforeFolder2.getId())
+			.title(beforeFolder1.getTitle())
+			.position(beforeFolder1.getPosition())
+			.color(beforeFolder1.getColor())
+			.build();
+
+		List<FolderDto.UpdateFolderReq> req = new ArrayList<>();
+		req.add(req1);
+		req.add(req2);
+
+		// req.stream().forEach(this::updateFolder);
+		List<Folder> afterList = req.stream()
+			.map(this::updateFolder)
+			.collect(Collectors.toList());
+
+		Folder afterFolder1 = afterList.get(0);
+		Folder afterFolder2 = afterList.get(1);
+
+		assertAll(
+			() -> assertThat(beforeFolder1.getTitle()).isNotEqualTo(afterFolder1.getTitle()),
+			() -> assertThat(beforeFolder2.getTitle()).isNotEqualTo(afterFolder2.getTitle())
+		);
+	}
+
+	// TODO: MOVE TO FolderService
+	public Folder updateFolder(FolderDto.UpdateFolderReq dto) {
+		final Folder folder = folderRepository.findById(dto.getId()).get();
+		folder.update(dto);
+		return folder;
+	}
 }
+
+

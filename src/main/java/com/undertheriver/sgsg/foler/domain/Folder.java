@@ -55,4 +55,14 @@ public class Folder extends BaseEntity {
 	public void updateTitle(FolderDto.UpdateFolderTitleReq dto) {
 		this.title = dto.getTitle();
 	}
+
+	public void updatePosition(FolderDto.UpdateFolderPositionReq dto) {
+		this.position = dto.getPosition();
+	}
+
+	public void update(FolderDto.UpdateFolderReq dto) {
+		this.title = dto.getTitle();
+		this.color = dto.getColor();
+		this.position = dto.getPosition();
+	}
 }
