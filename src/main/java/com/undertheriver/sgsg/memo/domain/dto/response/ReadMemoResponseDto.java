@@ -1,7 +1,4 @@
-package com.undertheriver.sgsg.memo.dto.response;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+package com.undertheriver.sgsg.memo.domain.dto.response;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.undertheriver.sgsg.memo.dto.request;
+package com.undertheriver.sgsg.memo.domain.dto.request;
 
 import javax.validation.constraints.NotNull;
 
