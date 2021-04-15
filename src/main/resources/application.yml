@@ -1,27 +1,25 @@
-server:
-  http2:
-    enabled: true
-
 spring:
   profiles:
     include: auth
+  h2:
+    console:
+      enabled: true
   datasource:
     url: jdbc:h2:mem:testdb;IFEXISTS=FALSE;
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
   jpa:
     properties:
       hibernate:
+        show_sql: true
         format_sql: true
+        dialect: org.hibernate.dialect.MariaDBDialect
     show-sql: true
+    hibernate:
+      ddl-auto: create-drop
 debug: true
-  logging
 
-logging:
-  level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
 
 ---
 spring:
