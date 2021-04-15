@@ -1,8 +1,9 @@
-package com.undertheriver.sgsg.user.domain;
+package com.undertheriver.sgsg.user.domain.vo;
 
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 
+import com.undertheriver.sgsg.user.domain.PasswordConverter;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

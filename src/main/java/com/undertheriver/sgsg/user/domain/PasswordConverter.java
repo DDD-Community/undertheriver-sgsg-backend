@@ -1,5 +1,7 @@
 package com.undertheriver.sgsg.user.domain;
 
+import java.util.Objects;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
@@ -15,6 +17,9 @@ public class PasswordConverter implements AttributeConverter<String, String> {
 
 	@Override
 	public String convertToDatabaseColumn(String attribute) {
+		if (Objects.isNull(attribute) || attribute.isEmpty()) {
+			return "";
+		}
 		return bCryptPasswordEncoder.encode(attribute);
 	}
 

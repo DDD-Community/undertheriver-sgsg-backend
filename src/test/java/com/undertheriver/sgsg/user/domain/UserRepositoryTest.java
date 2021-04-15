@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.undertheriver.sgsg.common.type.UserRole;
+
 @SpringBootTest
 class UserRepositoryTest {
 
@@ -22,7 +24,13 @@ class UserRepositoryTest {
 	@Test
 	void name() {
 		String rawPassword = "1234";
-		User user = new User("1234");
+		User user = User.builder()
+			.name("김홍빈")
+			.userRole(UserRole.USER)
+			.profileImageUrl("http://naver.com/test.png")
+			.userSecretMemoPassword("1234")
+			.email("fusis1@naver.com")
+			.build();
 
 		Long userId = repository.save(user).getId();
 		User persistedUser = repository.findById(userId).get();
