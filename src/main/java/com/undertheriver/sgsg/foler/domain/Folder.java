@@ -8,9 +8,11 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
@@ -22,9 +24,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@Table(indexes = @Index(name = "fk_user", columnList = "user"))
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Folder extends BaseEntity {
 	@Id
 	@GeneratedValue
@@ -66,3 +69,5 @@ public class Folder extends BaseEntity {
 		this.position = dto.getPosition();
 	}
 }
+
+
