@@ -41,7 +41,7 @@ public class Folder extends BaseEntity {
 	private Integer position;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id", updatable = false)
+	@JoinColumn(name = "user", updatable = false)
 	private User user;
 
 	@OneToMany(mappedBy = "folder")

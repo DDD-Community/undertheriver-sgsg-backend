@@ -79,4 +79,8 @@ public class User extends BaseEntity {
 		this.profileImageUrl = profileImageUrl;
 		return this;
 	}
+
+	public User(Long id) {
+		this.id = id;
+	}
 }

@@ -14,10 +14,6 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
-debug: true
 
 
 ---
@@ -31,3 +27,7 @@ spring:
   config:
     activate:
       on-profile: production
+    hibernate:
+    show-sql: true
+debug: true
+      ddl-auto: create-drop

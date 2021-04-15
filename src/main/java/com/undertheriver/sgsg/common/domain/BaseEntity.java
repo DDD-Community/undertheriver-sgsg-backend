@@ -22,7 +22,6 @@ public class BaseEntity {
 	@CreatedDate
 	private LocalDate createdAt;
 
-
 	@LastModifiedDate
 	private LocalDate updatedAt;
 

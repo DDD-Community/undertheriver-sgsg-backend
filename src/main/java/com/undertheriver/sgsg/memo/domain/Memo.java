@@ -36,6 +36,6 @@ public class Memo extends BaseEntity {
 	private String thumbnailUrl;
 
 	@ManyToOne
-	@JoinColumn(name = "folder_id", updatable = false)
+	@JoinColumn(name = "folder", updatable = false)
 	private Folder folder;
 }

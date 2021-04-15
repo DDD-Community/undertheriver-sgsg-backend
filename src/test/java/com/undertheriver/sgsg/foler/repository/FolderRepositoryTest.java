@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,36 +67,73 @@ class FolderRepositoryTest {
 	@Disabled
 	@DisplayName("Folder를 조회할 수 있다.")
 	@Test
-	@Order(0)
+	@Disabled
 	public void read() {
 		Folder undeletedFolder = folderRepository.save(createFolderReq1.toEntity());
 		Folder deletedFolder = folderRepository.save(createFolderReq2.toEntity());
 		deletedFolder.setDeleted(true);
 
 		List<Folder> folders = folderRepository.findAll();
-		List<Folder> undeletedFolders = folderRepository.findAllByDeletedIsOrDeletedIs(false, null);
+		List<Folder> undeletedFolders = folderRepository.findAllByDeletedFalseOrDeletedNull();
 
-		System.out.println();
 		assertAll(
 			() -> assertThat(folders.size()).isEqualTo(NUMBER_OF_FOLDERS),
 			() -> assertThat(undeletedFolders.size()).isEqualTo(NUMBER_OF_UNDELETED_FOLDERS)
 		);
 	}
 
-	@DisplayName("Folder를 생성할 수 있다.")
+	@DisplayName("Folder를 20개 이하일 때 저장할 수 있다.")
 	@Test
-	@Order(1)
 	public void save() {
-		Folder savedFolder = folderRepository.save(createFolderReq1.toEntity());
+		Folder folder = folderRepository.save(createFolderReq1.toEntity());
+		List<Folder> folderCount = folderRepository.findFirst20ByUserAndDeletedFalseOrDeletedNull(folder.getUser());
 
+		Folder savedFolder = Folder.builder().build();
+		if (folderCount.size() <= 20) {
+			savedFolder = folderRepository.save(createFolderReq2.toEntity());
+		}
+
+		String title = savedFolder.getTitle();
 		assertAll(
-			() -> assertThat(savedFolder.getTitle()).isEqualTo(TEST_TITLE_VALUE1)
+			() -> assertThat(title).isEqualTo(TEST_TITLE_VALUE2)
+		);
+	}
+
+	@DisplayName("Folder를 20개 이상일 때 저장할 수 없다.")
+	@Test
+	public void saveFailed() {
+
+		String rawPassword = "1234";
+		User user = new User(rawPassword);
+		user = userRepository.save(user);
+
+		List<Folder> folderList = new ArrayList<>();
+		for (int i = 0; i < 21; i++) {
+			folderList.add(
+				FolderDto.CreateFolderReq.builder()
+					.user(user)
+					.title(i + "")
+					.color(FolderColor.BLACK)
+					.position(TEST_POSITION_VALUE1)
+					.build()
+					.toEntity()
+			);
+		}
+
+		Folder savedFolder = Folder.builder().build();
+		List<Folder> folderCount = folderRepository.findFirst20ByUserAndDeletedFalseOrDeletedNull(user);
+		if (folderCount.size() > 20) {
+			savedFolder = folderRepository.save(createFolderReq2.toEntity());
+		}
+
+		String title = savedFolder.getTitle();
+		assertAll(
+			() -> assertThat(title).isNotEqualTo(TEST_TITLE_VALUE2)
 		);
 	}
 
 	@DisplayName("Folder 제목을 수정할 수 있다.")
 	@Test
-	@Order(2)
 	public void updateTitle() {
 		Folder beforeFolder1 = folderRepository.save(createFolderReq1.toEntity());
 		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
@@ -136,7 +172,6 @@ class FolderRepositoryTest {
 
 	@DisplayName("Folder 순서를 수정할 수 있다.")
 	@Test
-	@Order(3)
 	public void updatePosition() {
 		Folder beforeFolder1 = folderRepository.save(createFolderReq1.toEntity());
 		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
@@ -179,7 +214,6 @@ class FolderRepositoryTest {
 
 	@DisplayName("Folder를 수정할 수 있다")
 	@Test
-	@Order(4)
 	public void updateFolder() {
 		Folder beforeFolder1 = folderRepository.save(createFolderReq1.toEntity());
 		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
