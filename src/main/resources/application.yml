@@ -1,9 +1,27 @@
 server:
   http2:
     enabled: true
-auth:
-  encrypt:
-    seed: B95D645620C482160DF37A0F6681800875FC3E0E07DEBC6687C4E9237689C013
+
+spring:
+  profiles:
+    include: auth
+  datasource:
+    url: jdbc:h2:mem:testdb;IFEXISTS=FALSE;
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+debug: true
+  logging
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
 
 ---
 spring:
