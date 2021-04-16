@@ -1,9 +1,25 @@
-server:
-  http2:
-    enabled: true
-auth:
-  encrypt:
-    seed: B95D645620C482160DF37A0F6681800875FC3E0E07DEBC6687C4E9237689C013
+spring:
+  profiles:
+    include: auth
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:testdb;IFEXISTS=FALSE;
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MariaDBDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+debug: true
+
 
 ---
 spring:
@@ -16,23 +32,3 @@ spring:
   config:
     activate:
       on-profile: production
-
----
-
-spring:
-  h2:
-    console:
-      enabled: true
-  datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        dialect: org.hibernate.dialect.MariaDBDialect
