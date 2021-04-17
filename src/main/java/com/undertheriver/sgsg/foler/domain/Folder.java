@@ -38,10 +38,8 @@ public class Folder extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private FolderColor color;
 
-	private Integer position;
-
 	@ManyToOne
-	@JoinColumn(name = "user", updatable = false)
+	@JoinColumn(name = "user")
 	private User user;
 
 	@OneToMany(mappedBy = "folder")
@@ -51,7 +49,6 @@ public class Folder extends BaseEntity {
 	public Folder(String title, FolderColor color, Integer position, User user) {
 		this.title = title;
 		this.color = color;
-		this.position = position;
 		this.user = user;
 	}
 
@@ -59,14 +56,9 @@ public class Folder extends BaseEntity {
 		this.title = dto.getTitle();
 	}
 
-	public void updatePosition(FolderDto.UpdateFolderPositionReq dto) {
-		this.position = dto.getPosition();
-	}
-
 	public void update(FolderDto.UpdateFolderReq dto) {
 		this.title = dto.getTitle();
 		this.color = dto.getColor();
-		this.position = dto.getPosition();
 	}
 }
 

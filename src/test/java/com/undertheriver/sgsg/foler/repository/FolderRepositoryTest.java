@@ -26,8 +26,7 @@ class FolderRepositoryTest {
 	private static final String TEST_TITLE_VALUE1 = "테스트 폴더";
 	private static final String TEST_TITLE_VALUE2 = "테스트 폴더2";
 	private static final String TEST_TITLE_VALUE3 = "업데이트 테스트 폴더";
-	private static final Integer TEST_POSITION_VALUE1 = 0;
-	private static final Integer TEST_POSITION_VALUE2 = 1;
+
 	private static final Integer NUMBER_OF_UNDELETED_FOLDERS = 1;
 	private static final Integer NUMBER_OF_FOLDERS = 2;
 	FolderDto.CreateFolderReq createFolderReq1;
@@ -53,14 +52,12 @@ class FolderRepositoryTest {
 			.user(user)
 			.title(TEST_TITLE_VALUE1)
 			.color(FolderColor.BLACK)
-			.position(TEST_POSITION_VALUE1)
 			.build();
 
 		createFolderReq2 = FolderDto.CreateFolderReq.builder()
 			.user(user)
 			.title(TEST_TITLE_VALUE2)
 			.color(FolderColor.WHITE)
-			.position(TEST_POSITION_VALUE2)
 			.build();
 	}
 
@@ -114,7 +111,6 @@ class FolderRepositoryTest {
 					.user(user)
 					.title(i + "")
 					.color(FolderColor.BLACK)
-					.position(TEST_POSITION_VALUE1)
 					.build()
 					.toEntity()
 			);
@@ -170,48 +166,6 @@ class FolderRepositoryTest {
 		return folder;
 	}
 
-	@DisplayName("Folder 순서를 수정할 수 있다.")
-	@Test
-	public void updatePosition() {
-		Folder beforeFolder1 = folderRepository.save(createFolderReq1.toEntity());
-		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
-
-		final FolderDto.UpdateFolderPositionReq req1 = FolderDto.UpdateFolderPositionReq.builder()
-			.id(beforeFolder1.getId())
-			.position(beforeFolder2.getPosition())
-			.build();
-
-		final FolderDto.UpdateFolderPositionReq req2 = FolderDto.UpdateFolderPositionReq.builder()
-			.id(beforeFolder2.getId())
-			.position(beforeFolder1.getPosition())
-			.build();
-
-		List<FolderDto.UpdateFolderPositionReq> updatePositionReqList = new ArrayList<>();
-		updatePositionReqList.add(req1);
-		updatePositionReqList.add(req2);
-
-		Integer beforePosition1 = beforeFolder1.getPosition();
-		Integer beforePosition2 = beforeFolder2.getPosition();
-
-		Folder afterFolder1 = updateFolderPosition(beforeFolder1.getId(), req1);
-		Folder afterFolder2 = updateFolderPosition(beforeFolder2.getId(), req2);
-
-		Integer afterPosition1 = afterFolder1.getPosition();
-		Integer afterPosition2 = afterFolder2.getPosition();
-
-		assertAll(
-			() -> assertThat(beforePosition1).isNotEqualTo(afterPosition1),
-			() -> assertThat(beforePosition2).isNotEqualTo(afterPosition2)
-		);
-	}
-
-	// TODO: MOVE TO FolderService
-	public Folder updateFolderPosition(Long id, FolderDto.UpdateFolderPositionReq dto) {
-		final Folder folder = folderRepository.findById(id).get();
-		folder.updatePosition(dto);
-		return folder;
-	}
-
 	@DisplayName("Folder를 수정할 수 있다")
 	@Test
 	public void updateFolder() {
@@ -221,14 +175,12 @@ class FolderRepositoryTest {
 		final FolderDto.UpdateFolderReq req1 = FolderDto.UpdateFolderReq.builder()
 			.id(beforeFolder1.getId())
 			.title(beforeFolder2.getTitle())
-			.position(beforeFolder2.getPosition())
 			.color(beforeFolder2.getColor())
 			.build();
 
 		final FolderDto.UpdateFolderReq req2 = FolderDto.UpdateFolderReq.builder()
 			.id(beforeFolder2.getId())
 			.title(beforeFolder1.getTitle())
-			.position(beforeFolder1.getPosition())
 			.color(beforeFolder1.getColor())
 			.build();
 
