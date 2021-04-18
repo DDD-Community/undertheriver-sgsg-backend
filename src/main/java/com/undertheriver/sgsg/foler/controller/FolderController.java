@@ -1,62 +1,63 @@
 package com.undertheriver.sgsg.foler.controller;
 
+import java.net.URI;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.undertheriver.sgsg.common.annotation.LoginUser;
+import com.undertheriver.sgsg.common.dto.CurrentUser;
+import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
+import com.undertheriver.sgsg.foler.service.FolderService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/folders")
 @Api(value = "folder")
 public class FolderController {
+	private final FolderService folderService;
+
 	@ApiOperation(value = "폴더 생성")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "title", value = "폴더 이름", required = true, dataType = "String", paramType = "body"),
-		@ApiImplicitParam(name = "color", value = "폴더 색깔", required = true, dataType = "String", paramType = "body"),
-		@ApiImplicitParam(name = "order", value = "폴더 순서", required = true, dataType = "Integer", paramType = "body")
-	})
-
-	@ApiResponses(value = {
-		@ApiResponse(code = 201, message = "Location: /api/folders/1"),
-		@ApiResponse(code = 406, message = "폴더는 20개까지 생성 가능합니다")
-	})
 	@PostMapping
-	public void save(@RequestBody String title) {
-	}
-
-
-	@ApiOperation("폴더 제목 수정")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "id", value = "폴더 ID", required = true, dataType = "Long", paramType = "path variable"),
-		@ApiImplicitParam(name = "title", value = "폴더 이름", required = true, dataType = "String", paramType = "body")
-	})
-	@PutMapping("/{id}")
-	public void update(@PathVariable Long id, @RequestBody String title) {
-	}
-
-	@ApiOperation("폴더 순서 수정")
-	@PutMapping("/order")
-	public void updateOrder(@RequestBody List<Long> ids) {
+	public ResponseEntity<Object> save(
+		@LoginUser CurrentUser currentUser,
+		@RequestBody FolderDto.CreateFolderReq dto) {
+		try {
+			dto.setUser(currentUser.toUserIdDto());
+			Long id = folderService.save(dto);
+			URI location = new URI("/api/folders/" + id);
+			return ResponseEntity.status(201).location(location).build();
+		} catch (IndexOutOfBoundsException e) {
+			return ResponseEntity.status(406).body(e.getMessage());
+		} catch (Exception e) {
+			return ResponseEntity.status(400).body(e.getMessage());
+		}
 	}
 
 	@ApiOperation("폴더 조회")
-	@ApiResponses(
-		@ApiResponse(code = 200, message = "[ { 'id' = 1, 'title' = '...' }, {'id' = 2, 'title' = '...' }, .... ] ")
-	)
 	@GetMapping
-	public void read() {
+	public ResponseEntity<List<FolderDto.ReadFolderRes>> read(@LoginUser CurrentUser currentUser) {
+		return new ResponseEntity<>(
+			folderService.read(currentUser.toUserIdDto()), HttpStatus.valueOf(200));
 	}
+
+	@ApiOperation("폴더 수정")
+	@PutMapping
+	public ResponseEntity<List<FolderDto.ReadFolderRes>> update(@RequestBody List<FolderDto.UpdateFolderReq> body) {
+		return new ResponseEntity<>(
+			folderService.update(body), HttpStatus.valueOf(200));
+	}
+
 }

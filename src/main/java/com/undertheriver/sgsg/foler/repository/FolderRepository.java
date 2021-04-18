@@ -10,7 +10,5 @@ import com.undertheriver.sgsg.user.domain.User;
 
 @Repository
 public interface FolderRepository extends JpaRepository<Folder, Long> {
-	List<Folder> findAllByDeletedFalseOrDeletedNull();
-
 	List<Folder> findFirst20ByUserAndDeletedFalseOrDeletedNull(User user);
 }

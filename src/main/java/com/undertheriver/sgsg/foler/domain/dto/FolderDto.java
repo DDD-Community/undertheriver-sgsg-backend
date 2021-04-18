@@ -32,6 +32,10 @@ public class FolderDto {
 				.user(this.user)
 				.build();
 		}
+
+		public void setUser(User user) {
+			this.user = user;
+		}
 	}
 
 	@Getter
@@ -71,6 +75,29 @@ public class FolderDto {
 			return Folder.builder()
 				.title(this.title)
 				.color(this.color)
+				.build();
+		}
+	}
+
+	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class ReadFolderRes {
+		private Long id;
+		private String title;
+		private FolderColor color;
+
+		@Builder
+		public ReadFolderRes(Long id, String title, FolderColor color) {
+			this.id = id;
+			this.title = title;
+			this.color = color;
+		}
+
+		public static ReadFolderRes toDto(Folder folder) {
+			return ReadFolderRes.builder()
+				.id(folder.getId())
+				.title(folder.getTitle())
+				.color(folder.getColor())
 				.build();
 		}
 	}
