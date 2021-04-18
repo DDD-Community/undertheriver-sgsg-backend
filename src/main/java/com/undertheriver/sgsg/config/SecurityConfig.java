@@ -58,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/").permitAll()
 			.anyRequest().authenticated()
 		.and()
+			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 		.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
@@ -80,6 +81,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.successHandler(authenticationSuccessHandler)
 				.failureHandler(authenticationFailureHandler);
 		//@formatter:on
-		http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 }
