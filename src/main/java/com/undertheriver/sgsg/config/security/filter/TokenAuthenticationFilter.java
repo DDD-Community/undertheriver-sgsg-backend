@@ -17,8 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.undertheriver.sgsg.auth.common.JwtProvider;
 import com.undertheriver.sgsg.common.exception.AccessTokenLoadException;
 import com.undertheriver.sgsg.config.security.UserPrincipal;
-import com.undertheriver.sgsg.user.domain.User;
-import com.undertheriver.sgsg.user.domain.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +28,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtProvider jwtProvider;
 
-	private final UserRepository userRepository;
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
@@ -40,13 +36,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			String jwt = getJwtFromRequest(request);
 			Claims claims = jwtProvider.extractValidSubject(jwt);
 			String userId = claims.get("userId", String.class);
+			String role = claims.get("role", String.class);
 
-			UserDetails userDetails = createUserDetails(userId);
+			UserDetails userDetails = createUserDetails(userId, role);
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
 				null, userDetails.getAuthorities());
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			request.setAttribute("userId", userId);
 
 			// TODO 토큰이 만료됐을때 액션 취할 수 있는지
 		} catch (IllegalArgumentException | AccessTokenLoadException e) {
@@ -56,11 +52,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		filterChain.doFilter(request, response);
 	}
 
-	private UserDetails createUserDetails(String userId) {
-		User user = userRepository.findById(Long.valueOf(userId))
-			.orElseThrow(IllegalArgumentException::new);
-
-		UserDetails userDetails = UserPrincipal.create(user);
+	private UserDetails createUserDetails(String userId, String role) {
+		UserDetails userDetails = UserPrincipal.createByToken(Long.valueOf(userId), role);
 		return userDetails;
 	}
 
