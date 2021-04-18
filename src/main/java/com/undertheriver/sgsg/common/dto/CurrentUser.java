@@ -26,8 +26,4 @@ public final class CurrentUser {
 		this.profileImageUrl = profileImageUrl;
 		this.userRole = userRole;
 	}
-
-	public User toUserIdDto() {
-		return new User(this.id);
-	}
 }

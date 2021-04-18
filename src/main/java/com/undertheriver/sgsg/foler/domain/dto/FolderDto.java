@@ -16,25 +16,18 @@ public class FolderDto {
 	public static class CreateFolderReq {
 		private String title;
 		private FolderColor color;
-		private User user;
 
 		@Builder
 		public CreateFolderReq(String title, FolderColor color, User user) {
 			this.title = title;
 			this.color = color;
-			this.user = user;
 		}
 
 		public Folder toEntity() {
 			return Folder.builder()
 				.title(this.title)
 				.color(this.color)
-				.user(this.user)
 				.build();
-		}
-
-		public void setUser(User user) {
-			this.user = user;
 		}
 	}
 

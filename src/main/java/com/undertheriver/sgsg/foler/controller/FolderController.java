@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,8 +34,7 @@ public class FolderController {
 		@LoginUser CurrentUser currentUser,
 		@RequestBody FolderDto.CreateFolderReq dto) {
 		try {
-			dto.setUser(currentUser.toUserIdDto());
-			Long id = folderService.save(dto);
+			Long id = folderService.save(currentUser.getId(), dto);
 			URI location = new URI("/api/folders/" + id);
 			return ResponseEntity.status(201).location(location).build();
 		} catch (IndexOutOfBoundsException e) {
@@ -50,7 +48,7 @@ public class FolderController {
 	@GetMapping
 	public ResponseEntity<List<FolderDto.ReadFolderRes>> read(@LoginUser CurrentUser currentUser) {
 		return new ResponseEntity<>(
-			folderService.read(currentUser.toUserIdDto()), HttpStatus.valueOf(200));
+			folderService.read(currentUser.getId()), HttpStatus.valueOf(200));
 	}
 
 	@ApiOperation("폴더 수정")

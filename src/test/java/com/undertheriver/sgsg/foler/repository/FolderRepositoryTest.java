@@ -56,13 +56,11 @@ class FolderRepositoryTest {
 		userRepository.save(user);
 
 		createFolderReq1 = FolderDto.CreateFolderReq.builder()
-			.user(user)
 			.title(TEST_TITLE_VALUE1)
 			.color(FolderColor.BLACK)
 			.build();
 
 		createFolderReq2 = FolderDto.CreateFolderReq.builder()
-			.user(user)
 			.title(TEST_TITLE_VALUE2)
 			.color(FolderColor.WHITE)
 			.build();
@@ -74,7 +72,7 @@ class FolderRepositoryTest {
 	@Disabled
 	public void read() {
 		folderRepository.save(createFolderReq1.toEntity());
-		List<Folder> folder = folderRepository.findFirst20ByUserAndDeletedFalseOrDeletedNull(user);
+		List<Folder> folder = folderRepository.findFirst20ByUserIdAndDeletedFalseOrDeletedNull(user.getId());
 		assertAll(
 			() -> assertThat(folder.size()).isGreaterThan(0)
 		);
@@ -83,7 +81,7 @@ class FolderRepositoryTest {
 	@DisplayName("Folder를 20개 이하일 때만 저장할 수 있다.")
 	@Test
 	public void save() {
-		Long id = folderService.save(createFolderReq1);
+		Long id = folderService.save(user.getId(), createFolderReq1);
 		assertAll(
 			() -> assertThat(id).isNotEqualTo(null)
 		);
@@ -97,7 +95,6 @@ class FolderRepositoryTest {
 		for (int i = 0; i < 21; i++) {
 			folderList.add(
 				FolderDto.CreateFolderReq.builder()
-					.user(user)
 					.title(i + "")
 					.color(FolderColor.BLACK)
 					.build()
@@ -107,7 +104,7 @@ class FolderRepositoryTest {
 
 		folderRepository.saveAll(folderList);
 		Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
-			folderService.save(createFolderReq1);
+			folderService.save(user.getId(), createFolderReq1);
 		});
 	}
 
