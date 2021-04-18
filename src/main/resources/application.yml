@@ -19,7 +19,12 @@ spring:
       ddl-auto: create-drop
 debug: true
 
-
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure: ERROR
 ---
 spring:
   config:

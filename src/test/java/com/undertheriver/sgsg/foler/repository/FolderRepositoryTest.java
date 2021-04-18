@@ -11,9 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
@@ -22,28 +20,30 @@ import com.undertheriver.sgsg.user.domain.UserRepository;
 
 @SpringBootTest
 class FolderRepositoryTest {
+	private static final String TEST_TITLE_VALUE1 = "테스트 폴더";
+	private static final String TEST_TITLE_VALUE2 = "테스트 폴더2";
+	private static final String TEST_TITLE_VALUE3 = "업데이트 테스트 폴더";
+	private static final Integer TEST_POSITION_VALUE1 = 0;
+	private static final Integer TEST_POSITION_VALUE2 = 1;
+	private static final Integer NUMBER_OF_UNDELETED_FOLDERS = 1;
+	private static final Integer NUMBER_OF_FOLDERS = 2;
+	FolderDto.CreateFolderReq createFolderReq1;
+	FolderDto.CreateFolderReq createFolderReq2;
 	@Autowired
 	private FolderRepository folderRepository;
 	@Autowired
 	private UserRepository userRepository;
 
-	FolderDto.CreateFolderReq createFolderReq1;
-	FolderDto.CreateFolderReq createFolderReq2;
-
-	private static final String TEST_TITLE_VALUE1 = "테스트 폴더";
-	private static final String TEST_TITLE_VALUE2 = "테스트 폴더2";
-	private static final String TEST_TITLE_VALUE3 = "업데이트 테스트 폴더";
-
-	private static final Integer TEST_POSITION_VALUE1 = 0;
-	private static final Integer TEST_POSITION_VALUE2 = 1;
-
-	private static final Integer NUMBER_OF_UNDELETED_FOLDERS = 1;
-	private static final Integer NUMBER_OF_FOLDERS = 2;
-
 	@BeforeEach
 	public void beforeEach() {
 		String rawPassword = "1234";
-		User user = new User(rawPassword);
+		User user = User.builder()
+			.userRole(UserRole.USER)
+			.email("hongbin@gmail.com")
+			.userSecretMemoPassword(rawPassword)
+			.name("test")
+			.build();
+
 		user = userRepository.save(user);
 
 		createFolderReq1 = FolderDto.CreateFolderReq.builder()
