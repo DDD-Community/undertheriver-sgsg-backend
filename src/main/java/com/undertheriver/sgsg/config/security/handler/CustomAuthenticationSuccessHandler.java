@@ -7,15 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.undertheriver.sgsg.auth.common.JwtProvider;
 import com.undertheriver.sgsg.config.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.undertheriver.sgsg.config.security.UserPrincipal;
+import com.undertheriver.sgsg.util.HttpResponseUtils;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -37,12 +35,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			.jwtToken(token)
 			.build();
 
-		MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
-		MediaType jsonMimeType = MediaType.APPLICATION_JSON;
-
-		if (jsonConverter.canWrite(responseDto.getClass(), jsonMimeType)) {
-			jsonConverter.write(responseDto, jsonMimeType, new ServletServerHttpResponse(response));
-		}
+		HttpResponseUtils.writeFromJson(response, responseDto);
 
 		authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 	}
