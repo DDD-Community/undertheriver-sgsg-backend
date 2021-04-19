@@ -20,6 +20,7 @@ import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.user.domain.vo.UserSecretMemoPassword;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -78,9 +79,5 @@ public class User extends BaseEntity {
 		this.name = name;
 		this.profileImageUrl = profileImageUrl;
 		return this;
-	}
-
-	public User(Long id) {
-		this.id = id;
 	}
 }

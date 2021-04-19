@@ -3,6 +3,7 @@ package com.undertheriver.sgsg.foler.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,19 +20,21 @@ import lombok.RequiredArgsConstructor;
 public class FolderService {
 	private final FolderRepository folderRepository;
 
-	private static final Integer FOLDER_INDEX_LIMIT = 20;
+	@Value("${const.folder.limit}")
+	private Integer FOLDER_INDEX_LIMIT;
 
 	@Transactional
 	public Long save(Long userId, FolderDto.CreateFolderReq req) {
-		if (isFoldersExistsMoreThan20(userId)) {
-			throw new IndexOutOfBoundsException("폴더는 최대 20개까지 생성할 수 있습니다!");
+		if (isFoldersExistsMoreThan20(userId, FOLDER_INDEX_LIMIT)) {
+			throw new IndexOutOfBoundsException(
+				String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", FOLDER_INDEX_LIMIT));
 		}
 		return folderRepository.save(req.toEntity()).getId();
 	}
 
 	@Transactional(readOnly = true)
-	boolean isFoldersExistsMoreThan20(Long userId) {
-		return read(userId).size() >= FOLDER_INDEX_LIMIT;
+	boolean isFoldersExistsMoreThan20(Long userId, Integer limit) {
+		return read(userId).size() >= limit;
 	}
 
 	@Transactional(readOnly = true)

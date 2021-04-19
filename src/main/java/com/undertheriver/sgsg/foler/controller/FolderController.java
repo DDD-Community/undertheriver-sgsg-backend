@@ -36,26 +36,28 @@ public class FolderController {
 		try {
 			Long id = folderService.save(currentUser.getId(), dto);
 			URI location = new URI("/api/folders/" + id);
-			return ResponseEntity.status(201).location(location).build();
+			return ResponseEntity.created(location)
+				.build();
 		} catch (IndexOutOfBoundsException e) {
-			return ResponseEntity.status(406).body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+				.body(e.getMessage());
 		} catch (Exception e) {
-			return ResponseEntity.status(400).body(e.getMessage());
+			return ResponseEntity.badRequest()
+				.body(e.getMessage());
 		}
 	}
 
 	@ApiOperation("폴더 조회")
 	@GetMapping
 	public ResponseEntity<List<FolderDto.ReadFolderRes>> read(@LoginUser CurrentUser currentUser) {
-		return new ResponseEntity<>(
-			folderService.read(currentUser.getId()), HttpStatus.valueOf(200));
+		List<FolderDto.ReadFolderRes> folders = folderService.read(currentUser.getId());
+		return ResponseEntity.ok(folders);
 	}
 
 	@ApiOperation("폴더 수정")
 	@PutMapping
 	public ResponseEntity<List<FolderDto.ReadFolderRes>> update(@RequestBody List<FolderDto.UpdateFolderReq> body) {
-		return new ResponseEntity<>(
-			folderService.update(body), HttpStatus.valueOf(200));
+		List<FolderDto.ReadFolderRes> folders = folderService.update(body);
+		return ResponseEntity.ok(folders);
 	}
-
 }

@@ -24,7 +24,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(indexes = @Index(name = "fk_user", columnList = "user"))
+@Table(indexes = @Index(name = "folder_idx_user", columnList = "user"))
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
