@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.undertheriver.sgsg.common.dto.CurrentUser;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
-import com.undertheriver.sgsg.user.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,13 +19,13 @@ public class FolderService {
 	private final FolderRepository folderRepository;
 
 	@Value("${const.folder.limit}")
-	private Integer FOLDER_INDEX_LIMIT;
+	private Integer folderLimit;
 
 	@Transactional
 	public Long save(Long userId, FolderDto.CreateFolderReq req) {
-		if (isFoldersExistsMoreThan20(userId, FOLDER_INDEX_LIMIT)) {
+		if (isFoldersExistsMoreThan20(userId, folderLimit)) {
 			throw new IndexOutOfBoundsException(
-				String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", FOLDER_INDEX_LIMIT));
+				String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", folderLimit));
 		}
 		return folderRepository.save(req.toEntity()).getId();
 	}

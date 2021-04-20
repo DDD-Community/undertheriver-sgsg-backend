@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.undertheriver.sgsg.common.dto.PageRequest;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
@@ -73,6 +74,7 @@ class FolderRepositoryTest {
 	public void read() {
 		folderRepository.save(createFolderReq1.toEntity());
 		List<Folder> folder = folderRepository.findFirst20ByUserIdAndDeletedFalseOrDeletedNull(user.getId());
+		// List<Folder> folder2 = folderRepository.findAllPagedByUserIdAndDeletedFalseOrDeletedNull(new PageRequest().of("id"), user.getId());
 		assertAll(
 			() -> assertThat(folder.size()).isGreaterThan(0)
 		);

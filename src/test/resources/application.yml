@@ -15,3 +15,11 @@ spring:
 const:
   folder:
     limit: 20
+
+paging:
+  folder:
+    limit: 20
+  memo:
+    limit: 20
+  max_row: 50
+  min_page: 1
