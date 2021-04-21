@@ -1,9 +1,16 @@
 name: gradle CD
 on:
   push:
-    branches: [ develop ]
+    branches:
+      - main
+      - develop
+      - 'feat/**'
+      - 'fix/**'
+      - 'hotfix/**'
+      - 'refactor/**'
+      - 'chore/**'
 jobs:
-  build:
+  fetch:
     runs-on: ubuntu-latest
     steps:
       - name: checkout main repository
@@ -16,6 +23,10 @@ jobs:
           token: ${{ secrets.SGSG_PRIVATE_PAT }}
           path: src/main/resources/config
 
+  build:
+    needs: [ fetch ]
+    runs-on: ubuntu-latest
+    steps:
       - name: JDK 11 설치
         uses: actions/setup-java@v1
         with:
@@ -27,6 +38,11 @@ jobs:
       - name: 빌드
         run: ./gradlew build
 
+  aws-setting:
+    needs: [ build ]
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
       - name: aws 세팅
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -34,6 +50,22 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
+  deploy-develop:
+    needs: [ aws-setting ]
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: S3 업로드
+        run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/build.zip --source .
+
+      - name: code deploy
+        run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name backend --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/build.zip
+
+  deploy-master:
+    needs: [ aws-setting ]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
       - name: S3 업로드
         run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/build.zip --source .
 
