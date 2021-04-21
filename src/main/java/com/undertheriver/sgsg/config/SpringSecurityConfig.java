@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -30,6 +31,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final AuthenticationFailureHandler authenticationFailureHandler;
 
 	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> cookieBasedAuthorizationRequestRepository;
+
+	private final AuthenticationEntryPoint authenticationEntryPoint;
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -58,7 +61,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/").permitAll()
 			.anyRequest().authenticated()
 		.and()
-		.sessionManagement()
+			.exceptionHandling()
+			.authenticationEntryPoint(authenticationEntryPoint)
+		.and()
+			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 			.csrf()
