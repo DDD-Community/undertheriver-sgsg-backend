@@ -10,23 +10,19 @@ on:
       - 'refactor/**'
       - 'chore/**'
 jobs:
-  fetch:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout main repository
+      - name: Github 업스트림 체크아웃
         uses: actions/checkout@v2
 
-      - name: Checkout secret properties repository
+      - name: Github 서브모듈 체크아웃
         uses: actions/checkout@v2
         with:
           repository: khb1109/sgsg-private
           token: ${{ secrets.SGSG_PRIVATE_PAT }}
           path: src/main/resources/config
 
-  build:
-    needs: [ fetch ]
-    runs-on: ubuntu-latest
-    steps:
       - name: JDK 11 설치
         uses: actions/setup-java@v1
         with:
@@ -38,11 +34,22 @@ jobs:
       - name: 빌드
         run: ./gradlew build
 
-  aws-setting:
+      - name: 소스코드 업로드
+        uses: actions/upload-artifact@v2
+        with:
+          name: source
+          path: .
+
+  deploy-develop:
     needs: [ build ]
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     steps:
+      - name: 소스코드 다운로드
+        uses: actions/download-artifact@v2
+        with:
+          name: source
+
       - name: aws 세팅
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -50,11 +57,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-  deploy-develop:
-    needs: [ aws-setting ]
-    if: github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    steps:
       - name: S3 업로드
         run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/build.zip --source .
 
@@ -62,10 +64,22 @@ jobs:
         run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name backend --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/build.zip
 
   deploy-master:
-    needs: [ aws-setting ]
+    needs: [ build ]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
+      - name: 소스코드 다운로드
+        uses: actions/download-artifact@v2
+        with:
+          name: source
+
+      - name: aws 세팅
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
       - name: S3 업로드
         run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/build.zip --source .
 
