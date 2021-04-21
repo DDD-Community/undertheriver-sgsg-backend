@@ -1,7 +1,7 @@
 name: gradle CD
 on:
   push:
-    branches: [ develop, chore/47-add-github-actions-submodule ]
+    branches: [ develop ]
 jobs:
   build:
     runs-on: ubuntu-latest
