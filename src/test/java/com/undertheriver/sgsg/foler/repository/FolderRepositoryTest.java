@@ -13,12 +13,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.undertheriver.sgsg.common.dto.PageRequest;
 import com.undertheriver.sgsg.common.type.UserRole;
+import com.undertheriver.sgsg.config.PagingConfig;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
@@ -32,9 +34,10 @@ class FolderRepositoryTest {
 	private FolderRepository folderRepository;
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private FolderService folderService;
+	@Autowired
+	private PagingConfig pagingConfig;
 
 	FolderDto.CreateFolderReq createFolderReq1;
 	FolderDto.CreateFolderReq createFolderReq2;
@@ -70,11 +73,14 @@ class FolderRepositoryTest {
 	@Disabled
 	@DisplayName("Folder를 조회할 수 있다.")
 	@Test
-	@Disabled
+	// @Disabled
 	public void read() {
 		folderRepository.save(createFolderReq1.toEntity());
-		List<Folder> folder = folderRepository.findFirst20ByUserIdAndDeletedFalseOrDeletedNull(user.getId());
-		// List<Folder> folder2 = folderRepository.findAllPagedByUserIdAndDeletedFalseOrDeletedNull(new PageRequest().of("id"), user.getId());
+
+		PageRequest pageRequest = new PageRequest(pagingConfig.getFolder());
+		List<Folder> folder = folderRepository.findByUserIdAndDeletedFalseOrDeletedNull(
+			user.getId(), pageRequest.of(Sort.Direction.ASC, "createdAt"));
+
 		assertAll(
 			() -> assertThat(folder.size()).isGreaterThan(0)
 		);
@@ -134,10 +140,8 @@ class FolderRepositoryTest {
 
 		List<FolderDto.ReadFolderRes> res = folderService.update(req);
 
-
 		FolderDto.ReadFolderRes afterFolder1 = res.get(0);
 		FolderDto.ReadFolderRes afterFolder2 = res.get(1);
-
 
 		assertAll(
 			() -> assertThat(beforeFolder1.getTitle()).isNotEqualTo(afterFolder1.getTitle()),

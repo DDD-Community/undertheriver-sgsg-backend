@@ -20,14 +20,10 @@ class PagingConfigTest {
 	public void readProperty() {
 		Map<String, Integer> folder = pagingConfig.getFolder();
 		Map<String, Integer> memo = pagingConfig.getMemo();
-		Integer maxLimit = pagingConfig.getMaxRow();
-		Integer minPage = pagingConfig.getMinPage();
 
 		assertAll(
 			() -> assertThat(folder.get("limit")).isEqualTo(20),
-			() -> assertThat(memo.get("limit")).isEqualTo(20),
-			() -> assertThat(maxLimit).isEqualTo(50),
-			() -> assertThat(minPage).isEqualTo(1)
+			() -> assertThat(memo.get("limit")).isEqualTo(20)
 		);
 	}
 }

@@ -19,7 +19,9 @@ const:
 paging:
   folder:
     limit: 20
+    max_limit: 50
+    min_page: 1
   memo:
     limit: 20
-  max_row: 50
-  min_page: 1
+    max_limit: 50
+    min_page: 1

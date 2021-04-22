@@ -16,15 +16,6 @@ public class PagingConfig {
 
 	private Map<String, Integer> folder;
 	private Map<String, Integer> memo;
-	private Integer maxRow;
-	private Integer minPage;
-
-	public PagingConfig(Map<String, Integer> folder, Map<String, Integer> memo, Integer maxRow, Integer minPage) {
-		this.folder = folder;
-		this.memo = memo;
-		this.maxRow = maxRow;
-		this.minPage = minPage;
-	}
 
 	public PagingConfig(Map<String, Integer> folder, Map<String, Integer> memo) {
 		this.folder = folder;
