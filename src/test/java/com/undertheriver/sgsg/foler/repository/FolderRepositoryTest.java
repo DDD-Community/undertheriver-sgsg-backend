@@ -57,12 +57,12 @@ class FolderRepositoryTest {
 
 		createFolderReq1 = FolderDto.CreateFolderReq.builder()
 			.title(TEST_TITLE_VALUE1)
-			.color(FolderColor.BLACK)
+			.color(FolderColor.RED)
 			.build();
 
 		createFolderReq2 = FolderDto.CreateFolderReq.builder()
 			.title(TEST_TITLE_VALUE2)
-			.color(FolderColor.WHITE)
+			.color(FolderColor.RED)
 			.build();
 	}
 
@@ -98,7 +98,7 @@ class FolderRepositoryTest {
 			folderList.add(
 				FolderDto.CreateFolderReq.builder()
 					.title(i + "")
-					.color(FolderColor.BLACK)
+					.color(FolderColor.RED)
 					.build()
 					.toEntity()
 			);
