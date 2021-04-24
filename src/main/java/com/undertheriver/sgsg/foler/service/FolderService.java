@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.undertheriver.sgsg.common.dto.PageRequest;
 import com.undertheriver.sgsg.config.PagingConfig;
 import com.undertheriver.sgsg.foler.domain.Folder;
+import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
 
@@ -52,5 +53,12 @@ public class FolderService {
 		final Folder folder = folderRepository.findById(folderId).get();
 		folder.update(dto);
 		return FolderDto.ReadFolderRes.toDto(folder);
+	}
+
+	public FolderDto.GetNextFolderColorRes getNextColor(int order) {
+		FolderColor nextColor = FolderColor.getNextColor(order);
+		return FolderDto.GetNextFolderColorRes.builder()
+			.color(nextColor)
+			.build();
 	}
 }

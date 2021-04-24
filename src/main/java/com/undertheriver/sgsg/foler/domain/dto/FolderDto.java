@@ -82,4 +82,15 @@ public class FolderDto {
 				.build();
 		}
 	}
+
+	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class GetNextFolderColorRes {
+		private FolderColor color;
+
+		@Builder
+		public GetNextFolderColorRes(FolderColor color) {
+			this.color = color;
+		}
+	}
 }
