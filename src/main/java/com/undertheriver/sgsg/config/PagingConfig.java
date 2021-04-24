@@ -14,11 +14,11 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "paging")
 public class PagingConfig {
 
-	private Map<String, Integer> folder;
-	private Map<String, Integer> memo;
+	private Map<String, Integer> folderConfig;
+	private Map<String, Integer> memoConfig;
 
-	public PagingConfig(Map<String, Integer> folder, Map<String, Integer> memo) {
-		this.folder = folder;
-		this.memo = memo;
+	public PagingConfig(Map<String, Integer> folderConfig, Map<String, Integer> memoConfig) {
+		this.folderConfig = folderConfig;
+		this.memoConfig = memoConfig;
 	}
 }

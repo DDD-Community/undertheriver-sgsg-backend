@@ -3,7 +3,6 @@ package com.undertheriver.sgsg.foler.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +23,7 @@ public class FolderService {
 
 	@Transactional
 	public Long save(Long userId, FolderDto.CreateFolderReq req) {
-		Integer limit = pagingConfig.getFolder().get("limit");
+		Integer limit = pagingConfig.getFolderConfig().get("limit");
 
 		if (isFoldersExistsMoreThan20(userId, limit)) {
 			throw new IndexOutOfBoundsException(
@@ -39,7 +38,7 @@ public class FolderService {
 
 	@Transactional(readOnly = true)
 	public List<FolderDto.ReadFolderRes> read(Long userId) {
-		PageRequest pageRequest = new PageRequest(pagingConfig.getFolder());
+		PageRequest pageRequest = new PageRequest(pagingConfig.getFolderConfig());
 
 		return folderRepository.findByUserIdAndDeletedFalseOrDeletedNull(
 			userId, pageRequest.of(Sort.Direction.ASC, "createdAt"))

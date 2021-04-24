@@ -18,8 +18,8 @@ class PagingConfigTest {
 	@DisplayName("application.yml 의 paging 값을 가져올 수 있다.")
 	@Test
 	public void readProperty() {
-		Map<String, Integer> folder = pagingConfig.getFolder();
-		Map<String, Integer> memo = pagingConfig.getMemo();
+		Map<String, Integer> folder = pagingConfig.getFolderConfig();
+		Map<String, Integer> memo = pagingConfig.getMemoConfig();
 
 		assertAll(
 			() -> assertThat(folder.get("limit")).isEqualTo(20),

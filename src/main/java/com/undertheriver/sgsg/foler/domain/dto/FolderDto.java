@@ -2,7 +2,6 @@ package com.undertheriver.sgsg.foler.domain.dto;
 
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
-import com.undertheriver.sgsg.user.domain.User;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -18,7 +17,7 @@ public class FolderDto {
 		private FolderColor color;
 
 		@Builder
-		public CreateFolderReq(String title, FolderColor color, User user) {
+		public CreateFolderReq(String title, FolderColor color) {
 			this.title = title;
 			this.color = color;
 		}

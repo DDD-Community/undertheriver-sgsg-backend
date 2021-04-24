@@ -17,11 +17,11 @@ const:
     limit: 20
 
 paging:
-  folder:
+  folder_config:
     limit: 20
     max_limit: 50
     min_page: 1
-  memo:
+  memo_config:
     limit: 20
     max_limit: 50
     min_page: 1

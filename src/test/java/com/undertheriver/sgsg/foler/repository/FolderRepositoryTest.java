@@ -8,15 +8,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.undertheriver.sgsg.common.dto.PageRequest;
 import com.undertheriver.sgsg.common.type.UserRole;
@@ -70,14 +66,12 @@ class FolderRepositoryTest {
 			.build();
 	}
 
-	@Disabled
 	@DisplayName("Folder를 조회할 수 있다.")
 	@Test
-	// @Disabled
 	public void read() {
 		folderRepository.save(createFolderReq1.toEntity());
 
-		PageRequest pageRequest = new PageRequest(pagingConfig.getFolder());
+		PageRequest pageRequest = new PageRequest(pagingConfig.getFolderConfig());
 		List<Folder> folder = folderRepository.findByUserIdAndDeletedFalseOrDeletedNull(
 			user.getId(), pageRequest.of(Sort.Direction.ASC, "createdAt"));
 
