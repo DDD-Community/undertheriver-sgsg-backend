@@ -2,7 +2,6 @@ package com.undertheriver.sgsg.foler.domain.dto;
 
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
-import com.undertheriver.sgsg.user.domain.User;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,23 +15,17 @@ public class FolderDto {
 	public static class CreateFolderReq {
 		private String title;
 		private FolderColor color;
-		private Integer position;
-		private User user;
 
 		@Builder
-		public CreateFolderReq(String title, FolderColor color, Integer position, User user) {
+		public CreateFolderReq(String title, FolderColor color) {
 			this.title = title;
 			this.color = color;
-			this.position = position;
-			this.user = user;
 		}
 
 		public Folder toEntity() {
 			return Folder.builder()
 				.title(this.title)
 				.color(this.color)
-				.position(this.position)
-				.user(this.user)
 				.build();
 		}
 	}
@@ -58,36 +51,15 @@ public class FolderDto {
 
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class UpdateFolderPositionReq {
-		private Long id;
-		private Integer position;
-
-		@Builder
-		public UpdateFolderPositionReq(Long id, Integer position) {
-			this.id = id;
-			this.position = position;
-		}
-
-		public Folder toEntity() {
-			return Folder.builder()
-				.position(this.position)
-				.build();
-		}
-	}
-
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class UpdateFolderReq {
 		private Long id;
 		private String title;
-		private Integer position;
 		private FolderColor color;
 
 		@Builder
 		public UpdateFolderReq(Long id, String title, Integer position, FolderColor color) {
 			this.id = id;
 			this.title = title;
-			this.position = position;
 			this.color = color;
 		}
 
@@ -95,7 +67,29 @@ public class FolderDto {
 			return Folder.builder()
 				.title(this.title)
 				.color(this.color)
-				.position(this.position)
+				.build();
+		}
+	}
+
+	@Getter
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class ReadFolderRes {
+		private Long id;
+		private String title;
+		private FolderColor color;
+
+		@Builder
+		public ReadFolderRes(Long id, String title, FolderColor color) {
+			this.id = id;
+			this.title = title;
+			this.color = color;
+		}
+
+		public static ReadFolderRes toDto(Folder folder) {
+			return ReadFolderRes.builder()
+				.id(folder.getId())
+				.title(folder.getTitle())
+				.color(folder.getColor())
 				.build();
 		}
 	}

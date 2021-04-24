@@ -1,6 +1,8 @@
 package com.undertheriver.sgsg.common.dto;
 
 import com.undertheriver.sgsg.common.type.UserRole;
+import com.undertheriver.sgsg.user.domain.User;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

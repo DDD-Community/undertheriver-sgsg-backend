@@ -4,40 +4,24 @@ spring:
   h2:
     console:
       enabled: true
-  datasource:
-    url: jdbc:h2:mem:testdb;IFEXISTS=FALSE;
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
   jpa:
     properties:
       hibernate:
-        show_sql: true
         format_sql: true
     show-sql: true
     hibernate:
       ddl-auto: create-drop
-debug: true
 
-paging:
+const:
   folder:
     limit: 20
-    max_limit: 50
-    min_page: 1
-  memo:
+
+paging:
+  folder_config:
     limit: 20
     max_limit: 50
     min_page: 1
-
-
----
-spring:
-  config:
-    activate:
-      on-profile: develop
----
-
-spring:
-  config:
-    activate:
-      on-profile: production
+  memo_config:
+    limit: 20
+    max_limit: 50
+    min_page: 1
