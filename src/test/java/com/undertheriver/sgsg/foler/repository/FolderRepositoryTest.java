@@ -137,6 +137,18 @@ class FolderRepositoryTest {
 		);
 	}
 
-}
+	@DisplayName("다음 생성할 폴더 색상을 알려준다.")
+	@Test
+	public void nextFolderColor() {
+		FolderColor[] colors = FolderColor.values();
+		int folderSize1 = 0;
+		int folderSize2 = colors.length;
+		FolderColor firstColor = FolderColor.values()[0];
 
+		assertAll(
+			() -> assertThat(FolderColor.getNextColor(folderSize1)).isEqualTo(firstColor),
+			() -> assertThat(FolderColor.getNextColor(folderSize2)).isEqualTo(firstColor)
+		);
+	}
+}
 

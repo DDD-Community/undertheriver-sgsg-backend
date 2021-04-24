@@ -7,10 +7,15 @@ public enum FolderColor {
 	PURPLE("#9F69DB"),
 	RED("#E64632");
 
-
 	String colorCode;
 
 	FolderColor(String colorCode) {
 		this.colorCode = colorCode;
+	}
+
+	public static FolderColor getNextColor(int folderRowSize) {
+		FolderColor[] values = FolderColor.values();
+		int nextColorOrdinary = folderRowSize % FolderColor.values().length;
+		return values[nextColorOrdinary];
 	}
 }
