@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -30,6 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final AuthenticationFailureHandler authenticationFailureHandler;
 
 	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> cookieBasedAuthorizationRequestRepository;
+
+	private final AuthenticationEntryPoint authenticationEntryPoint;
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -57,6 +60,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/health").permitAll()
 			.antMatchers("/").permitAll()
 			.anyRequest().authenticated()
+		.and()
+			.exceptionHandling()
+			.authenticationEntryPoint(authenticationEntryPoint)
 		.and()
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 		.sessionManagement()

@@ -1,8 +1,27 @@
 spring:
+  profiles:
+    include: auth
   h2:
     console:
       enabled: true
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
 
-auth:
-  encrypt:
-    seed: B95D645620C482160DF37A0F6681800875FC3E0E07DEBC6687C4E9237689C123
+const:
+  folder:
+    limit: 20
+
+paging:
+  folder_config:
+    limit: 20
+    max_limit: 50
+    min_page: 1
+  memo_config:
+    limit: 20
+    max_limit: 50
+    min_page: 1
