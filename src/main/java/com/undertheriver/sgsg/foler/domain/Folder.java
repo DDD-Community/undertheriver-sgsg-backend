@@ -46,19 +46,14 @@ public class Folder extends BaseEntity {
 	private List<Memo> memos = new ArrayList<>();
 
 	@Builder
-	public Folder(String title, FolderColor color, Integer position, User user) {
+	public Folder(String title, FolderColor color, User user) {
 		this.title = title;
 		this.color = color;
 		this.user = user;
 	}
 
-	public void updateTitle(FolderDto.UpdateFolderTitleReq dto) {
-		this.title = dto.getTitle();
-	}
-
 	public void update(FolderDto.UpdateFolderReq dto) {
 		this.title = dto.getTitle();
-		this.color = dto.getColor();
 	}
 }
 

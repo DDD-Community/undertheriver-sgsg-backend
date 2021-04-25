@@ -117,25 +117,19 @@ class FolderRepositoryTest {
 		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
 
 		updateFolderReq1 = FolderDto.UpdateFolderReq.builder()
-			.id(beforeFolder1.getId())
 			.title(beforeFolder2.getTitle())
-			.color(beforeFolder2.getColor())
 			.build();
 
 		updateFolderReq2 = FolderDto.UpdateFolderReq.builder()
-			.id(beforeFolder2.getId())
 			.title(beforeFolder1.getTitle())
-			.color(beforeFolder1.getColor())
 			.build();
 
 		List<FolderDto.UpdateFolderReq> req = new ArrayList<>();
 		req.add(updateFolderReq1);
 		req.add(updateFolderReq2);
 
-		List<FolderDto.ReadFolderRes> res = folderService.update(req);
-
-		FolderDto.ReadFolderRes afterFolder1 = res.get(0);
-		FolderDto.ReadFolderRes afterFolder2 = res.get(1);
+		FolderDto.ReadFolderRes afterFolder1 = folderService.update(beforeFolder1.getId(), req.get(0));
+		FolderDto.ReadFolderRes afterFolder2 = folderService.update(beforeFolder2.getId(), req.get(1));
 
 		assertAll(
 			() -> assertThat(beforeFolder1.getTitle()).isNotEqualTo(afterFolder1.getTitle()),
