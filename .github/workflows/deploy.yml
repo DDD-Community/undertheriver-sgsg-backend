@@ -1,5 +1,14 @@
 name: gradle CD
 on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'feat/**'
+      - 'fix/**'
+      - 'hotfix/**'
+      - 'refactor/**'
+      - 'chore/**'
   push:
     branches:
       - main
