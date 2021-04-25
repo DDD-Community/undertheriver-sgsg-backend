@@ -57,12 +57,12 @@ class FolderRepositoryTest {
 
 		createFolderReq1 = FolderDto.CreateFolderReq.builder()
 			.title(TEST_TITLE_VALUE1)
-			.color(FolderColor.BLACK)
+			.color(FolderColor.RED)
 			.build();
 
 		createFolderReq2 = FolderDto.CreateFolderReq.builder()
 			.title(TEST_TITLE_VALUE2)
-			.color(FolderColor.WHITE)
+			.color(FolderColor.RED)
 			.build();
 	}
 
@@ -98,7 +98,7 @@ class FolderRepositoryTest {
 			folderList.add(
 				FolderDto.CreateFolderReq.builder()
 					.title(i + "")
-					.color(FolderColor.BLACK)
+					.color(FolderColor.RED)
 					.build()
 					.toEntity()
 			);
@@ -137,6 +137,18 @@ class FolderRepositoryTest {
 		);
 	}
 
-}
+	@DisplayName("다음 생성할 폴더 색상을 알려준다.")
+	@Test
+	public void nextFolderColor() {
+		FolderColor[] colors = FolderColor.values();
+		FolderColor firstColor = FolderColor.values()[0];
+		int folderSize1 = 0;
+		int folderSize2 = colors.length;
 
+		assertAll(
+			() -> assertThat(FolderColor.getNextColor(folderSize1)).isEqualTo(firstColor),
+			() -> assertThat(FolderColor.getNextColor(folderSize2)).isEqualTo(firstColor)
+		);
+	}
+}
 

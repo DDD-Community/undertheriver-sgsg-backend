@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.undertheriver.sgsg.common.annotation.LoginUser;
@@ -60,6 +61,14 @@ public class FolderController {
 	public ResponseEntity<FolderDto.ReadFolderRes> update(
 		@PathVariable Long id, @RequestBody FolderDto.UpdateFolderReq body) {
 		FolderDto.ReadFolderRes res = folderService.update(id, body);
+		return ResponseEntity.ok(res);
+	}
+
+	@ApiOperation("다음 폴더 색상 조회")
+	@GetMapping("/color")
+	public ResponseEntity<FolderDto.GetNextFolderColorRes> getNextFolderColor(
+		@LoginUser CurrentUser currentUser) {
+		FolderDto.GetNextFolderColorRes res = folderService.getNextColor(currentUser.getId());
 		return ResponseEntity.ok(res);
 	}
 }
