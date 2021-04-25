@@ -7,7 +7,7 @@ public enum FolderColor {
 	PURPLE("#9F69DB"),
 	RED("#E64632");
 
-	String colorCode;
+	private final String colorCode;
 
 	FolderColor(String colorCode) {
 		this.colorCode = colorCode;

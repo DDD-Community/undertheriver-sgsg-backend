@@ -66,8 +66,9 @@ public class FolderController {
 
 	@ApiOperation("다음 폴더 색상 조회")
 	@GetMapping("/color")
-	public ResponseEntity<FolderDto.GetNextFolderColorRes> getNextFolderColor(@RequestParam Integer order) {
-		FolderDto.GetNextFolderColorRes res =  folderService.getNextColor(order);
+	public ResponseEntity<FolderDto.GetNextFolderColorRes> getNextFolderColor(
+		@LoginUser CurrentUser currentUser) {
+		FolderDto.GetNextFolderColorRes res = folderService.getNextColor(currentUser.getId());
 		return ResponseEntity.ok(res);
 	}
 }

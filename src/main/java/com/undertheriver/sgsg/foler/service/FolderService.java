@@ -55,10 +55,12 @@ public class FolderService {
 		return FolderDto.ReadFolderRes.toDto(folder);
 	}
 
-	public FolderDto.GetNextFolderColorRes getNextColor(int order) {
-		FolderColor nextColor = FolderColor.getNextColor(order);
+	@Transactional(readOnly = true)
+	public FolderDto.GetNextFolderColorRes getNextColor(Long userId) {
+		Integer folderCount = folderRepository.countByUserId(userId);
+		FolderColor nextColor = FolderColor.getNextColor(folderCount);
 		return FolderDto.GetNextFolderColorRes.builder()
-			.color(nextColor)
+			.nextColor(nextColor)
 			.build();
 	}
 }

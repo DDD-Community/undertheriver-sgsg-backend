@@ -141,9 +141,9 @@ class FolderRepositoryTest {
 	@Test
 	public void nextFolderColor() {
 		FolderColor[] colors = FolderColor.values();
+		FolderColor firstColor = FolderColor.values()[0];
 		int folderSize1 = 0;
 		int folderSize2 = colors.length;
-		FolderColor firstColor = FolderColor.values()[0];
 
 		assertAll(
 			() -> assertThat(FolderColor.getNextColor(folderSize1)).isEqualTo(firstColor),
