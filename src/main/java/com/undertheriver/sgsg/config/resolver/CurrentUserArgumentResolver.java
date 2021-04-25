@@ -10,6 +10,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.undertheriver.sgsg.common.annotation.LoginUser;
 import com.undertheriver.sgsg.common.dto.CurrentUser;
+import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +26,13 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 
 		String userId = (String)webRequest.getAttribute("userId", RequestAttributes.SCOPE_REQUEST);
 
-		return userService.findById(Long.valueOf(userId));
+		User user = userService.findById(Long.valueOf(userId));
+		return CurrentUser.builder()
+			.id(user.getId())
+			.name(user.getName())
+			.profileImageUrl(user.getProfileImageUrl())
+			.userRole(user.getUserRole())
+			.build();
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package com.undertheriver.sgsg.user.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.undertheriver.sgsg.common.dto.CurrentUser;
+import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +15,14 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
-	public CurrentUser findById(Long id) {
+	public User findById(Long id) {
 		return userRepository.findById(id)
-			.map(this::toDto)
-			.orElseThrow(IllegalAccessError::new);
+			.orElseThrow(ModelNotFoundException::new);
 	}
 
-	private CurrentUser toDto(User user) {
-		return CurrentUser.builder()
-			.id(user.getId())
-			.name(user.getName())
-			.profileImageUrl(user.getProfileImageUrl())
-			.userRole(user.getUserRole())
-			.build();
+	public void deleteUser(Long id) {
+		userRepository.findById(id)
+			.map(User::delete)
+			.orElseThrow(ModelNotFoundException::new);
 	}
 }
