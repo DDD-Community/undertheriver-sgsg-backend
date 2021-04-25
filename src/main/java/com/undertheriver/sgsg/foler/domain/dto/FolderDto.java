@@ -52,22 +52,11 @@ public class FolderDto {
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class UpdateFolderReq {
-		private Long id;
 		private String title;
-		private FolderColor color;
 
 		@Builder
-		public UpdateFolderReq(Long id, String title, Integer position, FolderColor color) {
-			this.id = id;
+		public UpdateFolderReq(String title) {
 			this.title = title;
-			this.color = color;
-		}
-
-		public Folder toEntity() {
-			return Folder.builder()
-				.title(this.title)
-				.color(this.color)
-				.build();
 		}
 	}
 

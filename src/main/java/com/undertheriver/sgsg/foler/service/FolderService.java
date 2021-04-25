@@ -48,14 +48,9 @@ public class FolderService {
 	}
 
 	@Transactional
-	public FolderDto.ReadFolderRes update(FolderDto.UpdateFolderReq body) {
-		Folder updatedFolder = updateFolder(body);
-		return FolderDto.ReadFolderRes.toDto(updatedFolder);
-	}
-
-	private Folder updateFolder(FolderDto.UpdateFolderReq dto) {
-		final Folder folder = folderRepository.findById(dto.getId()).get();
+	public FolderDto.ReadFolderRes update(Long folderId, FolderDto.UpdateFolderReq dto) {
+		final Folder folder = folderRepository.findById(folderId).get();
 		folder.update(dto);
-		return folder;
+		return FolderDto.ReadFolderRes.toDto(folder);
 	}
 }
