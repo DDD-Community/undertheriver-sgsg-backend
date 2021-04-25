@@ -56,8 +56,8 @@ public class FolderController {
 
 	@ApiOperation("폴더 수정")
 	@PutMapping
-	public ResponseEntity<List<FolderDto.ReadFolderRes>> update(@RequestBody List<FolderDto.UpdateFolderReq> body) {
-		List<FolderDto.ReadFolderRes> folders = folderService.update(body);
-		return ResponseEntity.ok(folders);
+	public ResponseEntity<FolderDto.ReadFolderRes> update(@RequestBody FolderDto.UpdateFolderReq body) {
+		FolderDto.ReadFolderRes res = folderService.update(body);
+		return ResponseEntity.ok(res);
 	}
 }

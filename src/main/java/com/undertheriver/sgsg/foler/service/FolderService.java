@@ -48,11 +48,9 @@ public class FolderService {
 	}
 
 	@Transactional
-	public List<FolderDto.ReadFolderRes> update(List<FolderDto.UpdateFolderReq> body) {
-		return body.stream()
-			.map(this::updateFolder)
-			.map(FolderDto.ReadFolderRes::toDto)
-			.collect(Collectors.toList());
+	public FolderDto.ReadFolderRes update(FolderDto.UpdateFolderReq body) {
+		Folder updatedFolder = updateFolder(body);
+		return FolderDto.ReadFolderRes.toDto(updatedFolder);
 	}
 
 	private Folder updateFolder(FolderDto.UpdateFolderReq dto) {

@@ -132,10 +132,8 @@ class FolderRepositoryTest {
 		req.add(updateFolderReq1);
 		req.add(updateFolderReq2);
 
-		List<FolderDto.ReadFolderRes> res = folderService.update(req);
-
-		FolderDto.ReadFolderRes afterFolder1 = res.get(0);
-		FolderDto.ReadFolderRes afterFolder2 = res.get(1);
+		FolderDto.ReadFolderRes afterFolder1 = folderService.update(req.get(0));
+		FolderDto.ReadFolderRes afterFolder2 = folderService.update(req.get(1));
 
 		assertAll(
 			() -> assertThat(beforeFolder1.getTitle()).isNotEqualTo(afterFolder1.getTitle()),
