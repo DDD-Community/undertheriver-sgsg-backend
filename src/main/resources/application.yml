@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: auth
+    include: auth, app
   h2:
     console:
       enabled: true
