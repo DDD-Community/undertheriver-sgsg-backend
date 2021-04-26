@@ -18,7 +18,6 @@ public class HealthController {
 
 	@GetMapping("/")
 	public ResponseEntity<String> hello(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-		System.out.println(userPrincipal);
 		return ResponseEntity
 			.ok("Hello World!");
 	}
