@@ -12,6 +12,7 @@ import com.undertheriver.sgsg.common.annotation.LoginUser;
 import com.undertheriver.sgsg.common.dto.CurrentUser;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.domain.dto.response.ReadMemoResponseDto;
+import com.undertheriver.sgsg.memo.service.MemoService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -19,11 +20,15 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/memos")
 @Api(value = "memo")
 public class MemoController {
+
+	private final MemoService memoService;
 
 	@ApiOperation(value = "메모 전체 조회")
 	@ApiResponses(value = {
@@ -55,8 +60,8 @@ public class MemoController {
 	@PostMapping
 	public void save(
 		@LoginUser CurrentUser currentUser,
-		@RequestBody MemoDto.CreateMemoReq request) {
-
+		@RequestBody MemoDto.CreateMemoReq body) {
+		memoService.save(currentUser.getId(), body);
 	}
 
 	@ApiOperation(value = "메모 내용 수정")
