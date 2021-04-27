@@ -14,14 +14,15 @@ public class MemoDto {
 	@Getter
 	@NoArgsConstructor
 	public static class CreateMemoReq {
-		@Nullable
 		Long folderId;
-		@NotNull
+		String folderTitle;
 		String content;
 
 		@Builder
-		public CreateMemoReq(@Nullable Long folderId, @NotNull String content) {
+		public CreateMemoReq(
+			@Nullable Long folderId, @NotNull String folderTitle, @NotNull String content) {
 			this.folderId = folderId;
+			this.folderTitle = folderTitle;
 			this.content = content;
 		}
 	}

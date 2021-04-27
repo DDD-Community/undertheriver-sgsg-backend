@@ -56,7 +56,7 @@ public class MemoController {
 	public void save(
 		@LoginUser CurrentUser currentUser,
 		@RequestBody MemoDto.CreateMemoReq request) {
-		
+
 	}
 
 	@ApiOperation(value = "메모 내용 수정")

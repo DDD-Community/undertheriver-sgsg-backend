@@ -56,6 +56,7 @@ class MemoRepositoryTest {
 		folder = folderRepository.findById(folderId).get();
 		createMemoReq1 = MemoDto.CreateMemoReq.builder()
 			.folderId(folder.getId())
+			.folderTitle(folder.getTitle())
 			.content("메모입니다 메모")
 			.build();
 	}
