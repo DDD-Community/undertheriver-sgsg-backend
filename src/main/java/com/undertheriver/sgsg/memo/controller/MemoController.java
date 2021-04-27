@@ -32,7 +32,6 @@ public class MemoController {
 
 	}
 
-
 	@ApiOperation(value = "특정 폴더 메모 전체 조회")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "folderId", value = "폴더 ID", required = true, dataType = "Long", paramType = "path variable")
