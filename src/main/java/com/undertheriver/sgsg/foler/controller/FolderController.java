@@ -11,14 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.undertheriver.sgsg.common.annotation.LoginUser;
-import com.undertheriver.sgsg.common.dto.CurrentUser;
+import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.service.FolderService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +30,10 @@ public class FolderController {
 	@ApiOperation(value = "폴더 생성")
 	@PostMapping
 	public ResponseEntity<Object> save(
-		@LoginUser CurrentUser currentUser,
+		@LoginUserId Long userId,
 		@RequestBody FolderDto.CreateFolderReq dto) {
 		try {
-			Long id = folderService.save(currentUser.getId(), dto);
+			Long id = folderService.save(userId, dto);
 			URI location = new URI("/api/folders/" + id);
 			return ResponseEntity.created(location)
 				.build();
@@ -51,8 +48,8 @@ public class FolderController {
 
 	@ApiOperation("폴더 조회")
 	@GetMapping
-	public ResponseEntity<List<FolderDto.ReadFolderRes>> read(@LoginUser CurrentUser currentUser) {
-		List<FolderDto.ReadFolderRes> folders = folderService.read(currentUser.getId());
+	public ResponseEntity<List<FolderDto.ReadFolderRes>> read(@LoginUserId Long userId) {
+		List<FolderDto.ReadFolderRes> folders = folderService.read(userId);
 		return ResponseEntity.ok(folders);
 	}
 
@@ -67,8 +64,8 @@ public class FolderController {
 	@ApiOperation("다음 폴더 색상 조회")
 	@GetMapping("/color")
 	public ResponseEntity<FolderDto.GetNextFolderColorRes> getNextFolderColor(
-		@LoginUser CurrentUser currentUser) {
-		FolderDto.GetNextFolderColorRes res = folderService.getNextColor(currentUser.getId());
+		@LoginUserId Long userId) {
+		FolderDto.GetNextFolderColorRes res = folderService.getNextColor(userId);
 		return ResponseEntity.ok(res);
 	}
 }

@@ -1,11 +1,8 @@
 package com.undertheriver.sgsg;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.undertheriver.sgsg.config.security.UserPrincipal;
 
 @RestController
 public class HealthController {
@@ -17,7 +14,7 @@ public class HealthController {
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<String> hello(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+	public ResponseEntity<String> hello() {
 		return ResponseEntity
 			.ok("Hello World!");
 	}
