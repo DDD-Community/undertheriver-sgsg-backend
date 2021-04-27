@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -64,7 +64,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.exceptionHandling()
 			.authenticationEntryPoint(authenticationEntryPoint)
 		.and()
-			.sessionManagement()
+			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+		.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 			.csrf()
@@ -86,6 +87,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.successHandler(authenticationSuccessHandler)
 				.failureHandler(authenticationFailureHandler);
 		//@formatter:on
-		http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 }

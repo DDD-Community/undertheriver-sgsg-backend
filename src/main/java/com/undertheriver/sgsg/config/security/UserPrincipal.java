@@ -12,7 +12,9 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.user.domain.User;
+import lombok.ToString;
 
+@ToString
 public class UserPrincipal implements OAuth2User, UserDetails {
 
 	private final Long id;
@@ -21,10 +23,10 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 	private final Collection<? extends GrantedAuthority> authorities;
 	private final Map<String, Object> attributes;
 
-	private UserPrincipal(Long id, String name, String email,
-		Collection<? extends GrantedAuthority> authorities,
+	private UserPrincipal(Long id, String name, String email, String role,
 		Map<String, Object> attributes) {
 
+		List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -32,20 +34,24 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 		this.attributes = attributes;
 	}
 
-	public static UserPrincipal create(User user) {
-		return create(user, null);
-	}
-
-	public static UserPrincipal create(User user, Map<String, Object> attributes) {
-		List<GrantedAuthority> authorities = Collections.
-			singletonList(new SimpleGrantedAuthority(user.getUserRole().getKey()));
+	public static UserPrincipal createByOAuthUser(User user, Map<String, Object> attributes) {
 
 		return new UserPrincipal(
 			user.getId(),
 			user.getName(),
 			user.getEmail(),
-			authorities,
+			user.getUserRole().getKey(),
 			attributes
+		);
+	}
+
+	public static UserDetails createByToken(Long userId, String role) {
+		return new UserPrincipal(
+			userId,
+			null,
+			null,
+			role,
+			null
 		);
 	}
 

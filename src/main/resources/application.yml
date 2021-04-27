@@ -30,6 +30,12 @@ paging:
     min_page: 1
 
 
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure: ERROR
 ---
 spring:
   config:

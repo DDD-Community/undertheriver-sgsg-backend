@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
 	@GetMapping("/callback")
-	public String callback(@RequestParam Map<String, Object> param) {
-		return param.toString();
+	public Map<String, Object> callback(@RequestParam Map<String, Object> param) {
+		return param;
 	}
 }
