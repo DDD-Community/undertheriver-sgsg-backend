@@ -1,3 +1,2 @@
-[submodule "config"]
-	path = src/main/resources/config
-	url = https://github.com/khb1109/sgsg-private
+[submodule "src/main/resources/config"]
+	url = https://github.com/khb1109/sgsg-private.git

@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.undertheriver.sgsg.common.annotation.LoginUser;
-import com.undertheriver.sgsg.common.dto.CurrentUser;
+import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.domain.dto.response.ReadMemoResponseDto;
 import com.undertheriver.sgsg.memo.service.MemoService;
@@ -59,9 +58,9 @@ public class MemoController {
 	@ApiOperation(value = "메모 저장")
 	@PostMapping
 	public void save(
-		@LoginUser CurrentUser currentUser,
+		@LoginUserId Long userId,
 		@RequestBody MemoDto.CreateMemoReq body) {
-		memoService.save(currentUser.getId(), body);
+		memoService.save(userId, body);
 	}
 
 	@ApiOperation(value = "메모 내용 수정")

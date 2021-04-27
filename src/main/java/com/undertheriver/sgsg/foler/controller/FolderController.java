@@ -49,7 +49,7 @@ public class FolderController {
 	@ApiOperation("폴더 조회")
 	@GetMapping
 	public ResponseEntity<List<FolderDto.ReadFolderRes>> read(@LoginUserId Long userId) {
-		List<FolderDto.ReadFolderRes> folders = folderService.read(userId);
+		List<FolderDto.ReadFolderRes> folders = folderService.readAll(userId);
 		return ResponseEntity.ok(folders);
 	}
 
