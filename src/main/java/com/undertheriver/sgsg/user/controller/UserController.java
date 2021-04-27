@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.undertheriver.sgsg.common.annotation.LoginUser;
-import com.undertheriver.sgsg.common.dto.CurrentUser;
+import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.user.controller.dto.UserDto;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.service.UserService;
@@ -32,8 +31,8 @@ public class UserController {
 		@ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header")
 	})
 	@GetMapping("/me")
-	public ResponseEntity<UserDto.DetailResponse> user(@LoginUser CurrentUser currentUser) {
-		User user = userService.findById(currentUser.getId());
+	public ResponseEntity<UserDto.DetailResponse> user(@LoginUserId Long userId) {
+		User user = userService.findById(userId);
 
 		UserDto.DetailResponse userDetail = new UserDto.DetailResponse(user.getName(),
 			user.getEmail(), user.getProfileImageUrl());
@@ -46,8 +45,8 @@ public class UserController {
 		@ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header")
 	})
 	@DeleteMapping("/me")
-	public ResponseEntity<Void> deleteUser(@LoginUser CurrentUser currentUser) {
-		userService.deleteUser(currentUser.getId());
+	public ResponseEntity<Void> deleteUser(@LoginUserId Long userId) {
+		userService.deleteUser(userId);
 
 		return ResponseEntity.ok()
 			.build();

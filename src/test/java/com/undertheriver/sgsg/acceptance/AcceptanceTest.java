@@ -58,9 +58,9 @@ public abstract class AcceptanceTest {
 					.oauth2(token)
 				.get(url)
 			.then()
-				.statusCode(HttpStatus.SC_OK)
 				.log()
 					.all()
+				.statusCode(HttpStatus.SC_OK)
 				.extract()
 					.as(classType);
 		//@formatter:on
@@ -77,9 +77,9 @@ public abstract class AcceptanceTest {
 					.oauth2(token)
 				.get(url)
 			.then()
-				.statusCode(HttpStatus.SC_OK)
 				.log()
 					.all()
+				.statusCode(HttpStatus.SC_OK)
 				.extract()
 					.jsonPath()
 						.getList(".", classType);
@@ -96,9 +96,9 @@ public abstract class AcceptanceTest {
 				.oauth2(token)
 			.delete(url)
 		.then()
-			.statusCode(HttpStatus.SC_OK)
 			.log()
-			.all();
+				.all()
+			.statusCode(HttpStatus.SC_OK);
 		//@formatter:on
 	}
 }
