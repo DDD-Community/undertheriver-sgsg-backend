@@ -1,11 +1,13 @@
 package com.undertheriver.sgsg.config.security.handler;
 
 import static com.undertheriver.sgsg.config.security.HttpCookieOAuth2AuthorizationRequestRepository.*;
+import static java.util.stream.Collectors.*;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -25,17 +27,29 @@ import com.undertheriver.sgsg.config.AppProperties;
 import com.undertheriver.sgsg.config.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.undertheriver.sgsg.config.security.UserPrincipal;
 import com.undertheriver.sgsg.util.CookieUtils;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor
 @Configuration
 @Slf4j
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 	private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 	private final JwtProvider jwtProvider;
-	private final AppProperties appProperties;
+	private final Set<URI> authorizedRedirectUris;
+
+	public CustomAuthenticationSuccessHandler(
+		HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
+		JwtProvider jwtProvider,
+		AppProperties appProperties
+	) {
+		this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
+		this.jwtProvider = jwtProvider;
+		this.authorizedRedirectUris = appProperties.getOauth2()
+			.getAuthorizedRedirectUris()
+			.stream()
+			.map(URI::create)
+			.collect(toSet());
+	}
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -52,18 +66,22 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 	protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) {
+
 		Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
 			.map(Cookie::getValue);
-		if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+
+		if (redirectUri.isPresent() && isNotAuthorizedRedirectUri(redirectUri.get())) {
 			throw new BadRequestException("승인되지 않은 URL입니다");
 		}
+
 		String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 		UserPrincipal principal = (UserPrincipal)authentication.getPrincipal();
 
 		String token = fetchToken(principal);
 		return UriComponentsBuilder.fromUriString(targetUrl)
 			.queryParam("token", token)
-			.build().toUriString();
+			.build()
+			.toUriString();
 	}
 
 	private String fetchToken(UserPrincipal principal) {
@@ -81,14 +99,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
 	}
 
-	private boolean isAuthorizedRedirectUri(String uri) {
+	private boolean isNotAuthorizedRedirectUri(String uri) {
 		URI clientRedirectUri = URI.create(uri);
-		return appProperties.getOauth2().getAuthorizedRedirectUris()
-			.stream()
-			.anyMatch(authorizedRedirectUri -> {
-				URI authorizedURI = URI.create(authorizedRedirectUri);
-				return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-					&& authorizedURI.getPort() == clientRedirectUri.getPort();
-			});
+		return !authorizedRedirectUris.contains(clientRedirectUri);
 	}
 }
