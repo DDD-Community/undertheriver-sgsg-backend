@@ -87,11 +87,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			.stream()
 			.anyMatch(authorizedRedirectUri -> {
 				URI authorizedURI = URI.create(authorizedRedirectUri);
-				if (authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-					&& authorizedURI.getPort() == clientRedirectUri.getPort()) {
-					return true;
-				}
-				return false;
+				return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+					&& authorizedURI.getPort() == clientRedirectUri.getPort();
 			});
 	}
 }
