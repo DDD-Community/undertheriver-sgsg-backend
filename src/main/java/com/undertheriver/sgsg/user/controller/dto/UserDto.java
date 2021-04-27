@@ -10,7 +10,7 @@ public class UserDto {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@Getter
-	static public class DetailResponse {
+	public static class DetailResponse {
 		private String name;
 		private String email;
 		private String profileImageUrl;
