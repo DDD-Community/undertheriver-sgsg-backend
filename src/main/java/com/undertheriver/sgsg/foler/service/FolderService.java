@@ -1,6 +1,7 @@
 package com.undertheriver.sgsg.foler.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Sort;
@@ -34,11 +35,11 @@ public class FolderService {
 	}
 
 	private boolean isFoldersExistsMoreThan20(Long userId, Integer limit) {
-		return read(userId).size() >= limit;
+		return readAll(userId).size() >= limit;
 	}
 
 	@Transactional(readOnly = true)
-	public List<FolderDto.ReadFolderRes> read(Long userId) {
+	public List<FolderDto.ReadFolderRes> readAll(Long userId) {
 		PageRequest pageRequest = new PageRequest(pagingConfig.getFolderConfig());
 
 		return folderRepository.findByUserIdAndDeletedFalseOrDeletedNull(
@@ -46,6 +47,11 @@ public class FolderService {
 			.stream()
 			.map(FolderDto.ReadFolderRes::toDto)
 			.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public Optional<Folder> read(Long folderId) {
+		return folderRepository.findById(folderId);
 	}
 
 	@Transactional

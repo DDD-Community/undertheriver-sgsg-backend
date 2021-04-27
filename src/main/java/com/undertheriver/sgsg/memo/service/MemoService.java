@@ -21,6 +21,7 @@ public class MemoService {
 
 	@Transactional
 	public Long save(Long userId, MemoDto.CreateMemoReq body) {
+		
 		if (body.getFolderId() == null) {
 			String folderTitle = body.getFolderTitle();
 			FolderColor nextColor = folderService.getNextColor(userId).getNextColor();
@@ -33,8 +34,11 @@ public class MemoService {
 			folderService.save(userId, req);
 		}
 
-
-
-		return userId;
+		Memo memo = Memo.builder()
+			.content(body.getContent())
+			.folder(folderService.read(body.getFolderId()).get())
+			.build();
+		memo = memoRepository.save(memo);
+		return memo.getId();
 	}
 }
