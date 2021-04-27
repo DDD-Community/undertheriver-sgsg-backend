@@ -1,5 +1,14 @@
 name: gradle CD
 on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - 'feat/**'
+      - 'fix/**'
+      - 'hotfix/**'
+      - 'refactor/**'
+      - 'chore/**'
   push:
     branches:
       - main
@@ -35,6 +44,7 @@ jobs:
         run: ./gradlew build
 
       - name: 소스코드 업로드
+        if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master') }}
         uses: actions/upload-artifact@v2
         with:
           name: source
@@ -42,7 +52,7 @@ jobs:
 
   deploy-develop:
     needs: [ build ]
-    if: github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: 소스코드 다운로드
@@ -65,7 +75,7 @@ jobs:
 
   deploy-master:
     needs: [ build ]
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: 소스코드 다운로드
