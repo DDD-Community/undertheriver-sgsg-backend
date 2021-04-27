@@ -58,9 +58,5 @@ class MemoRepositoryTest {
 			.folderId(folder.getId())
 			.content("메모입니다 메모")
 			.build();
-
-		
 	}
-
-	// @DisplayName("폴더가 없을 때 메모를 생성할 수 있다.")
 }
