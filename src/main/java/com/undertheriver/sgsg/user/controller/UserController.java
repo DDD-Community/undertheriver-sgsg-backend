@@ -1,6 +1,5 @@
 package com.undertheriver.sgsg.user.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -8,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.undertheriver.sgsg.common.ApiResult;
 import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.user.controller.dto.UserDto;
 import com.undertheriver.sgsg.user.domain.User;
@@ -31,13 +31,13 @@ public class UserController {
 		@ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header")
 	})
 	@GetMapping("/me")
-	public ResponseEntity<UserDto.DetailResponse> user(@LoginUserId Long userId) {
+	public ApiResult<UserDto.DetailResponse> user(@LoginUserId Long userId) {
 		User user = userService.findById(userId);
 
 		UserDto.DetailResponse userDetail = new UserDto.DetailResponse(user.getName(),
 			user.getEmail(), user.getProfileImageUrl());
 
-		return ResponseEntity.ok(userDetail);
+		return ApiResult.OK(userDetail);
 	}
 
 	@ApiOperation(value = "회원 탈퇴")
@@ -45,11 +45,10 @@ public class UserController {
 		@ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header")
 	})
 	@DeleteMapping("/me")
-	public ResponseEntity<Void> deleteUser(@LoginUserId Long userId) {
+	public ApiResult<Void> deleteUser(@LoginUserId Long userId) {
 		userService.deleteUser(userId);
 
-		return ResponseEntity.ok()
-			.build();
+		return ApiResult.OK();
 	}
 
 	@ApiOperation(value = "메모비밀번호 변경")
