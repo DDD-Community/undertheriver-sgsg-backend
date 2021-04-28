@@ -3,6 +3,7 @@ package com.undertheriver.sgsg.memo.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.service.FolderService;
@@ -31,12 +32,14 @@ public class MemoService {
 				.color(nextColor)
 				.build();
 
-			folderService.save(userId, req);
+			Long folderId = folderService.save(userId, req).getId();
+			body.setFolderId(folderId);
 		}
 
+		Folder folder = folderService.read(body.getFolderId()).get();
 		Memo memo = Memo.builder()
-			.content(body.getContent())
-			.folder(folderService.read(body.getFolderId()).get())
+			.content(body.getMemoContent())
+			.folder(Folder.builder().)
 			.build();
 		memo = memoRepository.save(memo);
 		return memo.getId();

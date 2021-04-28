@@ -24,14 +24,14 @@ public class FolderService {
 	private final PagingConfig pagingConfig;
 
 	@Transactional
-	public Long save(Long userId, FolderDto.CreateFolderReq req) {
+	public Folder save(Long userId, FolderDto.CreateFolderReq req) {
 		Integer limit = pagingConfig.getFolderConfig().get("limit");
 
 		if (isFoldersExistsMoreThan20(userId, limit)) {
 			throw new IndexOutOfBoundsException(
 				String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", limit));
 		}
-		return folderRepository.save(req.toEntity()).getId();
+		return folderRepository.save(req.toEntity());
 	}
 
 	private boolean isFoldersExistsMoreThan20(Long userId, Integer limit) {

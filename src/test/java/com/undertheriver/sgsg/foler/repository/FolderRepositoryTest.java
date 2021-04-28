@@ -83,7 +83,7 @@ class FolderRepositoryTest {
 	@DisplayName("Folder를 20개 이하일 때만 저장할 수 있다.")
 	@Test
 	public void save() {
-		Long id = folderService.save(user.getId(), createFolderReq1);
+		Long id = folderService.save(user.getId(), createFolderReq1).getId();
 		assertAll(
 			() -> assertThat(id).isNotEqualTo(null)
 		);

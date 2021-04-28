@@ -9,8 +9,10 @@ import com.undertheriver.sgsg.foler.domain.FolderColor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class MemoDto {
+	@Setter
 	@Getter
 	@NoArgsConstructor
 	public static class CreateMemoReq {
@@ -22,7 +24,6 @@ public class MemoDto {
 		FolderColor folderColor;
 		@NotNull
 		String memoContent;
-
 
 		@Builder
 		public CreateMemoReq(Long folderId, String folderTitle, FolderColor folderColor, String memoContent) {

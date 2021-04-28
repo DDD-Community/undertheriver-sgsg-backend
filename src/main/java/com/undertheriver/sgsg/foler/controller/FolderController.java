@@ -33,7 +33,7 @@ public class FolderController {
 		@LoginUserId Long userId,
 		@RequestBody FolderDto.CreateFolderReq dto) {
 		try {
-			Long id = folderService.save(userId, dto);
+			Long id = folderService.save(userId, dto).getId();
 			URI location = new URI("/api/folders/" + id);
 			return ResponseEntity.created(location)
 				.build();
