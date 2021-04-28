@@ -46,7 +46,8 @@ public class Folder extends BaseEntity {
 	private List<Memo> memos = new ArrayList<>();
 
 	@Builder
-	public Folder(String title, FolderColor color, User user) {
+	public Folder(Long id, String title, FolderColor color, User user) {
+		this.id =  id;
 		this.title = title;
 		this.color = color;
 		this.user = user;

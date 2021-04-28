@@ -21,27 +21,31 @@ public class MemoService {
 	private final FolderService folderService;
 
 	@Transactional
-	public Long save(Long userId, MemoDto.CreateMemoReq body) {
+	public Memo save(Long userId, MemoDto.CreateMemoReq body) {
 		
 		if (body.getFolderId() == null) {
 			String folderTitle = body.getFolderTitle();
-			FolderColor nextColor = folderService.getNextColor(userId).getNextColor();
+			FolderColor folderColor = body.getFolderColor();
 
 			FolderDto.CreateFolderReq req = FolderDto.CreateFolderReq.builder()
 				.title(folderTitle)
-				.color(nextColor)
+				.color(folderColor)
 				.build();
 
 			Long folderId = folderService.save(userId, req).getId();
 			body.setFolderId(folderId);
 		}
 
-		Folder folder = folderService.read(body.getFolderId()).get();
+		Folder folder = Folder.builder()
+			.id(body.getFolderId())
+			.build();
+
 		Memo memo = Memo.builder()
 			.content(body.getMemoContent())
-			.folder(Folder.builder().)
+			.folder(folder)
 			.build();
+
 		memo = memoRepository.save(memo);
-		return memo.getId();
+		return memo;
 	}
 }

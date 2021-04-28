@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,6 +66,12 @@ class FolderRepositoryTest {
 			.title(TEST_TITLE_VALUE2)
 			.color(FolderColor.RED)
 			.build();
+	}
+
+	@AfterEach
+	public void afterEach() {
+		userRepository.deleteAll();
+		folderRepository.deleteAll();
 	}
 
 	@DisplayName("Folder를 조회할 수 있다.")

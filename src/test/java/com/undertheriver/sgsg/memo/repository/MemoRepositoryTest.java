@@ -34,8 +34,6 @@ class MemoRepositoryTest {
 	private FolderService folderService;
 	@Autowired
 	private MemoService memoService;
-	@Autowired
-	private MemoRepository memoRepository;
 
 	User user;
 	Folder folder;
@@ -72,9 +70,10 @@ class MemoRepositoryTest {
 			.memoContent(FOLDER_TITLE_TEST)
 			.build();
 
-		Long memoId = memoService.save(user.getId(), createMemoReq1);
 		Assertions.assertDoesNotThrow(
-			() -> memoRepository.findById(memoId).get()
+			() -> {
+				memoService.save(user.getId(), createMemoReq1);
+			}
 		);
 	}
 
@@ -87,11 +86,14 @@ class MemoRepositoryTest {
 			.memoContent(FOLDER_TITLE_TEST)
 			.build();
 
-		Long memoId = memoService.save(user.getId(), createMemoNoFolderReq1);
 		Assertions.assertDoesNotThrow(() -> {
-				Memo savedMemo = memoRepository.findById(memoId).get();
-				Folder folder = folderService.read(savedMemo.getFolder().getId()).get();
-				assertThat(folder.getTitle()).isEqualTo(folder.getTitle());
+				Memo savedMemo = memoService.save(user.getId(), createMemoNoFolderReq1);
+				Folder joinFolder = savedMemo.getFolder();
+
+				assertThat(joinFolder.getId()).isNotEqualTo(null);
+				// assertThat(joinFolder.getTitle()).isEqualTo(createFolderReq1.getTitle());
+				// assertThat(joinFolder.getColor()).isEqualTo(createFolderReq1.getColor());
+				// assertThat(savedMemo.getContent()).isEqualTo(FOLDER_TITLE_TEST);
 			}
 		);
 	}
