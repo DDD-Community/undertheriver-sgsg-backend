@@ -1,5 +1,9 @@
 package com.undertheriver.sgsg.memo.repository;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,19 +17,22 @@ import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
 import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
+import com.undertheriver.sgsg.memo.service.MemoService;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
 
 @SpringBootTest
 class MemoRepositoryTest {
 	@Autowired
-	private MemoRepository memoRepository;
-	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private FolderRepository folderRepository;
 	@Autowired
 	private FolderService folderService;
+	@Autowired
+	private MemoService memoService;
+	@Autowired
+	private MemoRepository memoRepository;
 
 	User user;
 	Folder folder;
@@ -59,5 +66,10 @@ class MemoRepositoryTest {
 			.folderTitle(folder.getTitle())
 			.content("메모입니다 메모")
 			.build();
+
+		Long memoId = memoService.save(user.getId(), createMemoReq1);
+		Assertions.assertDoesNotThrow(
+			() -> memoRepository.findById(memoId).get()
+		);
 	}
 }
