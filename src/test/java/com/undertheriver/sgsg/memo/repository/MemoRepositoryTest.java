@@ -3,6 +3,7 @@ package com.undertheriver.sgsg.memo.repository;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +35,8 @@ class MemoRepositoryTest {
 	private FolderService folderService;
 	@Autowired
 	private MemoService memoService;
+	@Autowired
+	private MemoRepository memoRepository;
 
 	User user;
 	Folder folder;
@@ -56,6 +59,13 @@ class MemoRepositoryTest {
 			.title("폴더 테스트")
 			.color(FolderColor.RED)
 			.build();
+	}
+
+	@AfterEach
+	public void afterEach() {
+		memoRepository.deleteAll();
+		folderRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("폴더가 있을 때 메모를 생성할 수 있다.")
