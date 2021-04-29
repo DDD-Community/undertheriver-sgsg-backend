@@ -70,8 +70,8 @@ class FolderRepositoryTest {
 
 	@AfterEach
 	public void afterEach() {
-		userRepository.deleteAll();
 		folderRepository.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("Folder를 조회할 수 있다.")

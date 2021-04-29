@@ -1,5 +1,9 @@
 package com.undertheriver.sgsg.memo.controller;
 
+import java.net.URI;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,10 +61,21 @@ public class MemoController {
 
 	@ApiOperation(value = "메모 저장")
 	@PostMapping
-	public void save(
+	public ResponseEntity<Object> save(
 		@LoginUserId Long userId,
 		@RequestBody MemoDto.CreateMemoReq body) {
-		memoService.save(userId, body);
+		try {
+			Long id = memoService.save(userId, body).getId();
+			URI location = new URI("/api/v1/memos/" + id);
+			return ResponseEntity.created(location)
+				.build();
+		} catch (IndexOutOfBoundsException e) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+				.body(e.getMessage());
+		} catch (Exception e) {
+			return ResponseEntity.badRequest()
+				.body(e.getMessage());
+		}
 	}
 
 	@ApiOperation(value = "메모 내용 수정")
