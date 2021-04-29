@@ -88,12 +88,13 @@ class MemoRepositoryTest {
 
 		Assertions.assertDoesNotThrow(() -> {
 				Memo savedMemo = memoService.save(user.getId(), createMemoNoFolderReq1);
-				Folder joinFolder = savedMemo.getFolder();
+				Long joinFolderId = savedMemo.getFolder().getId();
+				Folder joinFolder = folderService.read(joinFolderId).get();
 
 				assertThat(joinFolder.getId()).isNotEqualTo(null);
-				// assertThat(joinFolder.getTitle()).isEqualTo(createFolderReq1.getTitle());
-				// assertThat(joinFolder.getColor()).isEqualTo(createFolderReq1.getColor());
-				// assertThat(savedMemo.getContent()).isEqualTo(FOLDER_TITLE_TEST);
+				assertThat(joinFolder.getTitle()).isEqualTo(createFolderReq1.getTitle());
+				assertThat(joinFolder.getColor()).isEqualTo(createFolderReq1.getColor());
+				assertThat(savedMemo.getContent()).isEqualTo(FOLDER_TITLE_TEST);
 			}
 		);
 	}
