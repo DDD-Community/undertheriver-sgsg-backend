@@ -46,7 +46,7 @@ public class FolderController {
 		@LoginUserId Long userId,
 		final PageRequest pageable
 	) 
-        List<FolderDto.ReadFolderRes> folders = folderService.readAll(userId);
+        List<FolderDto.ReadFolderRes> folders = folderService.readAll(userId, pageable);
         return ApiResult.OK(folders);
     }
 

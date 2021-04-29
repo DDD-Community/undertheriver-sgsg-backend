@@ -12,6 +12,8 @@ import com.undertheriver.sgsg.foler.domain.Folder;
 public interface FolderRepository extends JpaRepository<Folder, Long> {
 	List<Folder> findByUserIdAndDeletedFalseOrDeletedNull(Long userId, Pageable page);
 
+	List<Folder> findAllByUserId(Long userId);
+
 	Integer countByUserId(Long userId);
 
 	Integer countByUserIdAndDeletedFalseOrDeletedNull(Long userId);

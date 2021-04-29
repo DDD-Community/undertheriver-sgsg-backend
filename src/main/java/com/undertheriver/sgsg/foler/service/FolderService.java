@@ -48,10 +48,8 @@ public class FolderService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<FolderDto.ReadFolderRes> readAll(Long userId) {
-		PageRequest pageRequest = new PageRequest(pagingConfig.getFolderConfig());
-		return folderRepository.findByUserIdAndDeletedFalseOrDeletedNull(
-			userId, pageRequest.of(Sort.Direction.ASC, "createdAt"))
+	public List<FolderDto.ReadFolderRes> readAll(Long userId, PageRequest pageable) {
+		return folderRepository.findByUserIdAndDeletedFalseOrDeletedNull(userId, pageable.of())
 			.stream()
 			.map(FolderDto.ReadFolderRes::toDto)
 			.collect(Collectors.toList());
