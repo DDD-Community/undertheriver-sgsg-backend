@@ -24,13 +24,7 @@ public class MemoService {
 	public Memo save(Long userId, MemoDto.CreateMemoReq body) {
 		
 		if (body.getFolderId() == null) {
-			String folderTitle = body.getFolderTitle();
-			FolderColor folderColor = body.getFolderColor();
-
-			FolderDto.CreateFolderReq req = FolderDto.CreateFolderReq.builder()
-				.title(folderTitle)
-				.color(folderColor)
-				.build();
+			FolderDto.CreateFolderReq req = getCreateFolderReq(body);
 
 			Long folderId = folderService.save(userId, req).getId();
 			body.setFolderId(folderId);
@@ -47,5 +41,14 @@ public class MemoService {
 
 		memo = memoRepository.save(memo);
 		return memo;
+	}
+
+	private FolderDto.CreateFolderReq getCreateFolderReq(MemoDto.CreateMemoReq body) {
+		String folderTitle = body.getFolderTitle();
+		FolderColor folderColor = body.getFolderColor();
+		return FolderDto.CreateFolderReq.builder()
+			.title(folderTitle)
+			.color(folderColor)
+			.build();
 	}
 }
