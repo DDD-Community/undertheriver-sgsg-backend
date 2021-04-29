@@ -2,12 +2,14 @@ package com.undertheriver.sgsg.common.dto;
 
 import java.util.Map;
 
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Sort;
 
 import com.undertheriver.sgsg.config.PagingConfig;
 
 import lombok.Getter;
 
+@NoArgsConstructor
 @Getter
 public final class PageRequest {
 
