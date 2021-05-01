@@ -2,6 +2,7 @@ package com.undertheriver.sgsg.common.dto;
 
 import java.util.Map;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Sort;
 
@@ -18,6 +19,7 @@ public final class PageRequest {
 	private Sort.Direction direction;
 	private String orderBy;
 
+	@Builder
 	public PageRequest(int page, int size, Sort.Direction direction, String orderBy) {
 		this.page = page;
 		this.size = size;
