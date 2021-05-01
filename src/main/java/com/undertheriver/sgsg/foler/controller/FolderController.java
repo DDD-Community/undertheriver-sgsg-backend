@@ -40,15 +40,15 @@ public class FolderController {
 		return ApiResult.OK(location);
 	}
 
-    @ApiOperation("폴더 조회")
-    @GetMapping
-    public ApiResult<List<FolderDto.ReadFolderRes>> read(
+	@ApiOperation("폴더 조회")
+	@GetMapping
+	public ApiResult<List<FolderDto.ReadFolderRes>> read(
 		@LoginUserId Long userId,
 		final PageRequest pageable
-	) 
-        List<FolderDto.ReadFolderRes> folders = folderService.readAll(userId, pageable);
-        return ApiResult.OK(folders);
-    }
+	) {
+		List<FolderDto.ReadFolderRes> folders = folderService.readAll(userId, pageable);
+		return ApiResult.OK(folders);
+	}
 
     @ApiOperation("폴더 이름 수정")
     @PutMapping("/{id}/title")
