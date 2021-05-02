@@ -117,15 +117,19 @@ class FolderRepositoryTest {
 	@DisplayName("Folder를 수정할 수 있다")
 	@Test
 	public void updateFolder() {
+
 		Folder beforeFolder1 = folderRepository.save(createFolderReq1.toEntity());
+		String beforeFolderTitle1 = beforeFolder1.getTitle();
+
 		Folder beforeFolder2 = folderRepository.save(createFolderReq2.toEntity());
+		String beforeFolderTitle2 = beforeFolder2.getTitle();
 
 		updateFolderReq1 = FolderDto.UpdateFolderReq.builder()
-			.title(beforeFolder2.getTitle())
-			.build();
+				.title(beforeFolderTitle2)
+				.build();
 
 		updateFolderReq2 = FolderDto.UpdateFolderReq.builder()
-			.title(beforeFolder1.getTitle())
+			.title(beforeFolderTitle1)
 			.build();
 
 		List<FolderDto.UpdateFolderReq> req = new ArrayList<>();
@@ -136,8 +140,8 @@ class FolderRepositoryTest {
 		FolderDto.ReadFolderRes afterFolder2 = folderService.update(beforeFolder2.getId(), req.get(1));
 
 		assertAll(
-			() -> assertThat(beforeFolder1.getTitle()).isNotEqualTo(afterFolder1.getTitle()),
-			() -> assertThat(beforeFolder2.getTitle()).isNotEqualTo(afterFolder2.getTitle())
+			() -> assertThat(beforeFolderTitle1).isNotEqualTo(afterFolder1.getTitle()),
+			() -> assertThat(beforeFolderTitle2).isNotEqualTo(afterFolder2.getTitle())
 		);
 	}
 
@@ -155,4 +159,3 @@ class FolderRepositoryTest {
 		);
 	}
 }
-
