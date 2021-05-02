@@ -62,7 +62,8 @@ public abstract class AcceptanceTest {
 					.all()
 				.statusCode(HttpStatus.SC_OK)
 				.extract()
-					.as(classType);
+					.jsonPath()
+						.getObject("response", classType);
 		//@formatter:on
 	}
 
@@ -82,7 +83,7 @@ public abstract class AcceptanceTest {
 				.statusCode(HttpStatus.SC_OK)
 				.extract()
 					.jsonPath()
-						.getList(".", classType);
+						.getList("response", classType);
 		//@formatter:on
 	}
 
