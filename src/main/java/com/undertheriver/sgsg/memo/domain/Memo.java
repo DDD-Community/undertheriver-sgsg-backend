@@ -23,31 +23,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Memo extends BaseEntity {
 
-	@Id
-	@GeneratedValue
-	private long id;
+    @Id
+    @GeneratedValue
+    private long id;
 
-	@Lob
-	private String content;
+    @Lob
+    private String content;
 
-	private Boolean isSecret;
+    private Boolean isSecret;
 
-	private Boolean isFavorite;
+    private Boolean isFavorite;
 
-	private String thumbnailUrl;
+    private String thumbnailUrl;
 
-	@ManyToOne
-	@JoinColumn(name = "folder", updatable = false)
-	private Folder folder;
+    @ManyToOne
+    @JoinColumn(name = "folder", updatable = false)
+    private Folder folder;
 
-	@Builder
-	public Memo(long id, String content, Boolean isSecret, Boolean isFavorite, String thumbnailUrl,
-		Folder folder) {
-		this.id = id;
-		this.content = content;
-		this.isSecret = isSecret;
-		this.isFavorite = isFavorite;
-		this.thumbnailUrl = thumbnailUrl;
-		this.folder = folder;
-	}
+    @Builder
+    public Memo(String content, Boolean isSecret, Boolean isFavorite, String thumbnailUrl, Folder folder) {
+        this.content = content;
+        this.isSecret = isSecret;
+        this.isFavorite = isFavorite;
+        this.thumbnailUrl = thumbnailUrl;
+        this.folder = folder;
+    }
 }
