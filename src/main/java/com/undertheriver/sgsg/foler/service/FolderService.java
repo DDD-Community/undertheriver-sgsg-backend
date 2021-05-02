@@ -50,8 +50,8 @@ public class FolderService {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<Folder> read(Long folderId) {
-		return folderRepository.findById(folderId);
+	public Folder read(Long folderId) {
+		return folderRepository.findById(folderId).get();
 	}
 
 	@Transactional
