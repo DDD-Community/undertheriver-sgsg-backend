@@ -3,6 +3,8 @@ package com.undertheriver.sgsg.foler.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.undertheriver.sgsg.user.domain.User;
+import com.undertheriver.sgsg.user.service.UserService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class FolderService {
 	private final FolderRepository folderRepository;
+	private final UserService userService;
 	private final PagingConfig pagingConfig;
 
 	@Transactional
@@ -30,7 +33,12 @@ public class FolderService {
 			throw new IndexOutOfBoundsException(
 				String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", limit));
 		}
-		return folderRepository.save(req.toEntity()).getId();
+
+		Folder folder = folderRepository.save(req.toEntity());
+		User loginUser = userService.findById(userId);
+		folder.setUser(loginUser);
+		loginUser.addFolder(folder);
+		return folder.getId();
 	}
 
 	private boolean isFoldersExistsMoreThan20(Long userId, Integer limit) {
