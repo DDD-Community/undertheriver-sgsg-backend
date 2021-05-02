@@ -35,9 +35,8 @@ public class MemoDto {
 			this.memoContent = memoContent;
 		}
 
-		public Memo toEntity(Folder folder) {
+		public Memo toEntity() {
 			return Memo.builder()
-					.folder(folder)
 					.content(memoContent)
 					.build();
 		}

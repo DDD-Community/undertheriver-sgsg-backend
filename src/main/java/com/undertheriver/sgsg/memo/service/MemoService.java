@@ -22,24 +22,18 @@ public class MemoService {
 
 	@Transactional
 	public Memo save(Long userId, MemoDto.CreateMemoReq body) {
-		
+		Folder folder;
+
 		if (body.getFolderId() == null) {
 			FolderDto.CreateFolderReq req = getCreateFolderReq(body);
-
-			Long folderId = folderService.save(userId, req).getId();
-			body.setFolderId(folderId);
+			folder = folderService.save(userId, req);
+		} else {
+			folder = folderService.read(body.getFolderId());
 		}
-
-		Folder folder = Folder.builder()
-			.id(body.getFolderId())
-			.build();
-
-		Memo memo = Memo.builder()
-			.content(body.getMemoContent())
-			.folder(folder)
-			.build();
-
-		memo = memoRepository.save(memo);
+		
+		Memo memo = memoRepository.save(body.toEntity());
+		memo.setFolder(folder);
+		folder.addMemo(memo);
 		return memo;
 	}
 
