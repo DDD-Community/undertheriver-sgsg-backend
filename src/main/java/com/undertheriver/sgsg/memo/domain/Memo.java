@@ -52,4 +52,8 @@ public class Memo extends BaseEntity {
     public void setFolder(Folder folder)  {
         this.folder = folder;
     }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
+import com.undertheriver.sgsg.memo.domain.Memo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -129,7 +130,6 @@ class FolderServiceTest {
     @Test
     public void nextColorTestCase1() {
         // given
-        FolderColor[] colors = FolderColor.values();
         FolderColor expectedColor = FolderColor.values()[0];
         int notExistFolder = 0;
 

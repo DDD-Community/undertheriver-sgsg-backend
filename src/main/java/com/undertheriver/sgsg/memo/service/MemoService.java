@@ -32,7 +32,6 @@ public class MemoService {
 		}
 		
 		Memo memo = memoRepository.save(body.toEntity());
-		memo.setFolder(folder);
 		folder.addMemo(memo);
 		return memo;
 	}
