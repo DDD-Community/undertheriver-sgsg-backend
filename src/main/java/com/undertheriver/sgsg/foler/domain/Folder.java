@@ -55,6 +55,9 @@ public class Folder extends BaseEntity {
 	public void update(FolderDto.UpdateFolderReq dto) {
 		this.title = dto.getTitle();
 	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
 
 
