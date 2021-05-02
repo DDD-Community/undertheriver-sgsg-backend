@@ -48,4 +48,8 @@ public class Memo extends BaseEntity {
         this.thumbnailUrl = thumbnailUrl;
         this.folder = folder;
     }
+
+    public void setFolder(Folder folder)  {
+        this.folder = folder;
+    }
 }

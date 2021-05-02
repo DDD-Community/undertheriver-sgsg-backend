@@ -46,8 +46,7 @@ public class Folder extends BaseEntity {
 	private List<Memo> memos = new ArrayList<>();
 
 	@Builder
-	public Folder(Long id, String title, FolderColor color, User user) {
-		this.id =  id;
+	public Folder(String title, FolderColor color, User user) {
 		this.title = title;
 		this.color = color;
 		this.user = user;
@@ -55,6 +54,10 @@ public class Folder extends BaseEntity {
 
 	public void update(FolderDto.UpdateFolderReq dto) {
 		this.title = dto.getTitle();
+	}
+
+	public void addMemo(Memo memo) {
+		this.memos.add(memo);
 	}
 }
 

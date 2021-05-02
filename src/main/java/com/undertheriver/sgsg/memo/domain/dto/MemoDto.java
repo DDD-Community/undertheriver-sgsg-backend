@@ -2,6 +2,8 @@ package com.undertheriver.sgsg.memo.domain.dto;
 
 import javax.validation.constraints.NotNull;
 
+import com.undertheriver.sgsg.foler.domain.Folder;
+import com.undertheriver.sgsg.memo.domain.Memo;
 import org.springframework.lang.Nullable;
 
 import com.undertheriver.sgsg.foler.domain.FolderColor;
@@ -31,6 +33,13 @@ public class MemoDto {
 			this.folderTitle = folderTitle;
 			this.folderColor = folderColor;
 			this.memoContent = memoContent;
+		}
+
+		public Memo toEntity(Folder folder) {
+			return Memo.builder()
+					.folder(folder)
+					.content(memoContent)
+					.build();
 		}
 	}
 }
