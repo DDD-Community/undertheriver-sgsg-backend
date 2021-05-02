@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,8 @@ import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
+
+import javax.transaction.Transactional;
 
 @SpringBootTest
 class FolderRepositoryTest {
@@ -148,6 +151,24 @@ class FolderRepositoryTest {
 		assertAll(
 			() -> assertThat(FolderColor.getNextColor(folderSize1)).isEqualTo(firstColor),
 			() -> assertThat(FolderColor.getNextColor(folderSize2)).isEqualTo(firstColor)
+		);
+	}
+
+	@DisplayName("폴더 생성 시 유저와 관계 매핑을 할 수 있다")
+	@Test
+	@Transactional
+	public void mappingFolderUser() {
+		Long folderId = folderService.save(user.getId(), createFolderReq1);
+		Folder folder = folderRepository.findById(folderId).get();
+
+		User parent = folder.getUser();
+		List<Folder> child = parent.getFolders()
+				.stream()
+				.filter(f -> f.getId().equals(folderId))
+				.collect(Collectors.toList());
+
+		assertAll(
+				() -> assertThat(child.size()).isGreaterThan(0)
 		);
 	}
 }
