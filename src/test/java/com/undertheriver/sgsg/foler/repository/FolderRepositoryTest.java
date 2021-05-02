@@ -25,7 +25,9 @@ import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest
 class FolderRepositoryTest {
 	@Autowired
@@ -66,12 +68,6 @@ class FolderRepositoryTest {
 			.title(TEST_TITLE_VALUE2)
 			.color(FolderColor.RED)
 			.build();
-	}
-
-	@AfterEach
-	public void afterEach() {
-		folderRepository.deleteAll();
-		userRepository.deleteAll();
 	}
 
 	@DisplayName("Folder를 조회할 수 있다.")

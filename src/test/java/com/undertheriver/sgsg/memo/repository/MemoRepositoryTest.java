@@ -22,7 +22,9 @@ import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.service.MemoService;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest
 class MemoRepositoryTest {
 	private static final String FOLDER_TITLE_TEST = "메모입니다 메모";
@@ -35,8 +37,6 @@ class MemoRepositoryTest {
 	private FolderService folderService;
 	@Autowired
 	private MemoService memoService;
-	@Autowired
-	private MemoRepository memoRepository;
 
 	private User user;
 	private Folder folder;
@@ -59,13 +59,6 @@ class MemoRepositoryTest {
 			.title("폴더 테스트")
 			.color(FolderColor.RED)
 			.build();
-	}
-
-	@AfterEach
-	public void afterEach() {
-		memoRepository.deleteAll();
-		folderRepository.deleteAll();
-		userRepository.deleteAll();
 	}
 
 	@DisplayName("폴더가 있을 때 메모를 생성할 수 있다.")
