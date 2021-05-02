@@ -37,11 +37,11 @@ class FolderRepositoryTest {
 	@Autowired
 	private PagingConfig pagingConfig;
 
-	FolderDto.CreateFolderReq createFolderReq1;
-	FolderDto.CreateFolderReq createFolderReq2;
-	FolderDto.UpdateFolderReq updateFolderReq1;
-	FolderDto.UpdateFolderReq updateFolderReq2;
-	User user;
+	private FolderDto.CreateFolderReq createFolderReq1;
+	private FolderDto.CreateFolderReq createFolderReq2;
+	private FolderDto.UpdateFolderReq updateFolderReq1;
+	private FolderDto.UpdateFolderReq updateFolderReq2;
+	private User user;
 
 	private static final String TEST_TITLE_VALUE1 = "테스트 폴더";
 	private static final String TEST_TITLE_VALUE2 = "테스트 폴더2";

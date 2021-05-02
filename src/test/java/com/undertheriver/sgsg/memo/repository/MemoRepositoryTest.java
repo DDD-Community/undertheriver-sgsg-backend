@@ -38,11 +38,11 @@ class MemoRepositoryTest {
 	@Autowired
 	private MemoRepository memoRepository;
 
-	User user;
-	Folder folder;
-	FolderDto.CreateFolderReq createFolderReq1;
-	MemoDto.CreateMemoReq createMemoReq1;
-	MemoDto.CreateMemoReq createMemoNoFolderReq1;
+	private User user;
+	private Folder folder;
+	private FolderDto.CreateFolderReq createFolderReq1;
+	private MemoDto.CreateMemoReq createMemoReq1;
+	private MemoDto.CreateMemoReq createMemoNoFolderReq1;
 
 	@BeforeEach
 	public void beforeEach() {
