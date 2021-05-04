@@ -79,7 +79,7 @@ class FolderServiceTest {
     @DisplayName("Folder를 20개 이하일 때만 저장할 수 있다.")
     @Test
     public void save() {
-        Long id = folderService.save(user.getId(), createFolderReq).getId();
+        Long id = folderService.save(user.getId(), createFolderReq);
         assertAll(
                 () -> assertThat(id).isNotEqualTo(null)
         );
@@ -110,7 +110,8 @@ class FolderServiceTest {
     @Test
     public void updateFolder() {
         // given
-        Folder folder = folderService.save(user.getId(), createFolderReq);
+        Folder folder = folderRepository.save(createFolderReq.toEntity());
+        user.addFolder(folder);
         String defaultTitle = folder.getTitle();
         String expectedTitle = TEST_TITLE_VALUE2;
         updateFolderReq = FolderDto.UpdateFolderReq.builder()

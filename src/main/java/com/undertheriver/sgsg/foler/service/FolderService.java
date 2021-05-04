@@ -3,6 +3,8 @@ package com.undertheriver.sgsg.foler.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.undertheriver.sgsg.user.domain.User;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +28,22 @@ public class FolderService {
 	private final PagingConfig pagingConfig;
 
 	@Transactional
-	public Folder save(Long userId, FolderDto.CreateFolderReq req) {
+	public Long save(Long userId, FolderDto.CreateFolderReq req) {
 		Integer limit = pagingConfig.getFolderConfig().get("limit");
 
-		if (foldersExistsMoreThanLimit(userId, limit)) {
+		if (foldersExistMoreThanLimit(userId, limit)) {
 			throw new IndexOutOfBoundsException(
 				String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", limit));
 		}
 
-		Folder folder = req.toEntity();
-		userRepository.findById(userId).orElseThrow(ModelNotFoundException::new);
-		return folderRepository.save(folder);
+		User user = userRepository.findById(userId)
+			.orElseThrow(ModelNotFoundException::new);
+		Folder folder = folderRepository.save(req.toEntity());
+		user.addFolder(folder);
+		return folder.getId();
 	}
 
-	private boolean foldersExistsMoreThanLimit(Long userId, Integer limit) {
+	private boolean foldersExistMoreThanLimit(Long userId, Integer limit) {
 		return folderRepository.countByUserIdAndDeletedFalseOrDeletedNull(userId) >= limit;
 	}
 

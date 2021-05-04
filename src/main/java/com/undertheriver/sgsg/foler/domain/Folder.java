@@ -61,6 +61,10 @@ public class Folder extends BaseEntity {
         memo.setFolder(this);
     }
 
+    public void mapUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {

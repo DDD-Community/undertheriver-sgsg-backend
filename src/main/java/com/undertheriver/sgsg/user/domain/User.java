@@ -84,4 +84,9 @@ public class User extends BaseEntity {
 		setDeleted(true);
 		return this;
 	}
+
+	public void addFolder(Folder folder) {
+		this.folders.add(folder);
+		folder.mapUser(this);
+	}
 }

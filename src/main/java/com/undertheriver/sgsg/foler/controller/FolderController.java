@@ -33,7 +33,7 @@ public class FolderController {
             @LoginUserId Long userId,
             @RequestBody FolderDto.CreateFolderReq dto) {
         try {
-            Long id = folderService.save(userId, dto).getId();
+            Long id = folderService.save(userId, dto);
             URI location = new URI("/api/folders/" + id);
             return ApiResult.OK(location);
         } catch (IndexOutOfBoundsException e) {

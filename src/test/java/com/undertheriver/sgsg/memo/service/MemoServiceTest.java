@@ -61,7 +61,7 @@ class MemoServiceTest {
     @Test
     public void create() {
         // given
-        Long folderId = folderService.save(user.getId(), createFolderReq1).getId();
+        Long folderId = folderService.save(user.getId(), createFolderReq1);
         folder = folderRepository.findById(folderId).get();
         createMemoReq1 = MemoDto.CreateMemoReq.builder()
                 .folderId(folder.getId())
@@ -94,11 +94,10 @@ class MemoServiceTest {
         // when
         Memo actualMemo = memoService.save(user.getId(), createMemoNoFolderReq1);
         Long actualFolderId = actualMemo.getFolder().getId();
-        boolean expectedTrue = folderService.read(actualFolderId)
-                .getId()
-                .equals(actualFolderId);
+        Long expectedFolderId = folderService.read(actualFolderId)
+                .getId();
 
         // then
-        assertTrue(expectedTrue);
+        assertEquals(expectedFolderId, actualFolderId);
     }
 }

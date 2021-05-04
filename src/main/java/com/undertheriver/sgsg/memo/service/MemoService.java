@@ -28,6 +28,9 @@ public class MemoService {
 	@Transactional
 	public Memo save(Long userId, MemoDto.CreateMemoReq body) {
 		Folder folder = createOrReadFolder(body);
+		User user = userRepository.findById(userId)
+			.orElseThrow(ModelNotFoundException::new);
+		user.addFolder(folder);
 		Memo memo = memoRepository.save(body.toMemoEntity());
 		folder.addMemo(memo);
 		return memo;
@@ -41,14 +44,5 @@ public class MemoService {
 		}
 
 		return folderRepository.save(body.toFolderEntity());
-	}
-
-	private FolderDto.CreateFolderReq getCreateFolderReq(MemoDto.CreateMemoReq body) {
-		String folderTitle = body.getFolderTitle();
-		FolderColor folderColor = body.getFolderColor();
-		return FolderDto.CreateFolderReq.builder()
-			.title(folderTitle)
-			.color(folderColor)
-			.build();
 	}
 }
