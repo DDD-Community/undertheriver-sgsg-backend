@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.undertheriver.sgsg.common.ApiResult;
 import com.undertheriver.sgsg.common.annotation.LoginUserId;
+import com.undertheriver.sgsg.core.ApiResult;
 import com.undertheriver.sgsg.user.controller.dto.UserDto;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.service.UserService;
