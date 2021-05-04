@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class RestAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
 	private final HttpCookieOAuth2AuthorizationRequestRepository authorizationRequestRepository;
 

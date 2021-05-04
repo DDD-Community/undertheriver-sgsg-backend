@@ -31,13 +31,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @Slf4j
-public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 	private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 	private final JwtProvider jwtProvider;
 	private final Set<URI> authorizedRedirectUris;
 
-	public CustomAuthenticationSuccessHandler(
+	public RestAuthenticationSuccessHandler(
 		HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
 		JwtProvider jwtProvider,
 		AppProperties appProperties
