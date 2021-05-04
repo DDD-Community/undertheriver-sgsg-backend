@@ -14,6 +14,7 @@ import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
+import com.undertheriver.sgsg.user.domain.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class FolderService {
 	private final FolderRepository folderRepository;
+	private final UserRepository userRepository;
 	private final PagingConfig pagingConfig;
 
 	@Transactional
@@ -33,6 +35,7 @@ public class FolderService {
 		}
 
 		Folder folder = req.toEntity();
+		userRepository.findById(userId).orElseThrow(ModelNotFoundException::new);
 		return folderRepository.save(folder);
 	}
 
@@ -43,7 +46,6 @@ public class FolderService {
 	@Transactional(readOnly = true)
 	public List<FolderDto.ReadFolderRes> readAll(Long userId) {
 		PageRequest pageRequest = new PageRequest(pagingConfig.getFolderConfig());
-
 		return folderRepository.findByUserIdAndDeletedFalseOrDeletedNull(
 			userId, pageRequest.of(Sort.Direction.ASC, "createdAt"))
 			.stream()

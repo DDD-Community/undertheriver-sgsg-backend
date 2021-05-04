@@ -35,10 +35,21 @@ public class MemoDto {
 			this.memoContent = memoContent;
 		}
 
-		public Memo toEntity() {
+		public Memo toMemoEntity() {
 			return Memo.builder()
 					.content(memoContent)
 					.build();
+		}
+
+		public Folder toFolderEntity() {
+			return Folder.builder()
+				.title(folderTitle)
+				.color(folderColor)
+				.build();
+		}
+
+		public boolean hasFolderId() {
+			return folderId != null;
 		}
 	}
 }
