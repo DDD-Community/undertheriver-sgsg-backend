@@ -1,7 +1,7 @@
 package com.undertheriver.sgsg.foler.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,32 +29,62 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Folder extends BaseEntity {
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	private String title;
+    private String title;
 
-	@Enumerated(EnumType.STRING)
-	private FolderColor color;
+    @Enumerated(EnumType.STRING)
+    private FolderColor color;
 
-	@ManyToOne
-	@JoinColumn(name = "user")
-	private User user;
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private User user;
 
-	@OneToMany(mappedBy = "folder")
-	private List<Memo> memos = new ArrayList<>();
+    @OneToMany(mappedBy = "folder")
+    private Set<Memo> memos = new HashSet<>();
 
-	@Builder
-	public Folder(String title, FolderColor color, User user) {
-		this.title = title;
-		this.color = color;
-		this.user = user;
-	}
+    @Builder
+    public Folder(String title, FolderColor color, User user) {
+        this.title = title;
+        this.color = color;
+        this.user = user;
+    }
 
-	public void update(FolderDto.UpdateFolderReq dto) {
-		this.title = dto.getTitle();
-	}
+    public void update(FolderDto.UpdateFolderReq dto) {
+        this.title = dto.getTitle();
+    }
+
+    public void addMemo(Memo memo) {
+        this.memos.add(memo);
+        memo.setFolder(this);
+    }
+
+    public void mapUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof Folder)) {
+            return false;
+        }
+
+        final Folder folder = (Folder) other;
+        Long otherId = folder.getId();
+
+        return otherId.equals(this.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
+    }
 }
 
 
