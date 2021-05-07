@@ -1,4 +1,4 @@
-package com.undertheriver.sgsg.common;
+package com.undertheriver.sgsg.core;
 
 import org.springframework.http.HttpStatus;
 
