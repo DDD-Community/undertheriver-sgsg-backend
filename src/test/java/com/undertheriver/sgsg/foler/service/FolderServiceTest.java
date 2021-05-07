@@ -65,15 +65,14 @@ class FolderServiceTest {
     @DisplayName("Folder를 조회할 수 있다.")
     @Test
     public void read() {
+        // given
         folderRepository.save(createFolderReq.toEntity());
 
-        PageRequest pageRequest = new PageRequest(pagingConfig.getFolderConfig());
-        List<Folder> folder = folderRepository.findByUserIdAndDeletedFalseOrDeletedNull(
-                user.getId(), pageRequest.of(Sort.Direction.ASC, "createdAt"));
+        // when
+        List<FolderDto.ReadFolderRes> folders = folderService.readAll(user.getId());
+        int actualSize = folders.size();
 
-        assertAll(
-                () -> assertThat(folder.size()).isGreaterThan(0)
-        );
+        assertTrue(actualSize > 0);
     }
 
     @DisplayName("Folder를 20개 이하일 때만 저장할 수 있다.")
