@@ -1,6 +1,7 @@
 package com.undertheriver.sgsg.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,6 +22,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
+@EnableGlobalMethodSecurity(
+	securedEnabled = true,
+	jsr250Enabled = true,
+	prePostEnabled = true
+)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final CustomOAuth2UserService customOAuth2UserService;
@@ -33,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> cookieBasedAuthorizationRequestRepository;
 
 	private final AuthenticationEntryPoint authenticationEntryPoint;
+
+	private final AccessDeniedHandler customAccessDeniedHandler;
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -61,10 +70,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/").permitAll()
 			.anyRequest().authenticated()
 		.and()
-			.exceptionHandling()
-			.authenticationEntryPoint(authenticationEntryPoint)
-		.and()
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.exceptionHandling()
+				.accessDeniedHandler(customAccessDeniedHandler)
+				.authenticationEntryPoint(authenticationEntryPoint)
+		.and()
 		.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
