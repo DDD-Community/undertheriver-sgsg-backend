@@ -1,5 +1,7 @@
 package com.undertheriver.sgsg.core;
 
+import java.net.URISyntaxException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
@@ -46,7 +48,7 @@ public class GlobalExceptionHandler {
 		return ApiResult.ERROR(e, HttpStatus.NOT_FOUND);
 	}
 
-	@ExceptionHandler(value = {Exception.class})
+	@ExceptionHandler(value = {Exception.class, URISyntaxException.class})
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ApiResult<?> handleInternalServerError(Exception e) {
 		log.info("Exception, message: {{}}", e.getMessage());

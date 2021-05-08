@@ -1,6 +1,7 @@
 package com.undertheriver.sgsg.memo.controller;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
