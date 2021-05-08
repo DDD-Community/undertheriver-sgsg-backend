@@ -1,8 +1,12 @@
 package com.undertheriver.sgsg.foler.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -43,7 +47,7 @@ public class Folder extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "folder")
-    private Set<Memo> memos = new HashSet<>();
+    private Set<Memo> memos = new LinkedHashSet<>();
 
     @Builder
     public Folder(String title, FolderColor color, User user) {

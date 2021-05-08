@@ -36,7 +36,7 @@ public class Memo extends BaseEntity {
     private String thumbnailUrl;
 
     @ManyToOne
-    @JoinColumn(name = "folder", updatable = false)
+    @JoinColumn(name = "folder")
     private Folder folder;
 
     @Builder
@@ -56,5 +56,26 @@ public class Memo extends BaseEntity {
         this.favorite = dto.getFavorite();
         this.thumbnailUrl = dto.getThumbnailUrl();
         this.mapFolder(folder);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof Memo)) {
+            return false;
+        }
+
+        final Memo memo = (Memo) other;
+        Long otherId = memo.getId();
+
+        return otherId.equals(this.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 }
