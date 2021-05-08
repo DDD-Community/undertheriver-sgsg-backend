@@ -1,5 +1,6 @@
 package com.undertheriver.sgsg.memo.service;
 
+import org.hibernate.sql.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,5 +45,18 @@ public class MemoService {
 		}
 
 		return folderRepository.save(body.toFolderEntity());
+	}
+
+	public Memo update(MemoDto.UpdateMemoReq body) {
+		Long folderId = body.getFolderId();
+		Folder folder = folderRepository.findById(folderId)
+			.orElseThrow(ModelNotFoundException::new);
+
+		Long memoId = body.getMemoId();
+		Memo memo = memoRepository.findById(memoId)
+			.orElseThrow(ModelNotFoundException::new);
+
+		memo.update(body, folder);
+		return memo;
 	}
 }

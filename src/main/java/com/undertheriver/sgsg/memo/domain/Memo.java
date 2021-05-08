@@ -51,9 +51,10 @@ public class Memo extends BaseEntity {
         this.folder = folder;
     }
 
-    public void update(MemoDto.UpdateMemoReq dto) {
+    public void update(MemoDto.UpdateMemoReq dto, Folder folder) {
         this.content = dto.getContent();
         this.favorite = dto.getFavorite();
         this.thumbnailUrl = dto.getThumbnailUrl();
+        this.mapFolder(folder);
     }
 }

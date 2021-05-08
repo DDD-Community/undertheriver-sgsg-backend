@@ -5,7 +5,6 @@ import javax.validation.constraints.NotNull;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.memo.domain.Memo;
 
-import org.springframework.lang.NonNullApi;
 import org.springframework.lang.Nullable;
 
 import com.undertheriver.sgsg.foler.domain.FolderColor;
@@ -66,21 +65,24 @@ public class MemoDto {
 	@Getter
 	public static class UpdateMemoReq {
 		@NotNull
-		private Long id;
+		private Long memoId;
 		@NotNull
 		private String content;
 		@Nullable
 		private Boolean favorite;
 		@Nullable
 		private String thumbnailUrl;
+		@NotNull
+		private Long folderId;
 
 		@Builder
 		public UpdateMemoReq(
-			Long id, String content, Boolean favorite, String thumbnailUrl) {
-			this.id = id;
+			Long memoId, String content, Boolean favorite, String thumbnailUrl, Long folderId) {
+			this.memoId = memoId;
 			this.content = content;
 			this.favorite = favorite;
 			this.thumbnailUrl = thumbnailUrl;
+			this.folderId = folderId;
 		}
 	}
 }

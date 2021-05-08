@@ -116,16 +116,18 @@ class MemoServiceTest {
             .build();
         memo = memoRepository.save(memo);
 
-        MemoDto.UpdateMemoReq req = MemoDto.UpdateMemoReq
-            .builder()
-            .id(memo.getId())
+        Long folderId = folderService.save(user.getId(), createFolderReq1);
+
+        MemoDto.UpdateMemoReq req = MemoDto.UpdateMemoReq.builder()
+            .memoId(memo.getId())
+            .folderId(folderId)
             .content(expectedContent)
             .thumbnailUrl(expectedThumbnailUrl)
             .favorite(expectedFavorite)
             .build();
-        memo.update(req);
 
         // when
+        memoService.update(req);
         String actualContent = memo.getContent();
         String actualThumbnailUrl = memo.getThumbnailUrl();
         Boolean actualFavorite = memo.getFavorite();
