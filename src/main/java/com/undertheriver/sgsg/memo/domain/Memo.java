@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.Folder;
+import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,9 +31,7 @@ public class Memo extends BaseEntity {
     @Lob
     private String content;
 
-    private Boolean isSecret;
-
-    private Boolean isFavorite;
+    private Boolean favorite;
 
     private String thumbnailUrl;
 
@@ -41,19 +40,20 @@ public class Memo extends BaseEntity {
     private Folder folder;
 
     @Builder
-    public Memo(String content, Boolean isSecret, Boolean isFavorite, String thumbnailUrl, Folder folder) {
+    public Memo(String content, Boolean favorite, String thumbnailUrl, Folder folder) {
         this.content = content;
-        this.isSecret = isSecret;
-        this.isFavorite = isFavorite;
+        this.favorite = favorite;
         this.thumbnailUrl = thumbnailUrl;
         this.folder = folder;
     }
 
-    public void setFolder(Folder folder)  {
+    public void mapFolder(Folder folder)  {
         this.folder = folder;
     }
 
-    public void updateContent(String content) {
-        this.content = content;
+    public void update(MemoDto.UpdateMemoReq dto) {
+        this.content = dto.getContent();
+        this.favorite = dto.getFavorite();
+        this.thumbnailUrl = dto.getThumbnailUrl();
     }
 }

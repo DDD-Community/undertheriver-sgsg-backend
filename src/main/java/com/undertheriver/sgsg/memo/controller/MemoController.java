@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Api(value = "memo")
 public class MemoController {
 
-    private final MemoService memoService;
+	private final MemoService memoService;
 
     @ApiOperation(value = "메모 저장")
     @PostMapping

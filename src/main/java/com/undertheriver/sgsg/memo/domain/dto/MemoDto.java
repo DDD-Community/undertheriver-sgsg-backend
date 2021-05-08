@@ -4,6 +4,8 @@ import javax.validation.constraints.NotNull;
 
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.memo.domain.Memo;
+
+import org.springframework.lang.NonNullApi;
 import org.springframework.lang.Nullable;
 
 import com.undertheriver.sgsg.foler.domain.FolderColor;
@@ -19,13 +21,13 @@ public class MemoDto {
 	@NoArgsConstructor
 	public static class CreateMemoReq {
 		@Nullable
-		Long folderId;
+		private Long folderId;
 		@NotNull
-		String folderTitle;
+		private String folderTitle;
 		@NotNull
-		FolderColor folderColor;
+		private FolderColor folderColor;
 		@NotNull
-		String memoContent;
+		private String memoContent;
 
 		@Builder
 		public CreateMemoReq(Long folderId, String folderTitle, FolderColor folderColor, String memoContent) {
@@ -37,8 +39,8 @@ public class MemoDto {
 
 		public Memo toMemoEntity() {
 			return Memo.builder()
-					.content(memoContent)
-					.build();
+				.content(memoContent)
+				.build();
 		}
 
 		public Folder toFolderEntity() {
@@ -50,6 +52,35 @@ public class MemoDto {
 
 		public boolean hasFolderId() {
 			return folderId != null;
+		}
+	}
+
+	public static class ReadMemoRes {
+		private Long id;
+		private String content;
+		private String createdAt;
+		private Boolean favorite;
+		private String thumbnailUrl;
+	}
+
+	@Getter
+	public static class UpdateMemoReq {
+		@NotNull
+		private Long id;
+		@NotNull
+		private String content;
+		@Nullable
+		private Boolean favorite;
+		@Nullable
+		private String thumbnailUrl;
+
+		@Builder
+		public UpdateMemoReq(
+			Long id, String content, Boolean favorite, String thumbnailUrl) {
+			this.id = id;
+			this.content = content;
+			this.favorite = favorite;
+			this.thumbnailUrl = thumbnailUrl;
 		}
 	}
 }

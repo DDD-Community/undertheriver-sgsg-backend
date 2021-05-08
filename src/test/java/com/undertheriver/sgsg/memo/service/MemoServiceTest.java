@@ -16,6 +16,7 @@ import com.undertheriver.sgsg.foler.repository.FolderRepository;
 import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
+import com.undertheriver.sgsg.memo.repository.MemoRepository;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,8 @@ class MemoServiceTest {
     private FolderService folderService;
     @Autowired
     private MemoService memoService;
+    @Autowired
+    private MemoRepository memoRepository;
 
     private User user;
     private Folder folder;
@@ -99,5 +102,37 @@ class MemoServiceTest {
 
         // then
         assertEquals(expectedFolderId, actualFolderId);
+    }
+
+    @DisplayName("메모를 수정할 수 있다.")
+    @Test
+    public void updateMemo() {
+        // given
+        String expectedContent = "다나가";
+        String expectedThumbnailUrl = "https://sgsg.site";
+        Boolean expectedFavorite = true;
+        Memo memo = Memo.builder()
+            .content("안녕")
+            .build();
+        memo = memoRepository.save(memo);
+
+        MemoDto.UpdateMemoReq req = MemoDto.UpdateMemoReq
+            .builder()
+            .id(memo.getId())
+            .content(expectedContent)
+            .thumbnailUrl(expectedThumbnailUrl)
+            .favorite(expectedFavorite)
+            .build();
+        memo.update(req);
+
+        // when
+        String actualContent = memo.getContent();
+        String actualThumbnailUrl = memo.getThumbnailUrl();
+        Boolean actualFavorite = memo.getFavorite();
+
+        // then
+        assertEquals(expectedContent, actualContent);
+        assertEquals(expectedThumbnailUrl, actualThumbnailUrl);
+        assertEquals(expectedFavorite, actualFavorite);
     }
 }
