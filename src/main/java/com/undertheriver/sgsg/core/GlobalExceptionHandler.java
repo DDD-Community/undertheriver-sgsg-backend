@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
 		return ApiResult.ERROR(e, HttpStatus.NOT_FOUND);
 	}
 
-	@ExceptionHandler(value = {Exception.class, URISyntaxException.class})
+	@ExceptionHandler(value = {Exception.class})
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ApiResult<?> handleInternalServerError(Exception e) {
 		log.info("Exception, message: {{}}", e.getMessage());
