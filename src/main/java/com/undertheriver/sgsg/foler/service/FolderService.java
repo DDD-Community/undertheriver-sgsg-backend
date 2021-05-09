@@ -64,7 +64,7 @@ public class FolderService {
 	}
 
 	@Transactional
-	public FolderDto.ReadFolderRes update(Long folderId, FolderDto.UpdateFolderReq dto) {
+	public FolderDto.ReadFolderRes update(Long folderId, FolderDto.UpdateFolderTitleReq dto) {
 		final Folder folder = folderRepository.findById(folderId)
 			.orElseThrow(ModelNotFoundException::new);
 		folder.update(dto);

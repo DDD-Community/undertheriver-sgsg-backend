@@ -52,10 +52,10 @@ public class FolderController {
         return ApiResult.OK(folders);
     }
 
-    @ApiOperation("폴더 수정")
-    @PutMapping("/{id}")
+    @ApiOperation("폴더 이름 수정")
+    @PutMapping("/{id}/title")
     public ApiResult<FolderDto.ReadFolderRes> update(
-            @PathVariable Long id, @RequestBody FolderDto.UpdateFolderReq body) {
+            @PathVariable Long id, @RequestBody FolderDto.UpdateFolderTitleReq body) {
 
         FolderDto.ReadFolderRes res = folderService.update(id, body);
 
