@@ -52,7 +52,7 @@ public class Folder extends BaseEntity {
         this.user = user;
     }
 
-    public void update(FolderDto.UpdateFolderReq dto) {
+    public void update(FolderDto.UpdateFolderTitleReq dto) {
         this.title = dto.getTitle();
     }
 

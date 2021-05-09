@@ -3,7 +3,6 @@ package com.undertheriver.sgsg.foler.controller;
 import java.net.URI;
 import java.util.List;
 
-import com.undertheriver.sgsg.common.ApiResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.undertheriver.sgsg.common.annotation.LoginUserId;
+import com.undertheriver.sgsg.core.ApiResult;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.service.FolderService;
 import io.swagger.annotations.Api;
@@ -52,10 +52,10 @@ public class FolderController {
         return ApiResult.OK(folders);
     }
 
-    @ApiOperation("폴더 수정")
-    @PutMapping("/{id}")
+    @ApiOperation("폴더 이름 수정")
+    @PutMapping("/{id}/title")
     public ApiResult<FolderDto.ReadFolderRes> update(
-            @PathVariable Long id, @RequestBody FolderDto.UpdateFolderReq body) {
+            @PathVariable Long id, @RequestBody FolderDto.UpdateFolderTitleReq body) {
 
         FolderDto.ReadFolderRes res = folderService.update(id, body);
 

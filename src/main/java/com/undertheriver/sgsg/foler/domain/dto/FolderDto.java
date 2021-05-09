@@ -33,29 +33,10 @@ public class FolderDto {
 	@Getter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class UpdateFolderTitleReq {
-		private Long id;
 		private String title;
 
 		@Builder
-		public UpdateFolderTitleReq(Long id, String title) {
-			this.id = id;
-			this.title = title;
-		}
-
-		public Folder toEntity() {
-			return Folder.builder()
-				.title(this.title)
-				.build();
-		}
-	}
-
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class UpdateFolderReq {
-		private String title;
-
-		@Builder
-		public UpdateFolderReq(String title) {
+		public UpdateFolderTitleReq(String title) {
 			this.title = title;
 		}
 	}

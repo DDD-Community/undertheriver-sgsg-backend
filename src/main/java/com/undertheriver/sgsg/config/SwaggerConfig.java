@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
 import springfox.documentation.builders.PathSelectors;
@@ -27,7 +28,7 @@ public class SwaggerConfig {
 			.useDefaultResponseMessages(false)
 			.securityContexts(Lists.newArrayList(securityContext()))
 			.select()
-			.apis(RequestHandlerSelectors.any())
+			.apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
 			.paths(PathSelectors.any())
 			.build();
 	}
