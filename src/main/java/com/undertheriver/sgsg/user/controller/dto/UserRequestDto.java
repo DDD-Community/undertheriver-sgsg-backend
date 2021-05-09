@@ -4,15 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class UserDto {
+@NoArgsConstructor
+@Getter
+public class UserRequestDto {
 
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
-    public static class DetailResponse {
-        private String name;
-        private String email;
-        private String profileImageUrl;
-        private Boolean hasFolderPassword;
+    public static class changePasswordRequest {
+        private String oldPassword;
+        private String newPassword;
     }
 }
