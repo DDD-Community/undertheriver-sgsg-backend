@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
-import com.undertheriver.sgsg.memo.domain.Memo;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ class FolderServiceTest {
     private PagingConfig pagingConfig;
 
     private FolderDto.CreateFolderReq createFolderReq;
-    private FolderDto.UpdateFolderReq updateFolderReq;
+    private FolderDto.UpdateFolderTitleReq updateFolderTitleReq;
     private User user;
 
     private static final String TEST_TITLE_VALUE1 = "테스트 폴더";
@@ -114,12 +114,12 @@ class FolderServiceTest {
         user.addFolder(folder);
         String defaultTitle = folder.getTitle();
         String expectedTitle = TEST_TITLE_VALUE2;
-        updateFolderReq = FolderDto.UpdateFolderReq.builder()
+        updateFolderTitleReq = FolderDto.UpdateFolderTitleReq.builder()
                 .title(expectedTitle)
                 .build();
 
         // when
-        String actualTitle = folderService.update(folder.getId(), updateFolderReq)
+        String actualTitle = folderService.update(folder.getId(), updateFolderTitleReq)
                 .getTitle();
 
         // then
