@@ -17,50 +17,51 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.undertheriver.sgsg.auth.service.CustomOAuth2UserService;
 import com.undertheriver.sgsg.config.security.filter.TokenAuthenticationFilter;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
 @EnableGlobalMethodSecurity(
-	securedEnabled = true,
-	jsr250Enabled = true,
-	prePostEnabled = true
+    securedEnabled = true,
+    jsr250Enabled = true,
+    prePostEnabled = true
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-	private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
-	private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final TokenAuthenticationFilter tokenAuthenticationFilter;
 
-	private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
 
-	private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> cookieBasedAuthorizationRequestRepository;
+    private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> cookieBasedAuthorizationRequestRepository;
 
-	private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
-	private final AccessDeniedHandler customAccessDeniedHandler;
+    private final AccessDeniedHandler customAccessDeniedHandler;
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring()
-			.antMatchers("/css/**",
-				"/js/**",
-				"/img/**",
-				"/lib/**",
-				"/h2-console/**",
-				"/v2/**",
-				"/webjars/**",
-				"/swagger**",
-				"/swagger-resources/**",
-				"/member/**");
-	}
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+            .antMatchers("/css/**",
+                "/js/**",
+                "/img/**",
+                "/lib/**",
+                "/h2-console/**",
+                "/v2/**",
+                "/webjars/**",
+                "/swagger**",
+                "/swagger-resources/**",
+                "/member/**");
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		//@formatter:off
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        //@formatter:off
 		http.authorizeRequests()
 			.antMatchers("/api/v1/auth/login").permitAll()
 			.antMatchers("/callback").permitAll() // FIXME 임시, 프론트 생기면 삭제 예정
@@ -97,5 +98,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.successHandler(authenticationSuccessHandler)
 				.failureHandler(authenticationFailureHandler);
 		//@formatter:on
-	}
+    }
 }

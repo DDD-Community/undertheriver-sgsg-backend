@@ -14,12 +14,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
-	private final HandlerExceptionResolver handlerExceptionResolver;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
-	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response,
-		AccessDeniedException accessDeniedException) {
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response,
+        AccessDeniedException accessDeniedException) {
 
-		handlerExceptionResolver.resolveException(request, response, null, accessDeniedException);
-	}
+        handlerExceptionResolver.resolveException(request, response, null, accessDeniedException);
+    }
 }

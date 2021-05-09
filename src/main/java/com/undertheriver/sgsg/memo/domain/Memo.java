@@ -47,7 +47,7 @@ public class Memo extends BaseEntity {
         this.folder = folder;
     }
 
-    public void mapFolder(Folder folder)  {
+    public void mapFolder(Folder folder) {
         this.folder = folder;
     }
 
@@ -68,7 +68,7 @@ public class Memo extends BaseEntity {
             return false;
         }
 
-        final Memo memo = (Memo) other;
+        final Memo memo = (Memo)other;
         Long otherId = memo.getId();
 
         return otherId.equals(this.id);

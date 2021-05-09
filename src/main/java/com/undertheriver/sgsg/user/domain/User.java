@@ -33,67 +33,67 @@ import lombok.NoArgsConstructor;
 @Table(indexes = @Index(name = "user_idx_email", columnList = "email"))
 public class User extends BaseEntity {
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private final List<UserApiClient> userApiClients = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<UserApiClient> userApiClients = new ArrayList<>();
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@OneToMany(mappedBy = "user")
-	private List<Folder> folders = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<Folder> folders = new ArrayList<>();
 
-	@Embedded
-	private UserSecretFolderPassword userSecretFolderPassword;
+    @Embedded
+    private UserSecretFolderPassword userSecretFolderPassword;
 
-	@Column(nullable = false)
-	private String email;
+    @Column(nullable = false)
+    private String email;
 
-	private String profileImageUrl;
+    private String profileImageUrl;
 
-	private String name;
+    private String name;
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private UserRole userRole;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole userRole;
 
-	// FIXME userSecretMemoPassword 추후 업데이트하는 형식으로 변경됨
-	@Builder
-	private User(String userSecretMemoPassword, String email, String profileImageUrl, String name,
-		UserRole userRole) {
-		this.userSecretFolderPassword = UserSecretFolderPassword.from(userSecretMemoPassword);
-		this.email = email;
-		this.profileImageUrl = profileImageUrl;
-		this.name = name;
-		this.userRole = userRole;
-	}
+    // FIXME userSecretMemoPassword 추후 업데이트하는 형식으로 변경됨
+    @Builder
+    private User(String userSecretMemoPassword, String email, String profileImageUrl, String name,
+        UserRole userRole) {
+        this.userSecretFolderPassword = UserSecretFolderPassword.from(userSecretMemoPassword);
+        this.email = email;
+        this.profileImageUrl = profileImageUrl;
+        this.name = name;
+        this.userRole = userRole;
+    }
 
-	public void saveApiClient(String oAuthId, String oAuthName) {
-		if (userApiClients.stream()
-			.anyMatch(userApiClient -> userApiClient.isSameOAuthName(oAuthName))) {
-			return;
-		}
-		userApiClients.add(new UserApiClient(oAuthId, oAuthName, this));
-	}
+    public void saveApiClient(String oAuthId, String oAuthName) {
+        if (userApiClients.stream()
+            .anyMatch(userApiClient -> userApiClient.isSameOAuthName(oAuthName))) {
+            return;
+        }
+        userApiClients.add(new UserApiClient(oAuthId, oAuthName, this));
+    }
 
-	public User update(String name, String profileImageUrl) {
-		this.name = name;
-		this.profileImageUrl = profileImageUrl;
-		return this;
-	}
+    public User update(String name, String profileImageUrl) {
+        this.name = name;
+        this.profileImageUrl = profileImageUrl;
+        return this;
+    }
 
-	public User delete() {
-		setDeleted(true);
-		return this;
-	}
+    public User delete() {
+        setDeleted(true);
+        return this;
+    }
 
-	public void addFolder(Folder folder) {
-		this.folders.add(folder);
-		folder.mapUser(this);
-	}
+    public void addFolder(Folder folder) {
+        this.folders.add(folder);
+        folder.mapUser(this);
+    }
 
-	public Boolean hasFolderPassword() {
-		return Objects.isNull(userSecretFolderPassword)
-			|| userSecretFolderPassword.isEmpty();
-	}
+    public Boolean hasFolderPassword() {
+        return Objects.isNull(userSecretFolderPassword)
+            || userSecretFolderPassword.isEmpty();
+    }
 }
