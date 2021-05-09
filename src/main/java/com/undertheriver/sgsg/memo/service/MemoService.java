@@ -1,15 +1,11 @@
 package com.undertheriver.sgsg.memo.service;
 
-import org.hibernate.sql.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.foler.domain.Folder;
-import com.undertheriver.sgsg.foler.domain.FolderColor;
-import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
-import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.repository.MemoRepository;
@@ -47,16 +43,16 @@ public class MemoService {
 		return folderRepository.save(body.toFolderEntity());
 	}
 
-	public Memo update(MemoDto.UpdateMemoReq body) {
+	@Transactional
+	public MemoDto.UpdateMemoRes update(Long memoId, MemoDto.UpdateMemoReq body) {
 		Long folderId = body.getFolderId();
 		Folder folder = folderRepository.findById(folderId)
 			.orElseThrow(ModelNotFoundException::new);
 
-		Long memoId = body.getMemoId();
 		Memo memo = memoRepository.findById(memoId)
 			.orElseThrow(ModelNotFoundException::new);
 
 		memo.update(body, folder);
-		return memo;
+		return MemoDto.UpdateMemoRes.toDto(memo, folderId);
 	}
 }
