@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.undertheriver.sgsg.auth.common.JwtProvider;
 import com.undertheriver.sgsg.common.exception.AccessTokenLoadException;
 import com.undertheriver.sgsg.config.security.UserPrincipal;
+
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,42 +27,42 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-		FilterChain filterChain) throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
 
-		try {
-			String jwt = getJwtFromRequest(request);
-			Claims claims = jwtProvider.extractValidSubject(jwt);
-			String userId = claims.get("userId", String.class);
-			String role = claims.get("role", String.class);
+        try {
+            String jwt = getJwtFromRequest(request);
+            Claims claims = jwtProvider.extractValidSubject(jwt);
+            String userId = claims.get("userId", String.class);
+            String role = claims.get("role", String.class);
 
-			UserDetails userDetails = createUserDetails(userId, role);
-			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-				null, userDetails.getAuthorities());
+            UserDetails userDetails = createUserDetails(userId, role);
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                null, userDetails.getAuthorities());
 
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-			// TODO 토큰이 만료됐을때 액션 취할 수 있는지
-		} catch (IllegalArgumentException | AccessTokenLoadException e) {
-			logger.info("인증에 실패했습니다.");
-		}
+            // TODO 토큰이 만료됐을때 액션 취할 수 있는지
+        } catch (IllegalArgumentException | AccessTokenLoadException e) {
+            logger.info("인증에 실패했습니다.");
+        }
 
-		filterChain.doFilter(request, response);
-	}
+        filterChain.doFilter(request, response);
+    }
 
-	private UserDetails createUserDetails(String userId, String role) {
-		UserDetails userDetails = UserPrincipal.createByToken(Long.valueOf(userId), role);
-		return userDetails;
-	}
+    private UserDetails createUserDetails(String userId, String role) {
+        UserDetails userDetails = UserPrincipal.createByToken(Long.valueOf(userId), role);
+        return userDetails;
+    }
 
-	private String getJwtFromRequest(HttpServletRequest request) {
-		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7);
-		}
-		throw new IllegalArgumentException("보안정보가 없습니다.");
-	}
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        throw new IllegalArgumentException("보안정보가 없습니다.");
+    }
 }

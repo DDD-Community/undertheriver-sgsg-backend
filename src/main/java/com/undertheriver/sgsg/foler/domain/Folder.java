@@ -79,7 +79,7 @@ public class Folder extends BaseEntity {
             return false;
         }
 
-        final Folder folder = (Folder) other;
+        final Folder folder = (Folder)other;
         Long otherId = folder.getId();
 
         return otherId.equals(this.id);

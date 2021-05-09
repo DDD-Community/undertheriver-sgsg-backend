@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthController {
 
-	@GetMapping("/health")
-	public ResponseEntity<Void> health() {
-		return ResponseEntity.noContent()
-			.build();
-	}
+    @GetMapping("/health")
+    public ResponseEntity<Void> health() {
+        return ResponseEntity.noContent()
+            .build();
+    }
 
-	@GetMapping("/")
-	public ResponseEntity<String> hello() {
-		return ResponseEntity
-			.ok("Hello World!");
-	}
+    @GetMapping("/")
+    public ResponseEntity<String> hello() {
+        return ResponseEntity
+            .ok("Hello World!");
+    }
 }

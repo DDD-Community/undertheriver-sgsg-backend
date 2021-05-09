@@ -10,68 +10,68 @@ import lombok.NoArgsConstructor;
 
 public class FolderDto {
 
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class CreateFolderReq {
-		private String title;
-		private FolderColor color;
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class CreateFolderReq {
+        private String title;
+        private FolderColor color;
 
-		@Builder
-		public CreateFolderReq(String title, FolderColor color) {
-			this.title = title;
-			this.color = color;
-		}
+        @Builder
+        public CreateFolderReq(String title, FolderColor color) {
+            this.title = title;
+            this.color = color;
+        }
 
-		public Folder toEntity() {
-			return Folder.builder()
-				.title(this.title)
-				.color(this.color)
-				.build();
-		}
-	}
+        public Folder toEntity() {
+            return Folder.builder()
+                .title(this.title)
+                .color(this.color)
+                .build();
+        }
+    }
 
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class UpdateFolderTitleReq {
-		private String title;
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateFolderTitleReq {
+        private String title;
 
-		@Builder
-		public UpdateFolderTitleReq(String title) {
-			this.title = title;
-		}
-	}
+        @Builder
+        public UpdateFolderTitleReq(String title) {
+            this.title = title;
+        }
+    }
 
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class ReadFolderRes {
-		private Long id;
-		private String title;
-		private FolderColor color;
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class ReadFolderRes {
+        private Long id;
+        private String title;
+        private FolderColor color;
 
-		@Builder
-		public ReadFolderRes(Long id, String title, FolderColor color) {
-			this.id = id;
-			this.title = title;
-			this.color = color;
-		}
+        @Builder
+        public ReadFolderRes(Long id, String title, FolderColor color) {
+            this.id = id;
+            this.title = title;
+            this.color = color;
+        }
 
-		public static ReadFolderRes toDto(Folder folder) {
-			return ReadFolderRes.builder()
-				.id(folder.getId())
-				.title(folder.getTitle())
-				.color(folder.getColor())
-				.build();
-		}
-	}
+        public static ReadFolderRes toDto(Folder folder) {
+            return ReadFolderRes.builder()
+                .id(folder.getId())
+                .title(folder.getTitle())
+                .color(folder.getColor())
+                .build();
+        }
+    }
 
-	@Getter
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class GetNextFolderColorRes {
-		private FolderColor nextColor;
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class GetNextFolderColorRes {
+        private FolderColor nextColor;
 
-		@Builder
-		public GetNextFolderColorRes(FolderColor nextColor) {
-			this.nextColor = nextColor;
-		}
-	}
+        @Builder
+        public GetNextFolderColorRes(FolderColor nextColor) {
+            this.nextColor = nextColor;
+        }
+    }
 }

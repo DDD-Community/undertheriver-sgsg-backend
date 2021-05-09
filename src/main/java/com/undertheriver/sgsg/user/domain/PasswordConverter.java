@@ -13,18 +13,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PasswordConverter implements AttributeConverter<String, String> {
 
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@Override
-	public String convertToDatabaseColumn(String attribute) {
-		if (Objects.isNull(attribute) || attribute.isEmpty()) {
-			return "";
-		}
-		return bCryptPasswordEncoder.encode(attribute);
-	}
+    @Override
+    public String convertToDatabaseColumn(String attribute) {
+        if (Objects.isNull(attribute) || attribute.isEmpty()) {
+            return "";
+        }
+        return bCryptPasswordEncoder.encode(attribute);
+    }
 
-	@Override
-	public String convertToEntityAttribute(String dbData) {
-		return dbData;
-	}
+    @Override
+    public String convertToEntityAttribute(String dbData) {
+        return dbData;
+    }
 }

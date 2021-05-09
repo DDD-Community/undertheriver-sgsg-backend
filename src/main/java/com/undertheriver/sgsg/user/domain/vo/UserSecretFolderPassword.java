@@ -16,19 +16,19 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserSecretFolderPassword {
 
-	@Convert(converter = PasswordConverter.class)
-	private String password;
+    @Convert(converter = PasswordConverter.class)
+    private String password;
 
-	private UserSecretFolderPassword(String password) {
-		this.password = password;
-	}
+    private UserSecretFolderPassword(String password) {
+        this.password = password;
+    }
 
-	public static UserSecretFolderPassword from(String password) {
-		return new UserSecretFolderPassword(password);
-	}
+    public static UserSecretFolderPassword from(String password) {
+        return new UserSecretFolderPassword(password);
+    }
 
-	public boolean isEmpty() {
-		return Objects.isNull(password)
-			|| password.isEmpty();
-	}
+    public boolean isEmpty() {
+        return Objects.isNull(password)
+            || password.isEmpty();
+    }
 }

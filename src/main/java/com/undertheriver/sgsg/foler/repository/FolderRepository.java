@@ -11,15 +11,15 @@ import com.undertheriver.sgsg.foler.domain.Folder;
 
 @Repository
 public interface FolderRepository extends JpaRepository<Folder, Long> {
-	@Query(value = "SELECT f FROM Folder f "
-		+ "JOIN f.memos "
-		+ "WHERE f.user.id = :userId AND f.deleted = null OR f.deleted = false "
-		+ "GROUP BY f.id "
-		+ "ORDER BY count(f.id) DESC")
-	List<Folder> findAllOrderByMemos(Long userId);
+    @Query(value = "SELECT f FROM Folder f "
+        + "JOIN f.memos "
+        + "WHERE f.user.id = :userId AND f.deleted = null OR f.deleted = false "
+        + "GROUP BY f.id "
+        + "ORDER BY count(f.id) DESC")
+    List<Folder> findAllOrderByMemos(Long userId);
 
-	List<Folder> findAllByUserId(Long userId, Sort sort);
+    List<Folder> findAllByUserId(Long userId, Sort sort);
 
-	Integer countByUserIdAndDeletedFalseOrDeletedNull(Long userId);
+    Integer countByUserIdAndDeletedFalseOrDeletedNull(Long userId);
 
 }

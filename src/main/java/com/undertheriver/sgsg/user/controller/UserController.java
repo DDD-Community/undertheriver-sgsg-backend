@@ -25,39 +25,39 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserService userService;
+    private final UserService userService;
 
-	@ApiOperation(value = "회원 조회")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header")
-	})
-	@GetMapping
-	public ApiResult<UserDto.DetailResponse> user(@LoginUserId Long userId) {
-		User user = userService.findById(userId);
+    @ApiOperation(value = "회원 조회")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header")
+    })
+    @GetMapping
+    public ApiResult<UserDto.DetailResponse> user(@LoginUserId Long userId) {
+        User user = userService.findById(userId);
 
-		UserDto.DetailResponse userDetail = new UserDto.DetailResponse(user.getName(),
-			user.getEmail(), user.getProfileImageUrl(), user.hasFolderPassword());
+        UserDto.DetailResponse userDetail = new UserDto.DetailResponse(user.getName(),
+            user.getEmail(), user.getProfileImageUrl(), user.hasFolderPassword());
 
-		return ApiResult.OK(userDetail);
-	}
+        return ApiResult.OK(userDetail);
+    }
 
-	@ApiOperation(value = "회원 탈퇴")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header")
-	})
-	@DeleteMapping
-	public ApiResult<Void> deleteUser(@LoginUserId Long userId) {
-		userService.deleteUser(userId);
+    @ApiOperation(value = "회원 탈퇴")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header")
+    })
+    @DeleteMapping
+    public ApiResult<Void> deleteUser(@LoginUserId Long userId) {
+        userService.deleteUser(userId);
 
-		return ApiResult.OK();
-	}
+        return ApiResult.OK();
+    }
 
-	@ApiOperation(value = "메모비밀번호 변경")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header"),
-		@ApiImplicitParam(name = "password", value = "1234", required = true, dataType = "String", paramType = "body")
-	})
-	@PutMapping("/memo-password")
-	public void updateMemoPassword(@RequestBody String password) {
-	}
+    @ApiOperation(value = "메모비밀번호 변경")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header"),
+        @ApiImplicitParam(name = "password", value = "1234", required = true, dataType = "String", paramType = "body")
+    })
+    @PutMapping("/memo-password")
+    public void updateMemoPassword(@RequestBody String password) {
+    }
 }
