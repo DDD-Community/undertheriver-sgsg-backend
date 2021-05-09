@@ -33,9 +33,9 @@ public class FolderController {
 	@PostMapping
 	public ApiResult<?> save(
 		@LoginUserId Long userId,
-		@RequestBody FolderDto.CreateFolderReq dto) throws URISyntaxException {
+		@RequestBody FolderDto.CreateFolderReq dto){
 		long id = folderService.save(userId, dto);
-		URI location = new URI("/api/folders/" + id);
+		URI location = URI.create("/api/folders/" + id);
 		return ApiResult.OK(location);
 	}
 
