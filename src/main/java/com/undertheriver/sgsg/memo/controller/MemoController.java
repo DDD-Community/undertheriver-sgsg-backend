@@ -2,8 +2,9 @@ package com.undertheriver.sgsg.memo.controller;
 
 import java.net.URI;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,21 +25,20 @@ import lombok.RequiredArgsConstructor;
 @Api(value = "memo")
 public class MemoController {
 
-    private final MemoService memoService;
+	private final MemoService memoService;
 
-    @ApiOperation(value = "메모 저장")
-    @PostMapping
-    public ApiResult<?> save(
-            @LoginUserId Long userId,
-            @RequestBody MemoDto.CreateMemoReq body) {
-        try {
-            Long id = memoService.save(userId, body).getId();
-            URI location = new URI("/api/v1/memos/" + id);
-            return ApiResult.OK(location);
-        } catch (IndexOutOfBoundsException e) {
-            return ApiResult.ERROR(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
-        } catch (Exception e) {
-            return ApiResult.ERROR(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+	@ApiOperation(value = "메모 저장")
+	@PostMapping
+	public ApiResult<?> save(@LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq body) {
+		long id = memoService.save(userId, body);
+		URI location = URI.create("/api/folders/" + id);
+		return ApiResult.OK(location);
+	}
+
+	@ApiOperation(value = "메모 수정")
+	@PutMapping("/{memoId}")
+	public ApiResult<MemoDto.UpdateMemoRes> update(@PathVariable Long memoId, @RequestBody MemoDto.UpdateMemoReq body) {
+		MemoDto.UpdateMemoRes res = memoService.update(memoId, body);
+		return ApiResult.OK(res);
+	}
 }

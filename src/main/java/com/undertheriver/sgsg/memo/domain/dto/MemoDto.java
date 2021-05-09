@@ -1,9 +1,12 @@
 package com.undertheriver.sgsg.memo.domain.dto;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.NotNull;
 
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.memo.domain.Memo;
+
 import org.springframework.lang.Nullable;
 
 import com.undertheriver.sgsg.foler.domain.FolderColor;
@@ -19,13 +22,13 @@ public class MemoDto {
 	@NoArgsConstructor
 	public static class CreateMemoReq {
 		@Nullable
-		Long folderId;
+		private Long folderId;
 		@NotNull
-		String folderTitle;
+		private String folderTitle;
 		@NotNull
-		FolderColor folderColor;
+		private FolderColor folderColor;
 		@NotNull
-		String memoContent;
+		private String memoContent;
 
 		@Builder
 		public CreateMemoReq(Long folderId, String folderTitle, FolderColor folderColor, String memoContent) {
@@ -37,8 +40,8 @@ public class MemoDto {
 
 		public Memo toMemoEntity() {
 			return Memo.builder()
-					.content(memoContent)
-					.build();
+				.content(memoContent)
+				.build();
 		}
 
 		public Folder toFolderEntity() {
@@ -52,4 +55,72 @@ public class MemoDto {
 			return folderId != null;
 		}
 	}
+
+	public static class ReadMemoRes {
+		private Long id;
+		private String content;
+		private String createdAt;
+		private Boolean favorite;
+		private String thumbnailUrl;
+	}
+
+	@Getter
+	public static class UpdateMemoReq {
+		@NotNull
+		private String content;
+		@Nullable
+		private Boolean favorite;
+		@Nullable
+		private String thumbnailUrl;
+		@NotNull
+		private Long folderId;
+
+		@Builder
+		public UpdateMemoReq(
+			String content, Boolean favorite, String thumbnailUrl, Long folderId) {
+			this.content = content;
+			this.favorite = favorite;
+			this.thumbnailUrl = thumbnailUrl;
+			this.folderId = folderId;
+		}
+	}
+
+	@Getter
+	public static class UpdateMemoRes {
+		@NotNull
+		private Long memoId;
+		@NotNull
+		private String content;
+		@Nullable
+		private Boolean favorite;
+		@Nullable
+		private String thumbnailUrl;
+		@NotNull
+		private Long folderId;
+		@NotNull
+		private LocalDate createdAt;
+
+		@Builder
+		public UpdateMemoRes(
+			Long memoId, String content, Boolean favorite, String thumbnailUrl, Long folderId, LocalDate createdAt) {
+			this.memoId = memoId;
+			this.content = content;
+			this.favorite = favorite;
+			this.thumbnailUrl = thumbnailUrl;
+			this.folderId = folderId;
+			this.createdAt = createdAt;
+		}
+
+		public static UpdateMemoRes toDto(Memo memo, Long folderId) {
+			return UpdateMemoRes.builder()
+				.memoId(memo.getId())
+				.content(memo.getContent())
+				.favorite(memo.getFavorite())
+				.thumbnailUrl(memo.getThumbnailUrl())
+				.createdAt(memo.getCreatedAt())
+				.folderId(folderId)
+				.build();
+		}
+	}
+
 }

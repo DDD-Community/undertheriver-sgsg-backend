@@ -1,5 +1,7 @@
 package com.undertheriver.sgsg.core;
 
+import java.net.URISyntaxException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;

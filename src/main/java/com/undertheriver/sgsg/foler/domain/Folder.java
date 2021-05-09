@@ -58,7 +58,7 @@ public class Folder extends BaseEntity {
 
     public void addMemo(Memo memo) {
         this.memos.add(memo);
-        memo.setFolder(this);
+        memo.mapFolder(this);
     }
 
     public void mapUser(User user) {
