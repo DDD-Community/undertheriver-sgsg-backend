@@ -55,9 +55,7 @@ public class MemoController {
 
 	@ApiOperation(value = "메모 저장")
 	@PostMapping
-	public ApiResult<?> save(
-		@LoginUserId Long userId,
-		@RequestBody MemoDto.CreateMemoReq body) {
+	public ApiResult<?> save(@LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq body) {
 		long id = memoService.save(userId, body);
 		URI location = URI.create("/api/folders/" + id);
 		return ApiResult.OK(location);
