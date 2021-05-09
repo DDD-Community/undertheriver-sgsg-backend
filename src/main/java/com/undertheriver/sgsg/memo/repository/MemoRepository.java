@@ -16,5 +16,10 @@ public interface MemoRepository extends JpaRepository<Memo, Long> {
         + "JOIN Folder f ON f.user.id = :userId "
         + "WHERE f.id = m.folder.id AND (m.deleted = null OR m.deleted = false) "
         + "ORDER BY m.favorite DESC")
-    List<Memo> findAllByUserId(Long userId);
+    List<Memo> findAllByUser(Long userId);
+
+    @Query(value = "SELECT m FROM Memo m "
+        + "WHERE m.folder.id = :folderId AND (m.deleted = null OR m.deleted = false) "
+        + "ORDER BY m.favorite DESC")
+    List<Memo> findAllByFolder(Long folderId);
 }
