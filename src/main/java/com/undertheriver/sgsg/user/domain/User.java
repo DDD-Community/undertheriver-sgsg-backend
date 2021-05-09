@@ -2,6 +2,7 @@ package com.undertheriver.sgsg.user.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,7 +20,8 @@ import javax.persistence.Table;
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
-import com.undertheriver.sgsg.user.domain.vo.UserSecretMemoPassword;
+import com.undertheriver.sgsg.user.domain.vo.UserSecretFolderPassword;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +44,7 @@ public class User extends BaseEntity {
 	private List<Folder> folders = new ArrayList<>();
 
 	@Embedded
-	private UserSecretMemoPassword userSecretMemoPassword;
+	private UserSecretFolderPassword userSecretFolderPassword;
 
 	@Column(nullable = false)
 	private String email;
@@ -59,7 +61,7 @@ public class User extends BaseEntity {
 	@Builder
 	private User(String userSecretMemoPassword, String email, String profileImageUrl, String name,
 		UserRole userRole) {
-		this.userSecretMemoPassword = UserSecretMemoPassword.from(userSecretMemoPassword);
+		this.userSecretFolderPassword = UserSecretFolderPassword.from(userSecretMemoPassword);
 		this.email = email;
 		this.profileImageUrl = profileImageUrl;
 		this.name = name;
@@ -88,5 +90,10 @@ public class User extends BaseEntity {
 	public void addFolder(Folder folder) {
 		this.folders.add(folder);
 		folder.mapUser(this);
+	}
+
+	public Boolean hasFolderPassword() {
+		return Objects.isNull(userSecretFolderPassword)
+			|| userSecretFolderPassword.isEmpty();
 	}
 }

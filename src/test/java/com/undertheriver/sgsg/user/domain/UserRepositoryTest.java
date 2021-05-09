@@ -34,7 +34,7 @@ class UserRepositoryTest {
 
 		Long userId = repository.save(user).getId();
 		User persistedUser = repository.findById(userId).get();
-		String actual = persistedUser.getUserSecretMemoPassword().getPassword();
+		String actual = persistedUser.getUserSecretFolderPassword().getPassword();
 
 		assertAll(
 			() -> assertThat(bCryptPasswordEncoder.matches(rawPassword, actual)).isTrue(),
