@@ -11,5 +11,5 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 @Retention(RetentionPolicy.RUNTIME)
 @AuthenticationPrincipal(expression = "getId")
 public @interface LoginUserId {
-	String value() default "";
+    String value() default "";
 }

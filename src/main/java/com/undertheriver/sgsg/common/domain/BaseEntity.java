@@ -1,10 +1,7 @@
 package com.undertheriver.sgsg.common.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 
@@ -19,11 +16,11 @@ import lombok.Data;
 @EntityListeners({AuditingEntityListener.class})
 public class BaseEntity {
 
-	@CreatedDate
-	private LocalDate createdAt;
+    @CreatedDate
+    private LocalDate createdAt;
 
-	@LastModifiedDate
-	private LocalDate updatedAt;
+    @LastModifiedDate
+    private LocalDate updatedAt;
 
-	private Boolean deleted;
+    private Boolean deleted;
 }

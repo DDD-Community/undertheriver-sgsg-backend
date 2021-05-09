@@ -1,8 +1,6 @@
 package com.undertheriver.sgsg.foler.domain;
 
-import com.undertheriver.sgsg.foler.repository.FolderRepository;
-import com.undertheriver.sgsg.memo.domain.Memo;
-import com.undertheriver.sgsg.memo.repository.MemoRepository;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.undertheriver.sgsg.foler.repository.FolderRepository;
+import com.undertheriver.sgsg.memo.domain.Memo;
+import com.undertheriver.sgsg.memo.repository.MemoRepository;
 
 @Transactional
 @SpringBootTest
@@ -27,14 +27,14 @@ public class FolderTest {
         int expectedMemoSize = 1;
 
         Folder folder = Folder.builder()
-                .title("테스트")
-                .color(FolderColor.BLUE)
-                .build();
+            .title("테스트")
+            .color(FolderColor.BLUE)
+            .build();
         folder = folderRepository.save(folder);
 
         Memo memo = Memo.builder()
-                .content("안녕")
-                .build();
+            .content("안녕")
+            .build();
         memo = memoRepository.save(memo);
 
         folder.addMemo(memo);

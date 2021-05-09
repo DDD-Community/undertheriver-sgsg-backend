@@ -6,30 +6,30 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.undertheriver.sgsg.foler.domain.FolderOrderBy;
-import com.undertheriver.sgsg.foler.repository.FolderRepository;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
+import com.undertheriver.sgsg.foler.domain.FolderOrderBy;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
+import com.undertheriver.sgsg.foler.repository.FolderRepository;
 import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.memo.repository.MemoRepository;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
 class FolderServiceTest {
+    private static final String TEST_TITLE_VALUE1 = "나";
+    private static final String TEST_TITLE_VALUE2 = "가";
     @Autowired
     private FolderRepository folderRepository;
     @Autowired
@@ -38,24 +38,20 @@ class FolderServiceTest {
     private MemoRepository memoRepository;
     @Autowired
     private FolderService folderService;
-
     private FolderDto.CreateFolderReq createFolderReq;
     private FolderDto.CreateFolderReq createFolderReq2;
     private FolderDto.UpdateFolderTitleReq updateFolderTitleReq;
     private User user;
 
-    private static final String TEST_TITLE_VALUE1 = "나";
-    private static final String TEST_TITLE_VALUE2 = "가";
-
     @BeforeEach
     public void beforeEach() {
         user = User.builder()
-                .name("김홍빈")
-                .userRole(UserRole.USER)
-                .profileImageUrl("http://naver.com/test.png")
-                .userSecretMemoPassword("1234")
-                .email("fusis1@naver.com")
-                .build();
+            .name("김홍빈")
+            .userRole(UserRole.USER)
+            .profileImageUrl("http://naver.com/test.png")
+            .userSecretMemoPassword("1234")
+            .email("fusis1@naver.com")
+            .build();
         userRepository.save(user);
 
         createFolderReq = FolderDto.CreateFolderReq.builder()
@@ -98,7 +94,6 @@ class FolderServiceTest {
         // when
         List<FolderDto.ReadFolderRes> actualFolderList = folderService.readAll(user.getId(), FolderOrderBy.MEMO);
         Long actualFolderId = actualFolderList.get(0).getId();
-
 
         // then
         assertTrue(expectedFolderId.equals(actualFolderId));
@@ -145,7 +140,7 @@ class FolderServiceTest {
     public void save() {
         Long id = folderService.save(user.getId(), createFolderReq);
         assertAll(
-                () -> assertThat(id).isNotEqualTo(null)
+            () -> assertThat(id).isNotEqualTo(null)
         );
     }
 
@@ -156,11 +151,11 @@ class FolderServiceTest {
         List<Folder> folderList = new ArrayList<>();
         for (int i = 0; i < 21; i++) {
             folderList.add(
-                    FolderDto.CreateFolderReq.builder()
-                            .title(i + "")
-                            .color(FolderColor.RED)
-                            .build()
-                            .toEntity()
+                FolderDto.CreateFolderReq.builder()
+                    .title(i + "")
+                    .color(FolderColor.RED)
+                    .build()
+                    .toEntity()
             );
         }
         folderRepository.saveAll(folderList);
@@ -181,12 +176,12 @@ class FolderServiceTest {
         String defaultTitle = folder.getTitle();
         String expectedTitle = TEST_TITLE_VALUE2;
         updateFolderTitleReq = FolderDto.UpdateFolderTitleReq.builder()
-                .title(expectedTitle)
-                .build();
+            .title(expectedTitle)
+            .build();
 
         // when
         String actualTitle = folderService.update(folder.getId(), updateFolderTitleReq)
-                .getTitle();
+            .getTitle();
 
         // then
         assertEquals(expectedTitle, actualTitle);

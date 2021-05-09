@@ -13,12 +13,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BCryptPasswordEncoderConfig {
 
-	private final AppProperties appProperties;
+    private final AppProperties appProperties;
 
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		String seed = appProperties.getEncrypt()
-			.getSeed();
-		return new BCryptPasswordEncoder(4, new SecureRandom(seed.getBytes(StandardCharsets.UTF_8)));
-	}
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        String seed = appProperties.getEncrypt()
+            .getSeed();
+        return new BCryptPasswordEncoder(4, new SecureRandom(seed.getBytes(StandardCharsets.UTF_8)));
+    }
 }

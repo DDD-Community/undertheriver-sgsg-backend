@@ -14,31 +14,31 @@ import com.undertheriver.sgsg.common.type.UserRole;
 @SpringBootTest
 class UserRepositoryTest {
 
-	@Autowired
-	private UserRepository repository;
+    @Autowired
+    private UserRepository repository;
 
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@DisplayName("유저의 포스팅 패스워드는 단방향 해로 암호화된다.")
-	@Test
-	void name() {
-		String rawPassword = "1234";
-		User user = User.builder()
-			.name("김홍빈")
-			.userRole(UserRole.USER)
-			.profileImageUrl("http://naver.com/test.png")
-			.userSecretMemoPassword("1234")
-			.email("fusis1@naver.com")
-			.build();
+    @DisplayName("유저의 포스팅 패스워드는 단방향 해로 암호화된다.")
+    @Test
+    void name() {
+        String rawPassword = "1234";
+        User user = User.builder()
+            .name("김홍빈")
+            .userRole(UserRole.USER)
+            .profileImageUrl("http://naver.com/test.png")
+            .userSecretMemoPassword("1234")
+            .email("fusis1@naver.com")
+            .build();
 
-		Long userId = repository.save(user).getId();
-		User persistedUser = repository.findById(userId).get();
-		String actual = persistedUser.getUserSecretFolderPassword().getPassword();
+        Long userId = repository.save(user).getId();
+        User persistedUser = repository.findById(userId).get();
+        String actual = persistedUser.getUserSecretFolderPassword().getPassword();
 
-		assertAll(
-			() -> assertThat(bCryptPasswordEncoder.matches(rawPassword, actual)).isTrue(),
-			() -> assertThat(actual).isNotEqualTo("1234")
-		);
-	}
+        assertAll(
+            () -> assertThat(bCryptPasswordEncoder.matches(rawPassword, actual)).isTrue(),
+            () -> assertThat(actual).isNotEqualTo("1234")
+        );
+    }
 }

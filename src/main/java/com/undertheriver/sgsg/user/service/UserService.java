@@ -13,16 +13,16 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserService {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	public User findById(Long id) {
-		return userRepository.findById(id)
-			.orElseThrow(ModelNotFoundException::new);
-	}
+    public User findById(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(ModelNotFoundException::new);
+    }
 
-	public void deleteUser(Long id) {
-		userRepository.findById(id)
-			.map(User::delete)
-			.orElseThrow(ModelNotFoundException::new);
-	}
+    public void deleteUser(Long id) {
+        userRepository.findById(id)
+            .map(User::delete)
+            .orElseThrow(ModelNotFoundException::new);
+    }
 }

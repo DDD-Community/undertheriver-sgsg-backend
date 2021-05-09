@@ -17,19 +17,19 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-	private static final String TOKEN_KEY = "sgsg_token";
+    private static final String TOKEN_KEY = "sgsg_token";
 
-	@DeleteMapping("/logout")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header"),
-	})
-	public ResponseEntity<Void> logout(HttpServletResponse response) {
-		Cookie jwtCookie = new Cookie(TOKEN_KEY, null);
-		jwtCookie.setMaxAge(0);
-		jwtCookie.setPath("/");
-		response.addCookie(jwtCookie);
+    @DeleteMapping("/logout")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "Authorization", value = "Bearer sgsg-token-value", required = true, dataType = "String", paramType = "header"),
+    })
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie jwtCookie = new Cookie(TOKEN_KEY, null);
+        jwtCookie.setMaxAge(0);
+        jwtCookie.setPath("/");
+        response.addCookie(jwtCookie);
 
-		return ResponseEntity.noContent()
-			.build();
-	}
+        return ResponseEntity.noContent()
+            .build();
+    }
 }

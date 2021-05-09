@@ -18,32 +18,32 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	@Override
-	@Transactional
-	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-		OAuth2UserService delegate = new DefaultOAuth2UserService();
-		OAuth2User oAuth2User = delegate.loadUser(userRequest);
+    @Override
+    @Transactional
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        OAuth2UserService delegate = new DefaultOAuth2UserService();
+        OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-		String registrationId = userRequest.getClientRegistration().getRegistrationId();
-		String userNameAttributeName = userRequest.getClientRegistration()
-			.getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String userNameAttributeName = userRequest.getClientRegistration()
+            .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-		OAuthAttributes attributes = OAuthAttributes.
-			of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        OAuthAttributes attributes = OAuthAttributes.
+            of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-		User user = saveOrUpdate(attributes);
-		return UserPrincipal.createByOAuthUser(user, oAuth2User.getAttributes());
-	}
+        User user = saveOrUpdate(attributes);
+        return UserPrincipal.createByOAuthUser(user, oAuth2User.getAttributes());
+    }
 
-	private User saveOrUpdate(OAuthAttributes attributes) {
-		User u = userRepository.findByEmail(attributes.getEmail())
-			.map(it -> it.update(attributes.getName(), attributes.getProfileImageUrl()))
-			.orElse(attributes.toEntity());
+    private User saveOrUpdate(OAuthAttributes attributes) {
+        User u = userRepository.findByEmail(attributes.getEmail())
+            .map(it -> it.update(attributes.getName(), attributes.getProfileImageUrl()))
+            .orElse(attributes.toEntity());
 
-		u.saveApiClient(attributes.fetchOAuthId(), attributes.getOAuthName());
+        u.saveApiClient(attributes.fetchOAuthId(), attributes.getOAuthName());
 
-		return userRepository.save(u);
-	}
+        return userRepository.save(u);
+    }
 }

@@ -10,7 +10,7 @@ import com.undertheriver.sgsg.config.PagingConfig;
 @EnableConfigurationProperties({PagingConfig.class, AppProperties.class})
 @SpringBootApplication
 public class SgsgApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(SgsgApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SgsgApplication.class, args);
+    }
 }

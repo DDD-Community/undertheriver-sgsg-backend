@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class AuthenticationResponse {
-	private final String message;
-	private final String jwtToken;
+    private final String message;
+    private final String jwtToken;
 
-	@Builder
-	public AuthenticationResponse(String message, String jwtToken) {
-		this.message = message;
-		this.jwtToken = jwtToken;
-	}
+    @Builder
+    public AuthenticationResponse(String message, String jwtToken) {
+        this.message = message;
+        this.jwtToken = jwtToken;
+    }
 }

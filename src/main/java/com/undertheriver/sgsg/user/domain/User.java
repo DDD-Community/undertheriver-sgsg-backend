@@ -21,7 +21,6 @@ import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.user.domain.vo.UserSecretFolderPassword;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,67 +32,64 @@ import lombok.NoArgsConstructor;
 @Table(indexes = @Index(name = "user_idx_email", columnList = "email"))
 public class User extends BaseEntity {
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private final List<UserApiClient> userApiClients = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<UserApiClient> userApiClients = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private final List<Folder> folders = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Embedded
+    private UserSecretFolderPassword userSecretFolderPassword;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Column(nullable = false)
+    private String email;
 
-	@OneToMany(mappedBy = "user")
-	private List<Folder> folders = new ArrayList<>();
+    private String profileImageUrl;
 
-	@Embedded
-	private UserSecretFolderPassword userSecretFolderPassword;
+    private String name;
 
-	@Column(nullable = false)
-	private String email;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole userRole;
 
-	private String profileImageUrl;
+    // FIXME userSecretMemoPassword 추후 업데이트하는 형식으로 변경됨
+    @Builder
+    private User(String userSecretMemoPassword, String email, String profileImageUrl, String name,
+        UserRole userRole) {
+        this.userSecretFolderPassword = UserSecretFolderPassword.from(userSecretMemoPassword);
+        this.email = email;
+        this.profileImageUrl = profileImageUrl;
+        this.name = name;
+        this.userRole = userRole;
+    }
 
-	private String name;
+    public void saveApiClient(String oAuthId, String oAuthName) {
+        if (userApiClients.stream()
+            .anyMatch(userApiClient -> userApiClient.isSameOAuthName(oAuthName))) {
+            return;
+        }
+        userApiClients.add(new UserApiClient(oAuthId, oAuthName, this));
+    }
 
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
-	private UserRole userRole;
+    public User update(String name, String profileImageUrl) {
+        this.name = name;
+        this.profileImageUrl = profileImageUrl;
+        return this;
+    }
 
-	// FIXME userSecretMemoPassword 추후 업데이트하는 형식으로 변경됨
-	@Builder
-	private User(String userSecretMemoPassword, String email, String profileImageUrl, String name,
-		UserRole userRole) {
-		this.userSecretFolderPassword = UserSecretFolderPassword.from(userSecretMemoPassword);
-		this.email = email;
-		this.profileImageUrl = profileImageUrl;
-		this.name = name;
-		this.userRole = userRole;
-	}
+    public User delete() {
+        setDeleted(true);
+        return this;
+    }
 
-	public void saveApiClient(String oAuthId, String oAuthName) {
-		if (userApiClients.stream()
-			.anyMatch(userApiClient -> userApiClient.isSameOAuthName(oAuthName))) {
-			return;
-		}
-		userApiClients.add(new UserApiClient(oAuthId, oAuthName, this));
-	}
+    public void addFolder(Folder folder) {
+        this.folders.add(folder);
+        folder.mapUser(this);
+    }
 
-	public User update(String name, String profileImageUrl) {
-		this.name = name;
-		this.profileImageUrl = profileImageUrl;
-		return this;
-	}
-
-	public User delete() {
-		setDeleted(true);
-		return this;
-	}
-
-	public void addFolder(Folder folder) {
-		this.folders.add(folder);
-		folder.mapUser(this);
-	}
-
-	public Boolean hasFolderPassword() {
-		return Objects.isNull(userSecretFolderPassword)
-			|| userSecretFolderPassword.isEmpty();
-	}
+    public Boolean hasFolderPassword() {
+        return Objects.isNull(userSecretFolderPassword)
+            || userSecretFolderPassword.isEmpty();
+    }
 }

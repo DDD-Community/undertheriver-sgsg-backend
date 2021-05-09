@@ -21,32 +21,32 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-	@Bean
-	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)
-			.securitySchemes(Lists.newArrayList(apiKey()))
-			.useDefaultResponseMessages(false)
-			.securityContexts(Lists.newArrayList(securityContext()))
-			.select()
-			.apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-			.paths(PathSelectors.any())
-			.build();
-	}
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+            .securitySchemes(Lists.newArrayList(apiKey()))
+            .useDefaultResponseMessages(false)
+            .securityContexts(Lists.newArrayList(securityContext()))
+            .select()
+            .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+            .paths(PathSelectors.any())
+            .build();
+    }
 
-	private SecurityContext securityContext() {
-		return SecurityContext.builder()
-			.securityReferences(defaultAuth())
-			.forPaths(PathSelectors.any()).build();
-	}
+    private SecurityContext securityContext() {
+        return SecurityContext.builder()
+            .securityReferences(defaultAuth())
+            .forPaths(PathSelectors.any()).build();
+    }
 
-	List<SecurityReference> defaultAuth() {
-		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-		AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-		authorizationScopes[0] = authorizationScope;
-		return Lists.newArrayList(new SecurityReference("JWT", authorizationScopes));
-	}
+    List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return Lists.newArrayList(new SecurityReference("JWT", authorizationScopes));
+    }
 
-	private ApiKey apiKey() {
-		return new ApiKey("JWT", "Authorization", "header");
-	}
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", "Authorization", "header");
+    }
 }

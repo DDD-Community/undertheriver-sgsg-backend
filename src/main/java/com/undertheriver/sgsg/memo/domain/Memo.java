@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,7 +46,7 @@ public class Memo extends BaseEntity {
         this.folder = folder;
     }
 
-    public void mapFolder(Folder folder)  {
+    public void mapFolder(Folder folder) {
         this.folder = folder;
     }
 
@@ -68,7 +67,7 @@ public class Memo extends BaseEntity {
             return false;
         }
 
-        final Memo memo = (Memo) other;
+        final Memo memo = (Memo)other;
         Long otherId = memo.getId();
 
         return otherId.equals(this.id);
