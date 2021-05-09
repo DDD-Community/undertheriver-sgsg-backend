@@ -27,14 +27,14 @@ public class MemoService {
 	private final UserRepository userRepository;
 
 	@Transactional
-	public Memo save(Long userId, MemoDto.CreateMemoReq body) {
+	public Long save(Long userId, MemoDto.CreateMemoReq body) {
 		Folder folder = createOrReadFolder(body);
 		User user = userRepository.findById(userId)
 			.orElseThrow(ModelNotFoundException::new);
 		user.addFolder(folder);
 		Memo memo = memoRepository.save(body.toMemoEntity());
 		folder.addMemo(memo);
-		return memo;
+		return memo.getId();
 	}
 
 	private Folder createOrReadFolder(MemoDto.CreateMemoReq body) {

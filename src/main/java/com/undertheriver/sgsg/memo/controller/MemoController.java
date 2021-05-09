@@ -58,7 +58,7 @@ public class MemoController {
 	public ApiResult<?> save(
 		@LoginUserId Long userId,
 		@RequestBody MemoDto.CreateMemoReq body) {
-		long id = memoService.save(userId, body).getId();
+		long id = memoService.save(userId, body);
 		URI location = URI.create("/api/folders/" + id);
 		return ApiResult.OK(location);
 	}
