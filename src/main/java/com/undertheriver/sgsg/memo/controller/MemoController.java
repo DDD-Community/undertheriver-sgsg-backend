@@ -2,7 +2,6 @@ package com.undertheriver.sgsg.memo.controller;
 
 import java.net.URI;
 
-import com.undertheriver.sgsg.common.ApiResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.undertheriver.sgsg.common.annotation.LoginUserId;
+import com.undertheriver.sgsg.core.ApiResult;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.domain.dto.response.ReadMemoResponseDto;
 import com.undertheriver.sgsg.memo.service.MemoService;
