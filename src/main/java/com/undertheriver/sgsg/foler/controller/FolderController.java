@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.core.ApiResult;
+import com.undertheriver.sgsg.foler.domain.FolderOrderBy;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.service.FolderService;
 
@@ -41,10 +43,9 @@ public class FolderController {
 
 	@ApiOperation("폴더 조회")
 	@GetMapping
-	public ApiResult<List<FolderDto.ReadFolderRes>> read(@LoginUserId Long userId) {
-
-		List<FolderDto.ReadFolderRes> folders = folderService.readAll(userId);
-
+	public ApiResult<List<FolderDto.ReadFolderRes>> read(
+		@LoginUserId Long userId, @RequestParam FolderOrderBy orderBy) {
+		List<FolderDto.ReadFolderRes> folders = folderService.readAll(userId, orderBy);
 		return ApiResult.OK(folders);
 	}
 
