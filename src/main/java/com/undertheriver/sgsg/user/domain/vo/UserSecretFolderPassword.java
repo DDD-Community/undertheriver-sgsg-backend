@@ -1,5 +1,7 @@
 package com.undertheriver.sgsg.user.domain.vo;
 
+import java.util.Objects;
+
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 
@@ -23,5 +25,10 @@ public class UserSecretFolderPassword {
 
 	public static UserSecretFolderPassword from(String password) {
 		return new UserSecretFolderPassword(password);
+	}
+
+	public boolean isEmpty() {
+		return Objects.isNull(password)
+			|| password.isEmpty();
 	}
 }

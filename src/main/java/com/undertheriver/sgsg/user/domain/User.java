@@ -91,4 +91,9 @@ public class User extends BaseEntity {
 		this.folders.add(folder);
 		folder.mapUser(this);
 	}
+
+	public Boolean hasFolderPassword() {
+		return Objects.isNull(userSecretFolderPassword)
+			|| userSecretFolderPassword.isEmpty();
+	}
 }
