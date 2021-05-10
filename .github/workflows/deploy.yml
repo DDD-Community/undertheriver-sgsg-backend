@@ -68,10 +68,10 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: S3 업로드
-        run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/build.zip --source .
+        run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/develop/build.zip --source .
 
       - name: code deploy
-        run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name backend --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/build.zip
+        run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name backend-develop --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/develop/build.zip
 
   deploy-master:
     needs: [ build ]
@@ -91,7 +91,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: S3 업로드
-        run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/build.zip --source .
+        run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/production/build.zip --source .
 
       - name: code deploy
-        run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name backend --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/build.zip
+        run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name backend-production --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/production/build.zip
