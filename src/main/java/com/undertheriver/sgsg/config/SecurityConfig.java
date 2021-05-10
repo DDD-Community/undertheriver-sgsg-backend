@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/login/oauth2/code/*").permitAll()
 			.antMatchers("/oauth2/authorization/*").permitAll()
-			.antMatchers("/health").permitAll()
+			.antMatchers("/api/health").permitAll()
 			.anyRequest().authenticated()
 		.and()
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
