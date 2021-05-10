@@ -6,8 +6,8 @@ import static java.util.stream.Collectors.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -27,7 +27,6 @@ import com.undertheriver.sgsg.config.AppProperties;
 import com.undertheriver.sgsg.config.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.undertheriver.sgsg.config.security.UserPrincipal;
 import com.undertheriver.sgsg.util.CookieUtils;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -36,7 +35,7 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final JwtProvider jwtProvider;
-    private final Set<URI> authorizedRedirectUris;
+    private final List<URI> allowRedirectUris;
 
     public RestAuthenticationSuccessHandler(
         HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository,
@@ -45,11 +44,11 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     ) {
         this.httpCookieOAuth2AuthorizationRequestRepository = httpCookieOAuth2AuthorizationRequestRepository;
         this.jwtProvider = jwtProvider;
-        this.authorizedRedirectUris = appProperties.getOauth2()
+        this.allowRedirectUris = appProperties.getOauth2()
             .getAuthorizedRedirectUris()
             .stream()
             .map(URI::create)
-            .collect(toSet());
+            .collect(toList());
     }
 
     @Override
@@ -71,7 +70,7 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
             .map(Cookie::getValue);
 
-        if (redirectUri.isPresent() && isNotAuthorizedRedirectUri(redirectUri.get())) {
+        if (redirectUri.isPresent() && isNotSameHost(redirectUri.get())) {
             throw new BadRequestException("승인되지 않은 URL입니다");
         }
 
@@ -100,8 +99,12 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    private boolean isNotAuthorizedRedirectUri(String uri) {
-        URI clientRedirectUri = URI.create(uri);
-        return !authorizedRedirectUris.contains(clientRedirectUri);
+    private boolean isNotSameHost(String redirectUrl) {
+        URI clientRedirectUri = URI.create(redirectUrl);
+        return allowRedirectUris.stream()
+            .noneMatch(allowUri ->
+                allowUri.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+                    && allowUri.getPort() == clientRedirectUri.getPort()
+            );
     }
 }

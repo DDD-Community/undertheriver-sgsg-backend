@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.undertheriver.sgsg.auth.service.CustomOAuth2UserService;
 import com.undertheriver.sgsg.config.security.filter.TokenAuthenticationFilter;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -47,28 +46,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-            .antMatchers("/css/**",
-                "/js/**",
-                "/img/**",
-                "/lib/**",
-                "/h2-console/**",
-                "/v2/**",
-                "/webjars/**",
-                "/swagger**",
-                "/swagger-resources/**",
-                "/member/**");
+            .antMatchers("/v3/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //@formatter:off
 		http.authorizeRequests()
-			.antMatchers("/api/v1/auth/login").permitAll()
-			.antMatchers("/callback").permitAll() // FIXME 임시, 프론트 생기면 삭제 예정
 			.antMatchers("/login/oauth2/code/*").permitAll()
 			.antMatchers("/oauth2/authorization/*").permitAll()
 			.antMatchers("/health").permitAll()
-			.antMatchers("/").permitAll()
 			.anyRequest().authenticated()
 		.and()
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
