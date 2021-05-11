@@ -2,6 +2,7 @@ package com.undertheriver.sgsg.user.controller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.core.ApiResult;
+import com.undertheriver.sgsg.user.controller.dto.FolderPasswordRequest;
 import com.undertheriver.sgsg.user.controller.dto.UserRequestDto;
 import com.undertheriver.sgsg.user.controller.dto.UserResponseDto;
 import com.undertheriver.sgsg.user.domain.User;
@@ -43,6 +45,15 @@ public class UserController {
     public ApiResult<Void> deleteUser(@LoginUserId Long userId) {
         userService.deleteUser(userId);
 
+        return ApiResult.OK();
+    }
+
+    @ApiOperation(value = "메모 비밀번호 생성")
+    @PostMapping("/folder-password")
+    public ApiResult<Object> createFolderPassword(
+        @LoginUserId Long userId, @RequestBody FolderPasswordRequest request
+    ){
+        userService.createFolderPassword(userId, request);
         return ApiResult.OK();
     }
 

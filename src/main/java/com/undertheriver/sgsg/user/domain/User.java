@@ -21,6 +21,7 @@ import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.user.domain.vo.UserSecretFolderPassword;
+import com.undertheriver.sgsg.user.exception.PasswordCreateFailException;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -93,7 +94,14 @@ public class User extends BaseEntity {
     }
 
     public Boolean hasFolderPassword() {
-        return Objects.isNull(userSecretFolderPassword)
-            || userSecretFolderPassword.isEmpty();
+        return Objects.nonNull(userSecretFolderPassword)
+            && !userSecretFolderPassword.isEmpty();
+    }
+
+    public void createFolderPassword(String password) {
+        if (Objects.nonNull(this.userSecretFolderPassword)) {
+            throw new PasswordCreateFailException();
+        }
+        this.userSecretFolderPassword = UserSecretFolderPassword.from(password);
     }
 }
