@@ -95,13 +95,13 @@ public abstract class AcceptanceTest {
 		//@formatter:off
 		given()
 			.body(json)
-		.when()
+			.when()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.auth()
 			.oauth2(token)
 			.post(url)
-		.then()
+			.then()
 			.log()
 			.all()
 			.statusCode(HttpStatus.SC_OK);
@@ -117,6 +117,23 @@ public abstract class AcceptanceTest {
 			.auth()
 				.oauth2(token)
 			.delete(url)
+		.then()
+			.log()
+				.all()
+			.statusCode(HttpStatus.SC_OK);
+		//@formatter:on
+	}
+
+	protected void put(String url, String json) {
+		//@formatter:off
+		given()
+			.body(json)
+		.when()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.auth()
+				.oauth2(token)
+			.put(url)
 		.then()
 			.log()
 				.all()

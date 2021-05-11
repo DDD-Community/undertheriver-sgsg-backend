@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.undertheriver.sgsg.core.ApiResult;
 import com.undertheriver.sgsg.user.exception.PasswordCreateFailException;
+import com.undertheriver.sgsg.user.exception.PasswordUpdateFailException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserControllerAdvice {
 
-    @ExceptionHandler(value = {PasswordCreateFailException.class})
+    @ExceptionHandler(value = {PasswordCreateFailException.class, PasswordUpdateFailException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiResult<?> handleBadRequest(PasswordCreateFailException e) {
         log.info("PasswordCreateFailException, message: {{}}", e.getMessage());

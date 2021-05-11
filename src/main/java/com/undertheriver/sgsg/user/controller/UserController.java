@@ -51,20 +51,18 @@ public class UserController {
     @ApiOperation(value = "메모 비밀번호 생성")
     @PostMapping("/folder-password")
     public ApiResult<Object> createFolderPassword(
-        @LoginUserId Long userId, @RequestBody FolderPasswordRequest request
+        @LoginUserId Long userId, @RequestBody FolderPasswordRequest.CreateRequest request
     ){
         userService.createFolderPassword(userId, request);
         return ApiResult.OK();
     }
 
-    @ApiOperation(value = "메모비밀번호 변경 - 개발 중")
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "password", value = "1234", required = true, dataType = "String", paramType = "body")
-    })
-    @PutMapping("/memo-password")
-    public ApiResult<Object> updateMemoPassword(
-        @RequestBody UserRequestDto.changePasswordRequest request
+    @ApiOperation(value = "메모비밀번호 변경")
+    @PutMapping("/folder-password")
+    public ApiResult<Object> updateFolderPassword(
+        @LoginUserId Long userId, @RequestBody FolderPasswordRequest.UpdateRequest request
     ) {
+        userService.updateFolderPassword(userId, request);
         return ApiResult.OK();
     }
 }

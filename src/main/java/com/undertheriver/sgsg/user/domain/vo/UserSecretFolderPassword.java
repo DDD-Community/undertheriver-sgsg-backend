@@ -36,4 +36,8 @@ public class UserSecretFolderPassword {
         return Objects.isNull(encryptedPassword)
             || encryptedPassword.isEmpty();
     }
+
+    public void changePassword(String newPassword) {
+        this.encryptedPassword = newPassword;
+    }
 }

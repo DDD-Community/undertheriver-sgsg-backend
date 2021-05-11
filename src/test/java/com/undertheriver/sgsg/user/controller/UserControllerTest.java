@@ -30,10 +30,28 @@ class UserControllerTest extends AcceptanceTest {
     @DisplayName("초기 비밀번호를 설정할 수 있다.")
     @Test
     void name1() throws JsonProcessingException {
-        FolderPasswordRequest request = new FolderPasswordRequest("1234");
+        FolderPasswordRequest.CreateRequest request = new FolderPasswordRequest.CreateRequest("1234");
         String json = objectMapper.writeValueAsString(request);
 
         post("/api/v1/users/me/folder-password", json);
+
+        UserResponseDto.UserDetailResponse response = getOne("/api/v1/users/me", UserResponseDto.UserDetailResponse.class);
+
+        assertThat(response.getHasFolderPassword()).isTrue();
+     }
+
+    @DisplayName("비밀번호를 변경할 수 있다.")
+    @Test
+    void changeFolderPassword() throws JsonProcessingException {
+        // given
+        FolderPasswordRequest.CreateRequest request = new FolderPasswordRequest.CreateRequest("1234");
+        String json = objectMapper.writeValueAsString(request);
+        post("/api/v1/users/me/folder-password", json);
+
+        //when
+        FolderPasswordRequest.UpdateRequest updateRequest = new FolderPasswordRequest.UpdateRequest("1234", "4321");
+        String updateJson = objectMapper.writeValueAsString(updateRequest);
+        put("/api/v1/users/me/folder-password", updateJson);
 
         UserResponseDto.UserDetailResponse response = getOne("/api/v1/users/me", UserResponseDto.UserDetailResponse.class);
 

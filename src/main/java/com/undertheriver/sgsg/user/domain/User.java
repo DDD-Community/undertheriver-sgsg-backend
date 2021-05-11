@@ -104,4 +104,13 @@ public class User extends BaseEntity {
         }
         this.userSecretFolderPassword = UserSecretFolderPassword.from(password);
     }
+
+    public String getFolderPassword() {
+        return this.getUserSecretFolderPassword()
+            .getEncryptedPassword();
+    }
+
+    public void updateFolderPassword(String newPassword) {
+        this.userSecretFolderPassword.changePassword(newPassword);
+    }
 }
