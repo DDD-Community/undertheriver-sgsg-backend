@@ -2,10 +2,9 @@ package com.undertheriver.sgsg.user.domain.vo;
 
 import java.util.Objects;
 
-import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 
-import com.undertheriver.sgsg.user.domain.PasswordConverter;
+import com.undertheriver.sgsg.user.exception.PasswordCreateFailException;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,19 +15,29 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserSecretFolderPassword {
 
-    @Convert(converter = PasswordConverter.class)
-    private String password;
+    private String encryptedPassword;
 
-    private UserSecretFolderPassword(String password) {
-        this.password = password;
+    private UserSecretFolderPassword(String encryptedPassword) {
+        validate(encryptedPassword);
+        this.encryptedPassword = encryptedPassword;
     }
 
-    public static UserSecretFolderPassword from(String password) {
-        return new UserSecretFolderPassword(password);
+    private void validate(String encryptedPassword) {
+        if (Objects.isNull(encryptedPassword) || encryptedPassword.isEmpty()) {
+            throw new PasswordCreateFailException();
+        }
+    }
+
+    public static UserSecretFolderPassword from(String encryptedPassword) {
+        return new UserSecretFolderPassword(encryptedPassword);
     }
 
     public boolean isEmpty() {
-        return Objects.isNull(password)
-            || password.isEmpty();
+        return Objects.isNull(encryptedPassword)
+            || encryptedPassword.isEmpty();
+    }
+
+    public void changePassword(String newPassword) {
+        this.encryptedPassword = newPassword;
     }
 }

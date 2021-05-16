@@ -12,6 +12,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.undertheriver.sgsg.auth.common.JwtProvider;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.user.domain.User;
@@ -28,6 +29,9 @@ public abstract class AcceptanceTest {
 	@Autowired
 	private JwtProvider jwtProvider;
 
+	@Autowired
+	protected ObjectMapper objectMapper;
+
 	private String token;
 
 	@BeforeEach
@@ -37,7 +41,6 @@ public abstract class AcceptanceTest {
 			.profileImageUrl("http://naver.com/adf.png")
 			.userRole(UserRole.USER)
 			.name("TEST")
-			.userSecretMemoPassword("1234")
 			.build();
 
 		token = jwtProvider.createToken(1L, user.getUserRole());
@@ -87,6 +90,23 @@ public abstract class AcceptanceTest {
 		//@formatter:on
 	}
 
+	protected void post(String url, String json) {
+		//@formatter:off
+		given()
+			.body(json)
+			.when()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.auth()
+			.oauth2(token)
+			.post(url)
+			.then()
+			.log()
+			.all()
+			.statusCode(HttpStatus.SC_OK);
+		//@formatter:on
+	}
+
 	protected void delete(String url) {
 		//@formatter:off
 		given()
@@ -96,6 +116,23 @@ public abstract class AcceptanceTest {
 			.auth()
 				.oauth2(token)
 			.delete(url)
+		.then()
+			.log()
+				.all()
+			.statusCode(HttpStatus.SC_OK);
+		//@formatter:on
+	}
+
+	protected void put(String url, String json) {
+		//@formatter:off
+		given()
+			.body(json)
+		.when()
+			.contentType(MediaType.APPLICATION_JSON_VALUE)
+			.accept(MediaType.APPLICATION_JSON_VALUE)
+			.auth()
+				.oauth2(token)
+			.put(url)
 		.then()
 			.log()
 				.all()

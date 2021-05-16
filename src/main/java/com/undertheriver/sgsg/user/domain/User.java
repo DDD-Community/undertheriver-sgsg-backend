@@ -21,6 +21,7 @@ import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.user.domain.vo.UserSecretFolderPassword;
+import com.undertheriver.sgsg.user.exception.PasswordCreateFailException;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,6 +44,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Folder> folders = new ArrayList<>();
 
+    @Getter(AccessLevel.PRIVATE)
     @Embedded
     private UserSecretFolderPassword userSecretFolderPassword;
 
@@ -57,11 +59,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private UserRole userRole;
 
-    // FIXME userSecretMemoPassword 추후 업데이트하는 형식으로 변경됨
     @Builder
-    private User(String userSecretMemoPassword, String email, String profileImageUrl, String name,
+    private User(String email, String profileImageUrl, String name,
         UserRole userRole) {
-        this.userSecretFolderPassword = UserSecretFolderPassword.from(userSecretMemoPassword);
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
@@ -93,7 +93,23 @@ public class User extends BaseEntity {
     }
 
     public Boolean hasFolderPassword() {
-        return Objects.isNull(userSecretFolderPassword)
-            || userSecretFolderPassword.isEmpty();
+        return Objects.nonNull(userSecretFolderPassword)
+            && !userSecretFolderPassword.isEmpty();
+    }
+
+    public void createFolderPassword(String encryptedPassword) {
+        if (Objects.nonNull(this.userSecretFolderPassword)) {
+            throw new PasswordCreateFailException();
+        }
+        this.userSecretFolderPassword = UserSecretFolderPassword.from(encryptedPassword);
+    }
+
+    public String getFolderPassword() {
+        return this.getUserSecretFolderPassword()
+            .getEncryptedPassword();
+    }
+
+    public void updateFolderPassword(String newPassword) {
+        this.userSecretFolderPassword.changePassword(newPassword);
     }
 }

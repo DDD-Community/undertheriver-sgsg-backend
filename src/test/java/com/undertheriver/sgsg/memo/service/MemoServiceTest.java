@@ -48,16 +48,15 @@ class MemoServiceTest {
     private MemoDto.CreateMemoReq createMemoReq1;
     private MemoDto.CreateMemoReq createMemoNoFolderReq1;
 
-    @BeforeEach
-    public void beforeEach() {
-        user = User.builder()
-            .name("김홍빈")
-            .userRole(UserRole.USER)
-            .profileImageUrl("http://naver.com/test.png")
-            .userSecretMemoPassword("1234")
-            .email("fusis1@naver.com")
-            .build();
-        user = userRepository.save(user);
+	@BeforeEach
+	public void beforeEach() {
+		user = User.builder()
+			.name("김홍빈")
+			.userRole(UserRole.USER)
+			.profileImageUrl("http://naver.com/test.png")
+			.email("fusis1@naver.com")
+			.build();
+		user = userRepository.save(user);
 
         createFolderReq1 = FolderDto.CreateFolderReq.builder()
             .title("폴더 테스트")
