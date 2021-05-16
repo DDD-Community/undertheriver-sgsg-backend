@@ -44,6 +44,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Folder> folders = new ArrayList<>();
 
+    @Getter(AccessLevel.PRIVATE)
     @Embedded
     private UserSecretFolderPassword userSecretFolderPassword;
 
@@ -58,11 +59,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private UserRole userRole;
 
-    // FIXME userSecretMemoPassword 추후 업데이트하는 형식으로 변경됨
     @Builder
-    private User(String userSecretMemoPassword, String email, String profileImageUrl, String name,
+    private User(String email, String profileImageUrl, String name,
         UserRole userRole) {
-        this.userSecretFolderPassword = UserSecretFolderPassword.from(userSecretMemoPassword);
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
@@ -98,11 +97,11 @@ public class User extends BaseEntity {
             && !userSecretFolderPassword.isEmpty();
     }
 
-    public void createFolderPassword(String password) {
+    public void createFolderPassword(String encryptedPassword) {
         if (Objects.nonNull(this.userSecretFolderPassword)) {
             throw new PasswordCreateFailException();
         }
-        this.userSecretFolderPassword = UserSecretFolderPassword.from(password);
+        this.userSecretFolderPassword = UserSecretFolderPassword.from(encryptedPassword);
     }
 
     public String getFolderPassword() {

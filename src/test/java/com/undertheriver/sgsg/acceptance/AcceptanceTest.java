@@ -41,7 +41,6 @@ public abstract class AcceptanceTest {
 			.profileImageUrl("http://naver.com/adf.png")
 			.userRole(UserRole.USER)
 			.name("TEST")
-			.userSecretMemoPassword("1234")
 			.build();
 
 		token = jwtProvider.createToken(1L, user.getUserRole());

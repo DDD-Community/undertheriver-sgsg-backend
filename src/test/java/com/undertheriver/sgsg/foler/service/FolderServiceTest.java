@@ -53,7 +53,6 @@ class FolderServiceTest {
                 .name("김홍빈")
                 .userRole(UserRole.USER)
                 .profileImageUrl("http://naver.com/test.png")
-                .userSecretMemoPassword("1234")
                 .email("fusis1@naver.com")
                 .build();
         userRepository.save(user);
