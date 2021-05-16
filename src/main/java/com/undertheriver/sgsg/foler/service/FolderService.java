@@ -78,4 +78,10 @@ public class FolderService {
             .nextColor(nextColor)
             .build();
     }
+
+    public void delete(Long folderId) {
+        Folder folder = folderRepository.findById(folderId)
+            .orElseThrow(ModelNotFoundException::new);
+        folder.delete();
+    }
 }
