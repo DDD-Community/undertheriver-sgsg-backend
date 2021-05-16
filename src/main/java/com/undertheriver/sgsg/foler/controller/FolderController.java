@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,5 +67,12 @@ public class FolderController {
         FolderDto.GetNextFolderColorRes res = folderService.getNextColor(userId);
 
         return ApiResult.OK(res);
+    }
+
+    @ApiOperation("폴더 삭제")
+    @DeleteMapping("/{folderId}")
+    public ApiResult<?> delete(@PathVariable Long folderId) {
+        folderService.delete(folderId);
+        return ApiResult.OK();
     }
 }
