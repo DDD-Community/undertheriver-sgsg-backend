@@ -3,6 +3,7 @@ package com.undertheriver.sgsg.memo.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,12 @@ public class MemoController {
         @LoginUserId Long userId, @RequestParam(required = false) Long folderId) {
         List<MemoDto.ReadMemoRes> res = memoService.readAll(userId, folderId);
         return ApiResult.OK(res);
+    }
+
+    @ApiOperation(value = "메모 삭제")
+    @DeleteMapping("/{memoId}")
+    public ApiResult<?> delete(@PathVariable Long memoId) {
+        memoService.delete(memoId);
+        return ApiResult.OK();
     }
 }
