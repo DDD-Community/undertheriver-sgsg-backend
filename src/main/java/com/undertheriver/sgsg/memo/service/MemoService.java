@@ -60,7 +60,7 @@ public class MemoService {
         return MemoDto.UpdateMemoRes.toDto(memo, folderId);
     }
 
-    public List<MemoDto.ReadMemoRes> read(Long userId, Long folderId) {
+    public List<MemoDto.ReadMemoRes> readAll(Long userId, Long folderId) {
         if (Objects.isNull(folderId)) {
             return readAllByUser(userId);
         }

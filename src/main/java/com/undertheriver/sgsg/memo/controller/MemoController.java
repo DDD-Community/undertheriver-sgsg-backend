@@ -3,7 +3,6 @@ package com.undertheriver.sgsg.memo.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,9 +47,9 @@ public class MemoController {
 
     @ApiOperation(value = "메모 조회")
     @GetMapping
-    public ApiResult<List<MemoDto.ReadMemoRes>> read(
+    public ApiResult<List<MemoDto.ReadMemoRes>> readAll(
         @LoginUserId Long userId, @RequestParam(required = false) Long folderId) {
-        List<MemoDto.ReadMemoRes> res = memoService.read(userId, folderId);
+        List<MemoDto.ReadMemoRes> res = memoService.readAll(userId, folderId);
         return ApiResult.OK(res);
     }
 }

@@ -156,7 +156,7 @@ class MemoServiceTest {
         givenReadMemos(folderSize, memoSizePerFolder);
 
         // when
-        List<MemoDto.ReadMemoRes> actualMemos = memoService.read(user.getId(), null);
+        List<MemoDto.ReadMemoRes> actualMemos = memoService.readAll(user.getId(), null);
 
         // then
         int actualMemoSize = actualMemos.size();
@@ -174,7 +174,7 @@ class MemoServiceTest {
         Long folderId = folders.get(0).getId();
 
         // when
-        List<MemoDto.ReadMemoRes> actualMemos = memoService.read(user.getId(), folderId);
+        List<MemoDto.ReadMemoRes> actualMemos = memoService.readAll(user.getId(), folderId);
 
         // then
         int actualMemoSize = actualMemos.size();
