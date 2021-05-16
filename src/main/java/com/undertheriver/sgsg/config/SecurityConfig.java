@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-            .antMatchers("/v3/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**");
+            .antMatchers("/v3/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/h2-console/**");
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/login/oauth2/code/*").permitAll()
 			.antMatchers("/oauth2/authorization/*").permitAll()
-			.antMatchers("/api/health").permitAll()
+			.antMatchers("/health").permitAll()
 			.anyRequest().authenticated()
 		.and()
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

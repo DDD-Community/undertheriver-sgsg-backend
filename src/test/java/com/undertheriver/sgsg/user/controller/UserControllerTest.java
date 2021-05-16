@@ -16,7 +16,7 @@ class UserControllerTest extends AcceptanceTest {
     @DisplayName("유저 정보를 조회한다")
     @Test
     void name() {
-        UserResponseDto.UserDetailResponse response = getOne("/api/v1/users/me",
+        UserResponseDto.UserDetailResponse response = getOne("/v1/users/me",
             UserResponseDto.UserDetailResponse.class);
 
         assertAll(
@@ -33,9 +33,9 @@ class UserControllerTest extends AcceptanceTest {
         FolderPasswordRequest.CreateRequest request = new FolderPasswordRequest.CreateRequest("1234");
         String json = objectMapper.writeValueAsString(request);
 
-        post("/api/v1/users/me/folder-password", json);
+        post("/v1/users/me/folder-password", json);
 
-        UserResponseDto.UserDetailResponse response = getOne("/api/v1/users/me", UserResponseDto.UserDetailResponse.class);
+        UserResponseDto.UserDetailResponse response = getOne("/v1/users/me", UserResponseDto.UserDetailResponse.class);
 
         assertThat(response.getHasFolderPassword()).isTrue();
      }
@@ -46,14 +46,14 @@ class UserControllerTest extends AcceptanceTest {
         // given
         FolderPasswordRequest.CreateRequest request = new FolderPasswordRequest.CreateRequest("1234");
         String json = objectMapper.writeValueAsString(request);
-        post("/api/v1/users/me/folder-password", json);
+        post("/v1/users/me/folder-password", json);
 
         //when
         FolderPasswordRequest.UpdateRequest updateRequest = new FolderPasswordRequest.UpdateRequest("1234", "4321");
         String updateJson = objectMapper.writeValueAsString(updateRequest);
-        put("/api/v1/users/me/folder-password", updateJson);
+        put("/v1/users/me/folder-password", updateJson);
 
-        UserResponseDto.UserDetailResponse response = getOne("/api/v1/users/me", UserResponseDto.UserDetailResponse.class);
+        UserResponseDto.UserDetailResponse response = getOne("/v1/users/me", UserResponseDto.UserDetailResponse.class);
 
         assertThat(response.getHasFolderPassword()).isTrue();
     }

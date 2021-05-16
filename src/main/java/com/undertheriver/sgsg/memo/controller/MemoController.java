@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/memos")
+@RequestMapping("/v1/memos")
 @Api(value = "memo")
 public class MemoController {
 
@@ -34,7 +34,7 @@ public class MemoController {
     @PostMapping
     public ApiResult<?> save(@LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq body) {
         long id = memoService.save(userId, body);
-        URI location = URI.create("/api/folders/" + id);
+        URI location = URI.create("/folders/" + id);
         return ApiResult.OK(location);
     }
 
