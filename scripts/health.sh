@@ -1,9 +1,9 @@
 #!/bin/bash
 echo "> Health check 시작"
-echo "> curl -I http://localhost:8080/api/health "
+echo "> curl -I http://localhost:8080/health "
 
 for RETRY_COUNT in {1..15}; do
-  RESPONSE=$(curl -I http://localhost:8080/api/health)
+  RESPONSE=$(curl -I http://localhost:8080/health)
   UP_COUNT=$(echo $RESPONSE | grep '204' | wc -l)
 
   if [ $UP_COUNT -ge 1 ]; then # $up_count >= 1 ("UP" 문자열이 있는지 검증)

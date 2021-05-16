@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/users/me")
+@RequestMapping("/v1/users/me")
 @Api(value = "User")
 @RequiredArgsConstructor
 public class UserController {

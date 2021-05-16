@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/folders")
+@RequestMapping("/v1/folders")
 @Api(value = "folder")
 public class FolderController {
     private final FolderService folderService;
@@ -37,7 +37,7 @@ public class FolderController {
         @LoginUserId Long userId,
         @RequestBody FolderDto.CreateFolderReq dto) {
         long id = folderService.save(userId, dto);
-        URI location = URI.create("/api/folders/" + id);
+        URI location = URI.create("/folders/" + id);
         return ApiResult.OK(location);
     }
 
