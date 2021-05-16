@@ -60,6 +60,10 @@ public class Memo extends BaseEntity {
         this.mapFolder(folder);
     }
 
+    public void updateFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {

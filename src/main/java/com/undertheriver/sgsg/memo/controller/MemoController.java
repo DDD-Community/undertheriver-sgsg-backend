@@ -33,23 +33,28 @@ public class MemoController {
 
     @ApiOperation(value = "메모 저장")
     @PostMapping
-    public ApiResult<?> save(@LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq body) {
-        long id = memoService.save(userId, body);
-        URI location = URI.create("/folders/" + id);
+    public ApiResult<?> save(
+        @LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq request
+    ) {
+        long id = memoService.save(userId, request);
+        URI location = URI.create("/v1/memos" + id);
         return ApiResult.OK(location);
     }
 
     @ApiOperation(value = "메모 수정")
     @PutMapping("/{memoId}")
-    public ApiResult<MemoDto.UpdateMemoRes> update(@PathVariable Long memoId, @RequestBody MemoDto.UpdateMemoReq body) {
-        MemoDto.UpdateMemoRes res = memoService.update(memoId, body);
+    public ApiResult<MemoDto.UpdateMemoRes> update(
+        @PathVariable Long memoId, @RequestBody MemoDto.UpdateMemoReq request
+    ) {
+        MemoDto.UpdateMemoRes res = memoService.update(memoId, request);
         return ApiResult.OK(res);
     }
 
     @ApiOperation(value = "메모 조회")
     @GetMapping
     public ApiResult<List<MemoDto.ReadMemoRes>> readAll(
-        @LoginUserId Long userId, @RequestParam(required = false) Long folderId) {
+        @LoginUserId Long userId, @RequestParam(required = false) Long folderId
+    ) {
         List<MemoDto.ReadMemoRes> res = memoService.readAll(userId, folderId);
         return ApiResult.OK(res);
     }
