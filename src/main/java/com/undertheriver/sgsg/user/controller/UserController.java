@@ -57,7 +57,7 @@ public class UserController {
         return ApiResult.OK();
     }
 
-    @ApiOperation(value = "메모비밀번호 변경")
+    @ApiOperation(value = "폴더 비밀번호 변경")
     @PutMapping("/folder-password")
     public ApiResult<Object> updateFolderPassword(
         @LoginUserId Long userId, @RequestBody FolderPasswordRequest.UpdateRequest request
