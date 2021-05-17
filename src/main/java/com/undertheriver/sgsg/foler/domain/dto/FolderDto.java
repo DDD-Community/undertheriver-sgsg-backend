@@ -74,4 +74,14 @@ public class FolderDto {
             this.nextColor = nextColor;
         }
     }
+
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UpdateFolderSecretReq {
+        private Boolean secret;
+
+        public UpdateFolderSecretReq(Boolean secret) {
+            this.secret = secret;
+        }
+    }
 }
