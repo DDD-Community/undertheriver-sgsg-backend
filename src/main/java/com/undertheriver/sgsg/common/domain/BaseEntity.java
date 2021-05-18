@@ -30,4 +30,8 @@ public class BaseEntity {
 
     @Setter(AccessLevel.PROTECTED)
     private Boolean deleted;
+
+    public void delete() {
+        deleted = true;
+    }
 }
