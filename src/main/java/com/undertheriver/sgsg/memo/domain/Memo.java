@@ -80,9 +80,4 @@ public class Memo extends BaseEntity {
     public int hashCode() {
         return Long.hashCode(id);
     }
-
-
-    public void delete() {
-        setDeleted(true);
-    }
 }

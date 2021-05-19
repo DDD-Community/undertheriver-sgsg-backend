@@ -70,10 +70,6 @@ public class Folder extends BaseEntity {
         this.user = user;
     }
 
-    public void delete() {
-        setDeleted(true);
-    }
-
     @Override
     public boolean equals(Object other) {
         if (this == other) {
