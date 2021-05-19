@@ -218,4 +218,19 @@ class MemoServiceTest {
         return folders;
     }
 
+    @DisplayName("메모를 삭제할 수 있다.")
+    @Test
+    public void delete() {
+	    // given
+        Memo memo = Memo.builder()
+            .content("테스트")
+            .build();
+        Memo persistedMemo = memoRepository.save(memo);
+
+        // when
+        memoService.delete(persistedMemo.getId());
+
+        // then
+        assertTrue(persistedMemo.getDeleted());
+    }
 }

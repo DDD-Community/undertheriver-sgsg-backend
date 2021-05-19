@@ -82,11 +82,6 @@ public class User extends BaseEntity {
         return this;
     }
 
-    public User delete() {
-        setDeleted(true);
-        return this;
-    }
-
     public void addFolder(Folder folder) {
         this.folders.add(folder);
         folder.mapUser(this);

@@ -80,4 +80,10 @@ public class MemoService {
             .map(MemoDto.ReadMemoRes::toDto)
             .collect(Collectors.toList());
     }
+
+    public void delete(Long memoId) {
+        Memo memo = memoRepository.findById(memoId)
+            .orElseThrow(ModelNotFoundException::new);
+        memo.delete();
+    }
 }

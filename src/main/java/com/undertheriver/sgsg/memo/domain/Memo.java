@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table(indexes = @Index(name = "fk_folder", columnList = "folder"))
 @Entity
@@ -31,7 +32,7 @@ public class Memo extends BaseEntity {
 
     @Lob
     private String content;
-
+    
     private Boolean favorite;
 
     private String thumbnailUrl;

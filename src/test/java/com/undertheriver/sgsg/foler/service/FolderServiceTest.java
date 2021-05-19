@@ -206,4 +206,21 @@ class FolderServiceTest {
         // then
         assertEquals(actualColor, expectedColor);
     }
+
+    @DisplayName("폴더를 삭제할 수 있다.")
+    @Test
+    public void delete() {
+        // given
+        Folder folder = Folder.builder()
+            .title("테스트")
+            .color(FolderColor.BLUE)
+            .build();
+        folderRepository.save(folder);
+
+        // when
+        folderService.delete(folder.getId());
+
+        // then
+        assertTrue(folder.getDeleted());
+    }
 }

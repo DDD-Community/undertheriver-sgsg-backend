@@ -33,9 +33,9 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        userRepository.findById(id)
-            .map(User::delete)
+        User user = userRepository.findById(id)
             .orElseThrow(ModelNotFoundException::new);
+        user.delete();
     }
 
     @Transactional
