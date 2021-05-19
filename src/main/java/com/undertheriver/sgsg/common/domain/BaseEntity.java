@@ -15,12 +15,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Data
+@Getter
 @MappedSuperclass
 @EntityListeners({AuditingEntityListener.class})
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @CreatedDate
     private LocalDate createdAt;
@@ -28,7 +30,6 @@ public class BaseEntity {
     @LastModifiedDate
     private LocalDate updatedAt;
 
-    @Setter(AccessLevel.PROTECTED)
     private Boolean deleted;
 
     public void delete() {
