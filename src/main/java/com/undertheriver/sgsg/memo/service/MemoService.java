@@ -86,4 +86,18 @@ public class MemoService {
             .orElseThrow(ModelNotFoundException::new);
         memo.delete();
     }
+
+    public MemoDto.FavoriteRes favorite(Long memoId) {
+        Memo memo =  memoRepository.findById(memoId)
+            .orElseThrow(ModelNotFoundException::new);
+        memo.favorite();
+        return MemoDto.FavoriteRes.toDto(memo);
+    }
+
+    public MemoDto.FavoriteRes unfavorite(Long memoId) {
+        Memo memo =  memoRepository.findById(memoId)
+            .orElseThrow(ModelNotFoundException::new);
+        memo.unfavorite();
+        return MemoDto.FavoriteRes.toDto(memo);
+    }
 }

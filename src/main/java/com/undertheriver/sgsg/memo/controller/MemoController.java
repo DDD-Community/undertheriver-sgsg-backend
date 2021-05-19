@@ -65,4 +65,18 @@ public class MemoController {
         memoService.delete(memoId);
         return ApiResult.OK();
     }
+    
+    @ApiOperation(value = "메모 즐겨찾기")
+    @PostMapping("/{memoId}/favorite")
+    public ApiResult<MemoDto.FavoriteRes> favorite(@PathVariable Long memoId) {
+        MemoDto.FavoriteRes response = memoService.favorite(memoId);
+        return ApiResult.OK(response);
+    }
+
+    @ApiOperation(value = "메모 즐겨찾기 취소")
+    @PostMapping("/{memoId}/unfavorite")
+    public ApiResult<MemoDto.FavoriteRes> unfavorite(@PathVariable Long memoId) {
+        MemoDto.FavoriteRes response = memoService.unfavorite(memoId);
+        return ApiResult.OK(response);
+    }
 }

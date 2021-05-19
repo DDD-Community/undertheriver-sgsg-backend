@@ -60,8 +60,12 @@ public class Memo extends BaseEntity {
         this.mapFolder(folder);
     }
 
-    public void updateFavorite(Boolean favorite) {
-        this.favorite = favorite;
+    public void favorite() {
+        favorite = true;
+    }
+
+    public void unfavorite() {
+        favorite = false;
     }
 
     @Override

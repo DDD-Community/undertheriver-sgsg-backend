@@ -155,11 +155,13 @@ public class MemoDto {
         }
     }
 
-    @AllArgsConstructor
-    @NoArgsConstructor
     @Getter
-    public static class UpdateFavoriteReq {
-        @NotNull
-        Boolean favorite;
+    @AllArgsConstructor
+    public static class FavoriteRes {
+        private Boolean favorite;
+
+        public static FavoriteRes toDto(Memo memo) {
+            return new FavoriteRes(memo.getFavorite());
+        }
     }
 }

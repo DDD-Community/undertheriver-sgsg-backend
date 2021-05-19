@@ -21,6 +21,7 @@ import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.repository.MemoRepository;
+import com.undertheriver.sgsg.memo.service.MemoService;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
 
@@ -232,5 +233,53 @@ class MemoServiceTest {
 
         // then
         assertTrue(persistedMemo.getDeleted());
+    }
+    
+    @DisplayName("메모를 즐겨찾기할 수 있다.")
+    @Test
+    public void favorite1() {
+        // given
+        Folder folder = Folder.builder()
+            .title("")
+            .color(FolderColor.BLUE)
+            .build();
+        Folder persistedFolder = folderRepository.save(folder);
+
+        Memo memo = Memo.builder()
+            .content("테스트")
+            .thumbnailUrl("")
+            .folder(persistedFolder)
+            .build();
+        Memo persistedMemo = memoRepository.save(memo);
+
+        // when
+        Boolean actualFavorite = memoService.favorite(persistedMemo.getId()).getFavorite();
+
+        // then
+        assertTrue(actualFavorite);
+    }
+
+    @DisplayName("메모 즐겨찾기를 취소할 수 있다.")
+    @Test
+    public void favorite2() {
+        // given
+        Folder folder = Folder.builder()
+            .title("")
+            .color(FolderColor.BLUE)
+            .build();
+        Folder persistedFolder = folderRepository.save(folder);
+
+        Memo memo = Memo.builder()
+            .content("테스트")
+            .thumbnailUrl("")
+            .folder(persistedFolder)
+            .build();
+        Memo persistedMemo = memoRepository.save(memo);
+
+        // when
+        Boolean actualFavorite =  memoService.unfavorite(persistedMemo.getId()).getFavorite();
+
+        // then
+        assertFalse(actualFavorite);
     }
 }
