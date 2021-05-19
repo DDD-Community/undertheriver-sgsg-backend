@@ -1,5 +1,9 @@
 package com.undertheriver.sgsg.memo.service;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,5 +58,26 @@ public class MemoService {
 
         memo.update(body, folder);
         return MemoDto.UpdateMemoRes.toDto(memo, folderId);
+    }
+
+    public List<MemoDto.ReadMemoRes> readAll(Long userId, Long folderId) {
+        if (Objects.isNull(folderId)) {
+            return readAllByUser(userId);
+        }
+        return readAllByFolder(folderId);
+    }
+
+    private List<MemoDto.ReadMemoRes> readAllByUser(Long userId) {
+        return memoRepository.findAllByUser(userId)
+            .stream()
+            .map(MemoDto.ReadMemoRes::toDto)
+            .collect(Collectors.toList());
+    }
+
+    private List<MemoDto.ReadMemoRes> readAllByFolder(Long folderId) {
+        return memoRepository.findAllByFolder(folderId)
+            .stream()
+            .map(MemoDto.ReadMemoRes::toDto)
+            .collect(Collectors.toList());
     }
 }

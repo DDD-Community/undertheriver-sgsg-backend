@@ -53,6 +53,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiResult<?> handleInternalServerError(Exception e) {
         log.info("Exception, message: {{}}", e.getMessage());
+        e.printStackTrace();
         return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

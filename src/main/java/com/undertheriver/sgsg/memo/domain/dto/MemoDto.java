@@ -56,14 +56,6 @@ public class MemoDto {
         }
     }
 
-    public static class ReadMemoRes {
-        private Long id;
-        private String content;
-        private String createdAt;
-        private Boolean favorite;
-        private String thumbnailUrl;
-    }
-
     @Getter
     public static class UpdateMemoReq {
         @NotNull
@@ -119,6 +111,44 @@ public class MemoDto {
                 .thumbnailUrl(memo.getThumbnailUrl())
                 .createdAt(memo.getCreatedAt())
                 .folderId(folderId)
+                .build();
+        }
+    }
+
+    @Getter
+    public static class ReadMemoRes {
+        private Long memoId;
+        private String memoContent;
+        private LocalDate createdAt;
+        private String thumbnailUrl;
+        private Boolean favorite;
+        private Long folderId;
+        private String folderTitle;
+        private FolderColor folderColor;
+
+        @Builder
+        public ReadMemoRes(Long memoId, String memoContent, LocalDate createdAt, String thumbnailUrl,
+            Boolean favorite, Long folderId, String folderTitle, FolderColor folderColor) {
+            this.memoId = memoId;
+            this.memoContent = memoContent;
+            this.createdAt = createdAt;
+            this.thumbnailUrl = thumbnailUrl;
+            this.favorite = favorite;
+            this.folderId = folderId;
+            this.folderTitle = folderTitle;
+            this.folderColor = folderColor;
+        }
+
+        public static ReadMemoRes toDto(Memo memo) {
+            Folder f = memo.getFolder();
+            return ReadMemoRes.builder()
+                .memoId(memo.getId())
+                .memoContent(memo.getContent())
+                .createdAt(memo.getCreatedAt())
+                .thumbnailUrl(memo.getThumbnailUrl())
+                .folderId(f.getId())
+                .folderTitle(f.getTitle())
+                .folderColor(f.getColor())
                 .build();
         }
     }
