@@ -74,8 +74,12 @@ public class Folder extends BaseEntity {
         this.user = user;
     }
 
-    public void updateSecret(Boolean secret) {
-        this.secret = secret;
+    public void secret() {
+        secret = true;
+    }
+
+    public void unsecret() {
+        secret = false;
     }
 
     @Override

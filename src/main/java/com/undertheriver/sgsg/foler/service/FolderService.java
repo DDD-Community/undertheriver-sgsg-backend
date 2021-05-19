@@ -1,5 +1,7 @@
 package com.undertheriver.sgsg.foler.service;
 
+import static com.undertheriver.sgsg.user.exception.PasswordValidationException.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,10 +17,12 @@ import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
+import com.undertheriver.sgsg.user.exception.PasswordValidationException;
 
 @Service
 public class FolderService {
     private final FolderRepository folderRepository;
+
     private final UserRepository userRepository;
     private final Integer folderLimit;
 
@@ -88,5 +92,34 @@ public class FolderService {
         Folder folder = folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
         folder.delete();
+    }
+
+    public FolderDto.SecretRes secret(Long folderId) {
+        Folder folder = folderRepository.findById(folderId)
+            .orElseThrow(ModelNotFoundException::new);
+        folder.secret();
+        return FolderDto.SecretRes.toDto(folder);
+    }
+
+    public FolderDto.SecretRes unsecret(Long userId, Long folderId, FolderDto.UnsecretReq request) {
+        validate(userId, request);
+        Folder folder = folderRepository.findById(folderId)
+            .orElseThrow(ModelNotFoundException::new);
+        folder.unsecret();
+        return FolderDto.SecretRes.toDto(folder);
+    }
+
+
+    private void validate(Long userId, FolderDto.UnsecretReq request) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(ModelNotFoundException::new);
+
+        if (!user.hasFolderPassword()) {
+            throw new PasswordValidationException(NO_PASSWORD);
+        }
+
+        if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getFolderPassword())) {
+            throw new PasswordValidationException(PASSWORD_NOT_MATCH);
+        }
     }
 }
