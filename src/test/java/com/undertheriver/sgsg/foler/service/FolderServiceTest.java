@@ -1,5 +1,6 @@
 package com.undertheriver.sgsg.foler.service;
 
+import static com.undertheriver.sgsg.user.exception.PasswordValidationException.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +12,6 @@ import com.undertheriver.sgsg.foler.repository.FolderRepository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,10 @@ import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.memo.repository.MemoRepository;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
+import com.undertheriver.sgsg.user.domain.vo.UserSecretFolderPassword;
+import com.undertheriver.sgsg.user.exception.PasswordValidationException;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -38,6 +42,8 @@ class FolderServiceTest {
     private MemoRepository memoRepository;
     @Autowired
     private FolderService folderService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private FolderDto.CreateFolderReq createFolderReq;
     private FolderDto.CreateFolderReq createFolderReq2;
@@ -50,11 +56,11 @@ class FolderServiceTest {
     @BeforeEach
     public void beforeEach() {
         user = User.builder()
-                .name("김홍빈")
-                .userRole(UserRole.USER)
-                .profileImageUrl("http://naver.com/test.png")
-                .email("fusis1@naver.com")
-                .build();
+            .name("김홍빈")
+            .userRole(UserRole.USER)
+            .profileImageUrl("http://naver.com/test.png")
+            .email("fusis1@naver.com")
+            .build();
         userRepository.save(user);
 
         createFolderReq = FolderDto.CreateFolderReq.builder()
@@ -97,7 +103,6 @@ class FolderServiceTest {
         // when
         List<FolderDto.ReadFolderRes> actualFolderList = folderService.readAll(user.getId(), FolderOrderBy.MEMO);
         Long actualFolderId = actualFolderList.get(0).getId();
-
 
         // then
         assertTrue(expectedFolderId.equals(actualFolderId));
@@ -144,7 +149,7 @@ class FolderServiceTest {
     public void save() {
         Long id = folderService.save(user.getId(), createFolderReq);
         assertAll(
-                () -> assertThat(id).isNotEqualTo(null)
+            () -> assertThat(id).isNotEqualTo(null)
         );
     }
 
@@ -155,11 +160,11 @@ class FolderServiceTest {
         List<Folder> folderList = new ArrayList<>();
         for (int i = 0; i < 21; i++) {
             folderList.add(
-                    FolderDto.CreateFolderReq.builder()
-                            .title(i + "")
-                            .color(FolderColor.RED)
-                            .build()
-                            .toEntity()
+                FolderDto.CreateFolderReq.builder()
+                    .title(i + "")
+                    .color(FolderColor.RED)
+                    .build()
+                    .toEntity()
             );
         }
         folderRepository.saveAll(folderList);
@@ -180,12 +185,12 @@ class FolderServiceTest {
         String defaultTitle = folder.getTitle();
         String expectedTitle = TEST_TITLE_VALUE2;
         updateFolderTitleReq = FolderDto.UpdateFolderTitleReq.builder()
-                .title(expectedTitle)
-                .build();
+            .title(expectedTitle)
+            .build();
 
         // when
         String actualTitle = folderService.update(folder.getId(), updateFolderTitleReq)
-                .getTitle();
+            .getTitle();
 
         // then
         assertEquals(expectedTitle, actualTitle);
@@ -223,4 +228,111 @@ class FolderServiceTest {
         // then
         assertTrue(folder.getDeleted());
     }
+
+    @DisplayName("폴더를 비밀 상태로 만들 수 있다.")
+    @Test
+    public void secret() {
+        //given
+        Folder folder = Folder.builder()
+            .color(FolderColor.RED)
+            .title("테스트")
+            .build();
+        folderRepository.save(folder);
+
+        // when
+        Boolean actualSecret = folderService.secret(folder.getId()).getSecret();
+
+        // then
+        assertTrue(actualSecret);
+    }
+
+    @DisplayName("폴더를 비밀 상태를 취소할 있다.")
+    @Test
+    public void unsecret() {
+        //given
+        Folder folder = Folder.builder()
+            .color(FolderColor.RED)
+            .title("테스트")
+            .build();
+        folderRepository.save(folder);
+
+        String rawPassword = "1234";
+        String encryptedPassword = bCryptPasswordEncoder.encode(rawPassword);
+        UserSecretFolderPassword folderPassword = UserSecretFolderPassword.from(encryptedPassword);
+        User user = User.builder()
+            .name("김홍빈")
+            .userRole(UserRole.USER)
+            .profileImageUrl("http://naver.com/test.png")
+            .email("fusis1@naver.com")
+            .userSecretFolderPassword(folderPassword)
+            .build();
+        userRepository.save(user);
+
+        FolderDto.UnsecretReq request = new FolderDto.UnsecretReq(rawPassword);
+
+        // when
+        Boolean actualSecret = folderService.unsecret(user.getId(), folder.getId(), request).getSecret();
+
+        // then
+        assertFalse(actualSecret);
+    }
+
+    @DisplayName("폴더 비밀번호를 설정하지 않았을 때는 비밀 상태를 취소할 없다.")
+    @Test
+    public void unsecret2() {
+        //given
+        Folder folder = Folder.builder()
+            .color(FolderColor.RED)
+            .title("테스트")
+            .build();
+        folderRepository.save(folder);
+
+        FolderDto.UnsecretReq request = new FolderDto.UnsecretReq("1234");
+
+        // when
+        PasswordValidationException thrown = assertThrows(
+            PasswordValidationException.class,
+            () -> folderService.unsecret(user.getId(), folder.getId(), request)
+        );
+
+        // then
+        assertFalse(user.hasFolderPassword());
+        assertEquals(NO_PASSWORD, thrown.getMessage());
+    }
+
+    @DisplayName("폴더 비밀번호가 일치하지 않으면 비밀 상태를 취소할 없다.")
+    @Test
+    public void unsecret3() {
+        Folder folder = Folder.builder()
+            .color(FolderColor.RED)
+            .title("테스트")
+            .build();
+        folderRepository.save(folder);
+
+        String rawPassword = "1234";
+        String encryptedPassword = bCryptPasswordEncoder.encode(rawPassword);
+        UserSecretFolderPassword folderPassword = UserSecretFolderPassword.from(encryptedPassword);
+        User user = User.builder()
+            .name("김홍빈")
+            .userRole(UserRole.USER)
+            .profileImageUrl("http://naver.com/test.png")
+            .email("fusis1@naver.com")
+            .userSecretFolderPassword(folderPassword)
+            .build();
+        userRepository.save(user);
+
+        String wrongPassword = rawPassword.repeat(2);
+        FolderDto.UnsecretReq request = new FolderDto.UnsecretReq(wrongPassword);
+
+        // when
+        PasswordValidationException thrown = assertThrows(
+            PasswordValidationException.class,
+            () -> folderService.unsecret(user.getId(), folder.getId(), request)
+        );
+
+        // then
+        assertTrue(user.hasFolderPassword());
+        assertEquals(PASSWORD_NOT_MATCH, thrown.getMessage());
+    }
+
 }
