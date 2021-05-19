@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -39,8 +38,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthorizationRequestRepository<OAuth2AuthorizationRequest> cookieBasedAuthorizationRequestRepository;
 
-    private final AuthenticationEntryPoint authenticationEntryPoint;
-
     private final AccessDeniedHandler customAccessDeniedHandler;
 
     @Override
@@ -61,7 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.exceptionHandling()
 				.accessDeniedHandler(customAccessDeniedHandler)
-				.authenticationEntryPoint(authenticationEntryPoint)
 		.and()
 		.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
