@@ -74,5 +74,21 @@ public class FolderController {
     public ApiResult<?> delete(@PathVariable Long folderId) {
         folderService.delete(folderId);
         return ApiResult.OK();
+    @ApiOperation("폴더를 비밀 상태로 변경")
+    @PostMapping("/{folderId}/secret")
+    public ApiResult<FolderDto.SecretRes> secret(@PathVariable Long folderId) {
+        FolderDto.SecretRes response = folderService.secret(folderId);
+        return ApiResult.OK(response);
+    }
+
+    @ApiOperation("폴더 비밀 상태 취소")
+    @PostMapping("/{folderId}/unsecret")
+    public ApiResult<FolderDto.SecretRes> unsecret(
+        @LoginUserId Long userId,
+        @PathVariable Long folderId,
+        @RequestBody FolderDto.UnsecretReq request
+    ) {
+        FolderDto.SecretRes response = folderService.unsecret(userId, folderId, request);
+        return ApiResult.OK(response);
     }
 }
