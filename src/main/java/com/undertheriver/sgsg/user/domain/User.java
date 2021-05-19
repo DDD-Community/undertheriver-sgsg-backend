@@ -60,11 +60,12 @@ public class User extends BaseEntity {
 
     @Builder
     private User(String email, String profileImageUrl, String name,
-        UserRole userRole) {
+        UserRole userRole, UserSecretFolderPassword userSecretFolderPassword) {
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.userRole = userRole;
+        this.userSecretFolderPassword = userSecretFolderPassword;
     }
 
     public void saveApiClient(String oAuthId, String oAuthName) {
