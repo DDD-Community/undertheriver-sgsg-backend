@@ -74,6 +74,8 @@ public class FolderController {
     public ApiResult<?> delete(@PathVariable Long folderId) {
         folderService.delete(folderId);
         return ApiResult.OK();
+    }
+
     @ApiOperation("폴더를 비밀 상태로 변경")
     @PostMapping("/{folderId}/secret")
     public ApiResult<FolderDto.SecretRes> secret(@PathVariable Long folderId) {
