@@ -102,7 +102,7 @@ public class FolderService {
     }
 
     public FolderDto.SecretRes unsecret(Long userId, Long folderId, FolderDto.UnsecretReq request) {
-        validateFolderPassword(userId, request);
+        validateFolderPassword(userId, request.getPassword());
         Folder folder = folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
         folder.unsecret();
@@ -110,7 +110,7 @@ public class FolderService {
     }
 
 
-    private void validateFolderPassword(Long userId, FolderDto.UnsecretReq request) {
+    private void validateFolderPassword(Long userId, String rawPassword) {
         User user = userRepository.findById(userId)
             .orElseThrow(ModelNotFoundException::new);
 
@@ -118,7 +118,7 @@ public class FolderService {
             throw new PasswordValidationException(NO_PASSWORD);
         }
 
-        if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getFolderPassword())) {
+        if (!bCryptPasswordEncoder.matches(rawPassword, user.getFolderPassword())) {
             throw new PasswordValidationException(PASSWORD_NOT_MATCH);
         }
     }
