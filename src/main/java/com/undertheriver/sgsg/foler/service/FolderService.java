@@ -102,7 +102,7 @@ public class FolderService {
     }
 
     public FolderDto.SecretRes unsecret(Long userId, Long folderId, FolderDto.UnsecretReq request) {
-        validate(userId, request);
+        validateFolderPassword(userId, request);
         Folder folder = folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
         folder.unsecret();
@@ -110,7 +110,7 @@ public class FolderService {
     }
 
 
-    private void validate(Long userId, FolderDto.UnsecretReq request) {
+    private void validateFolderPassword(Long userId, FolderDto.UnsecretReq request) {
         User user = userRepository.findById(userId)
             .orElseThrow(ModelNotFoundException::new);
 
