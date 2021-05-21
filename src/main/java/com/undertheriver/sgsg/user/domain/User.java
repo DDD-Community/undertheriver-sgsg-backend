@@ -44,7 +44,6 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Folder> folders = new ArrayList<>();
 
-    @Getter(AccessLevel.PRIVATE)
     @Embedded
     private UserSecretFolderPassword userSecretFolderPassword;
 

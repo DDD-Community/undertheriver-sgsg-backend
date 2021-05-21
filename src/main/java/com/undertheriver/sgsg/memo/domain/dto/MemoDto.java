@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -149,8 +150,8 @@ public class MemoDto {
                 .folderId(f.getId())
                 .folderTitle(f.getTitle())
                 .folderColor(f.getColor())
+                .favorite(memo.getFavorite())
                 .build();
         }
     }
-
 }

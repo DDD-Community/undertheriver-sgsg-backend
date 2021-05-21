@@ -1,5 +1,6 @@
 package com.undertheriver.sgsg.memo.service;
 
+import static com.undertheriver.sgsg.common.exception.BadRequestException.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.undertheriver.sgsg.common.exception.BadRequestException;
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
@@ -232,5 +234,84 @@ class MemoServiceTest {
 
         // then
         assertTrue(persistedMemo.getDeleted());
+    }
+    
+    @DisplayName("메모를 즐겨찾기할 수 있다.")
+    @Test
+    public void favorite1() {
+        // given
+        Folder folder = Folder.builder()
+            .title("")
+            .color(FolderColor.BLUE)
+            .user(user)
+            .build();
+        Folder persistedFolder = folderRepository.save(folder);
+
+        Memo memo = Memo.builder()
+            .content("테스트")
+            .thumbnailUrl("")
+            .folder(persistedFolder)
+            .build();
+        Memo persistedMemo = memoRepository.save(memo);
+
+        // when
+        memoService.favorite(user.getId(), persistedMemo.getId());
+
+        // then
+        assertTrue(persistedMemo.getFavorite());
+    }
+
+    @DisplayName("메모 즐겨찾기를 취소할 수 있다.")
+    @Test
+    public void favorite2() {
+        // given
+        Folder folder = Folder.builder()
+            .title("")
+            .color(FolderColor.BLUE)
+            .user(user)
+            .build();
+        Folder persistedFolder = folderRepository.save(folder);
+
+        Memo memo = Memo.builder()
+            .content("테스트")
+            .thumbnailUrl("")
+            .folder(persistedFolder)
+            .build();
+        Memo persistedMemo = memoRepository.save(memo);
+
+        // when
+        memoService.unfavorite(user.getId(), persistedMemo.getId());
+
+        // then
+        assertFalse(persistedMemo.getFavorite());
+    }
+
+    @DisplayName("사용자의 메모가 아니면 즐겨찾기를 취소할 수 없다.")
+    @Test
+    public void favorite3() {
+        // given
+        Folder folder = Folder.builder()
+            .title("")
+            .color(FolderColor.BLUE)
+            .user(user)
+            .build();
+        Folder persistedFolder = folderRepository.save(folder);
+
+        Memo memo = Memo.builder()
+            .content("테스트")
+            .thumbnailUrl("")
+            .folder(persistedFolder)
+            .build();
+        Memo persistedMemo = memoRepository.save(memo);
+        Long wrongUserId = 777L;
+
+        // when
+        BadRequestException thrown = assertThrows(
+            BadRequestException.class,
+            () -> memoService.unfavorite(wrongUserId, persistedMemo.getId())
+        );
+
+        // then
+        assertEquals(thrown.getMessage(), UNMACHED_USER);
     }
 }
