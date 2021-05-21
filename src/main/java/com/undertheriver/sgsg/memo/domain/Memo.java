@@ -18,7 +18,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Table(indexes = @Index(name = "fk_folder", columnList = "folder"))
 @Entity
@@ -66,6 +65,12 @@ public class Memo extends BaseEntity {
 
     public void unfavorite() {
         favorite = false;
+    }
+
+    public boolean ownBy(Long userId) {
+        return !folder.getUser()
+            .getId()
+            .equals(userId);
     }
 
     @Override

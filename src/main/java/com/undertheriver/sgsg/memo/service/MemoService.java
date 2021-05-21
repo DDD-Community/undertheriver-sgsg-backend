@@ -1,5 +1,7 @@
 package com.undertheriver.sgsg.memo.service;
 
+import static com.undertheriver.sgsg.common.exception.BadRequestException.*;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -7,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.undertheriver.sgsg.common.exception.BadRequestException;
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
@@ -87,17 +90,27 @@ public class MemoService {
         memo.delete();
     }
 
-    public MemoDto.FavoriteRes favorite(Long memoId) {
+    public void favorite(Long userId, Long memoId) {
         Memo memo =  memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);
+
+        validateUserHasMemo(userId, memo);
+
         memo.favorite();
-        return MemoDto.FavoriteRes.toDto(memo);
     }
 
-    public MemoDto.FavoriteRes unfavorite(Long memoId) {
+    public void unfavorite(Long userId, Long memoId) {
         Memo memo =  memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);
+
+        validateUserHasMemo(userId, memo);
+
         memo.unfavorite();
-        return MemoDto.FavoriteRes.toDto(memo);
+    }
+
+    private void validateUserHasMemo(Long userId, Memo memo) {
+        if (memo.ownBy(userId)) {
+            throw new BadRequestException(UNMACHED_USER);
+        }
     }
 }
