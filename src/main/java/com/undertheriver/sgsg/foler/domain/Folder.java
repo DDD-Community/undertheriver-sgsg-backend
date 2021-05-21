@@ -50,8 +50,7 @@ public class Folder extends BaseEntity {
 
     @OneToMany(mappedBy = "folder")
     private Set<Memo> memos = new LinkedHashSet<>();
-
-    @Setter(AccessLevel.NONE)
+    
     private Boolean secret;
 
     @Builder
