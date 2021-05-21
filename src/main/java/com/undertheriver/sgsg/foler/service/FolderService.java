@@ -1,5 +1,6 @@
 package com.undertheriver.sgsg.foler.service;
 
+import static com.undertheriver.sgsg.common.exception.BadRequestException.*;
 import static com.undertheriver.sgsg.user.exception.PasswordValidationException.*;
 
 import java.util.List;
@@ -94,19 +95,24 @@ public class FolderService {
         folder.delete();
     }
 
-    public FolderDto.SecretRes secret(Long folderId) {
+    public void secret(Long userId, Long folderId) {
         Folder folder = folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
+
+        validateUserHasFolder(userId, folder);
+
         folder.secret();
-        return FolderDto.SecretRes.toDto(folder);
     }
 
-    public FolderDto.SecretRes unsecret(Long userId, Long folderId, FolderDto.UnsecretReq request) {
+    public void unsecret(Long userId, Long folderId, FolderDto.UnsecretReq request) {
         validateFolderPassword(userId, request.getPassword());
+
         Folder folder = folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
+
+        validateUserHasFolder(userId, folder);
+
         folder.unsecret();
-        return FolderDto.SecretRes.toDto(folder);
     }
 
 
@@ -120,6 +126,12 @@ public class FolderService {
 
         if (!bCryptPasswordEncoder.matches(rawPassword, user.getFolderPassword())) {
             throw new PasswordValidationException(PASSWORD_NOT_MATCH);
+        }
+    }
+
+    private void validateUserHasFolder(Long userId, Folder folder) {
+        if (!folder.ownBy(userId)) {
+            throw new BadRequestException(UNMACHED_USER);
         }
     }
 }

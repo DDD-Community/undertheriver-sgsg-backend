@@ -83,15 +83,4 @@ public class FolderDto {
     public static class UnsecretReq {
         private String password;
     }
-
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class SecretRes {
-        private Boolean secret;
-
-        public static SecretRes toDto(Folder folder) {
-            return new SecretRes(folder.getSecret());
-        }
-    }
 }
