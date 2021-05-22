@@ -11,7 +11,6 @@ import org.springframework.lang.Nullable;
 
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -126,10 +125,11 @@ public class MemoDto {
         private Long folderId;
         private String folderTitle;
         private FolderColor folderColor;
+        private Boolean secret;
 
         @Builder
         public ReadMemoRes(Long memoId, String memoContent, LocalDate createdAt, String thumbnailUrl,
-            Boolean favorite, Long folderId, String folderTitle, FolderColor folderColor) {
+            Boolean favorite, Long folderId, String folderTitle, FolderColor folderColor, Boolean secret) {
             this.memoId = memoId;
             this.memoContent = memoContent;
             this.createdAt = createdAt;
@@ -138,20 +138,34 @@ public class MemoDto {
             this.folderId = folderId;
             this.folderTitle = folderTitle;
             this.folderColor = folderColor;
+            this.secret = secret;
         }
 
         public static ReadMemoRes toDto(Memo memo) {
-            Folder f = memo.getFolder();
+            Folder folder = memo.getFolder();
+            String memoContent = setMemoContent(memo);
+
             return ReadMemoRes.builder()
                 .memoId(memo.getId())
-                .memoContent(memo.getContent())
+                .memoContent(memoContent)
                 .createdAt(memo.getCreatedAt())
                 .thumbnailUrl(memo.getThumbnailUrl())
-                .folderId(f.getId())
-                .folderTitle(f.getTitle())
-                .folderColor(f.getColor())
+                .folderId(folder.getId())
+                .folderTitle(folder.getTitle())
+                .folderColor(folder.getColor())
                 .favorite(memo.getFavorite())
+                .secret(folder.isSecret())
                 .build();
         }
+
+        private static String setMemoContent(Memo memo) {
+            Folder folder = memo.getFolder();
+            if (folder.isSecret()) {
+                return "";
+            }
+
+            return memo.getContent();
+        }
     }
+
 }

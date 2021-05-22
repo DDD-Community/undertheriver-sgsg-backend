@@ -4,6 +4,7 @@ import static com.undertheriver.sgsg.common.exception.BadRequestException.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -313,5 +314,55 @@ class MemoServiceTest {
 
         // then
         assertEquals(thrown.getMessage(), UNMACHED_USER);
+    }
+
+    @DisplayName("비밀 폴더에 속한 메모들은 메모 내용을 숨길 수 있다.")
+    @Test
+    public void readAllMemosByFolder2() {
+        // given
+        User user = User.builder()
+            .name("김홍빈")
+            .userRole(UserRole.USER)
+            .profileImageUrl("http://naver.com/test.png")
+            .email("fusis1@naver.com")
+            .build();
+        user = userRepository.save(user);
+
+        Folder folder = Folder.builder()
+            .color(FolderColor.RED)
+            .title("테스트 폴더")
+            .build();
+
+        Folder secretFolder = Folder.builder()
+            .color(FolderColor.RED)
+            .title("비밀 폴더")
+            .build();
+        folder.secret();
+        folderRepository.saveAll(Arrays.asList(folder, secretFolder));
+        user.addFolder(folder);
+        user.addFolder(secretFolder);
+
+        Memo memo = Memo.builder()
+            .content("테스트 메모")
+            .build();
+
+        Memo secretMemo = Memo.builder()
+            .content("비밀 메모")
+            .build();
+        memoRepository.saveAll(Arrays.asList(memo, secretMemo));
+        folder.addMemo(memo);
+        secretFolder.addMemo(secretMemo);
+
+        String expectedMemoContent = "";
+
+        // when
+        boolean expectedTrue = memoService.readAll(user.getId(), null)
+            .stream()
+            .filter(MemoDto.ReadMemoRes::getSecret)
+            .map(MemoDto.ReadMemoRes::getMemoContent)
+            .allMatch(memoContent -> memoContent.equals(expectedMemoContent));
+
+        // then
+        assertTrue(expectedTrue);
     }
 }

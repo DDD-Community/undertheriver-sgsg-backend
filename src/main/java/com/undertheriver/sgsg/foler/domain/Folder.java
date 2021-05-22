@@ -53,6 +53,14 @@ public class Folder extends BaseEntity {
     
     private Boolean secret;
 
+    public boolean isSecret() {
+        if (secret == null) {
+            return false;
+        }
+
+        return secret;
+    }
+
     @Builder
     public Folder(String title, FolderColor color, User user) {
         this.title = title;
