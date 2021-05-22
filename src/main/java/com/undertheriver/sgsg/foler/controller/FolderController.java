@@ -45,7 +45,7 @@ public class FolderController {
     @ApiOperation("폴더 조회")
     @GetMapping
     public ApiResult<List<FolderDto.ReadFolderRes>> read(
-        @LoginUserId Long userId, @RequestParam FolderOrderBy orderBy) {
+        @LoginUserId Long userId, @RequestParam(required = false) FolderOrderBy orderBy) {
         List<FolderDto.ReadFolderRes> folders = folderService.readAll(userId, orderBy);
         return ApiResult.OK(folders);
     }
