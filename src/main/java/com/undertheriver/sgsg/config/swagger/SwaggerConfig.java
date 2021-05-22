@@ -13,7 +13,6 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.HttpAuthenticationScheme;
 import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.Server;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -24,10 +23,7 @@ public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        Server local = new Server("local", "http://localhost:8080", "local test", Collections.emptyList(), Collections.emptyList());
-        Server dev = new Server("dev", "https://api.sgsg.space", "dev test", Collections.emptyList(), Collections.emptyList());
         return new Docket(DocumentationType.OAS_30)
-            .servers(local, dev)
             .securitySchemes(List.of(apiKey()))
             .useDefaultResponseMessages(false)
             .securityContexts(List.of(securityContext()))

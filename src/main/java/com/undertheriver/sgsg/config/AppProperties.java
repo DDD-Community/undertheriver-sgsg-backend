@@ -45,10 +45,5 @@ public class AppProperties {
     public static class Swagger {
         private List<String> serverDescription = new ArrayList<>();
         private List<String> serverUrl = new ArrayList<>();
-
-        // public Swagger(List<String> serverDescription, List<String> serverUrl) {
-        //     this.serverDescription = serverDescription;
-        //     this.serverUrl = serverUrl;
-        // }
     }
 }
