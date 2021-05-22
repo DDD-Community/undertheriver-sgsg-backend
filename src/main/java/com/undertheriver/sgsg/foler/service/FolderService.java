@@ -49,6 +49,10 @@ public class FolderService {
 
     @Transactional(readOnly = true)
     public List<FolderDto.ReadFolderRes> readAll(Long userId, FolderOrderBy orderBy) {
+        if (orderBy == null) {
+            orderBy = FolderOrderBy.CREATED_AT;
+        }
+
         return orderBy.findFolders(userId, folderRepository)
             .stream()
             .map(FolderDto.ReadFolderRes::toDto)
