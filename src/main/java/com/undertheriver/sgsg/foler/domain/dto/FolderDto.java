@@ -49,12 +49,14 @@ public class FolderDto {
         private Long id;
         private String title;
         private FolderColor color;
+        private Integer memoCount;
 
         @Builder
-        public ReadFolderRes(Long id, String title, FolderColor color) {
+        public ReadFolderRes(Long id, String title, FolderColor color, Integer memoCount) {
             this.id = id;
             this.title = title;
             this.color = color;
+            this.memoCount = memoCount;
         }
 
         public static ReadFolderRes toDto(Folder folder) {
@@ -62,6 +64,7 @@ public class FolderDto {
                 .id(folder.getId())
                 .title(folder.getTitle())
                 .color(folder.getColor())
+                .memoCount(folder.getMemos().size())
                 .build();
         }
     }
