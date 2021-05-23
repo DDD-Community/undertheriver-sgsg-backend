@@ -67,7 +67,7 @@ public class Memo extends BaseEntity {
         favorite = false;
     }
 
-    public boolean ownBy(Long userId) {
+    public boolean hasBy(Long userId) {
         return !folder.getUser()
             .getId()
             .equals(userId);

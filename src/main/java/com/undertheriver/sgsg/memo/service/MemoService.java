@@ -109,7 +109,7 @@ public class MemoService {
     }
 
     private void validateUserHasMemo(Long userId, Memo memo) {
-        if (memo.ownBy(userId)) {
+        if (memo.hasBy(userId)) {
             throw new BadRequestException(UNMACHED_USER);
         }
     }

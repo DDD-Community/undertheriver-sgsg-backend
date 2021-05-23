@@ -81,7 +81,7 @@ public class Folder extends BaseEntity {
         secret = false;
     }
 
-    public boolean ownBy(Long userId) {
+    public boolean hasBy(Long userId) {
         return user.getId().equals(userId);
     }
 

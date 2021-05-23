@@ -140,7 +140,7 @@ public class FolderService {
     }
 
     private void validateUserHasFolder(Long userId, Folder folder) {
-        if (!folder.ownBy(userId)) {
+        if (!folder.hasBy(userId)) {
             throw new BadRequestException(UNMACHED_USER);
         }
     }
