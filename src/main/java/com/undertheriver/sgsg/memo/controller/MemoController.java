@@ -31,7 +31,7 @@ public class MemoController {
 
     private final MemoService memoService;
 
-    @ApiOperation(value = "메모 저장")
+    @ApiOperation(value = "메모 저장", notes = "일치하는 폴더가 없을 시 바디에 folderId 필드를 제거해주세요.")
     @PostMapping
     public ApiResult<?> save(
         @LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq request
