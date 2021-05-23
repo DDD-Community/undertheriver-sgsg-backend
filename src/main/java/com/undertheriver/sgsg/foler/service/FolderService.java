@@ -3,6 +3,7 @@ package com.undertheriver.sgsg.foler.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.undertheriver.sgsg.config.AppProperties;
 import com.undertheriver.sgsg.foler.domain.FolderOrderBy;
 import com.undertheriver.sgsg.user.domain.User;
 
@@ -19,20 +20,24 @@ import com.undertheriver.sgsg.user.domain.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
 public class FolderService {
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
-    private final PagingConfig pagingConfig;
+    private final Integer folderLimit;
+
+    public FolderService(FolderRepository folderRepository,
+        UserRepository userRepository, AppProperties appProperties) {
+        this.folderRepository = folderRepository;
+        this.userRepository = userRepository;
+        this.folderLimit = appProperties.getFolder().getLimit();
+    }
 
     @Transactional
     public Long save(Long userId, FolderDto.CreateFolderReq req) {
-        Integer limit = pagingConfig.getFolderConfig().get("limit");
-
-        if (foldersExistMoreThanLimit(userId, limit)) {
+        if (foldersExistMoreThanLimit(userId)) {
             throw new IndexOutOfBoundsException(
-                String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", limit));
+                String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", folderLimit));
         }
 
         User user = userRepository.findById(userId)
@@ -42,9 +47,9 @@ public class FolderService {
         return folder.getId();
     }
 
-    private boolean foldersExistMoreThanLimit(Long userId, Integer limit) {
-        Integer a = folderRepository.countByUserIdAndDeletedFalseOrDeletedNull(userId);
-        return a >= limit;
+    private boolean foldersExistMoreThanLimit(Long userId) {
+        Integer folderCount = folderRepository.countByUserIdAndDeletedFalseOrDeletedNull(userId);
+        return folderCount >= folderLimit;
     }
 
     @Transactional(readOnly = true)
