@@ -6,9 +6,11 @@ import static com.undertheriver.sgsg.user.exception.PasswordValidationException.
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.undertheriver.sgsg.common.exception.BadRequestException;
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.config.AppProperties;
 import com.undertheriver.sgsg.foler.domain.Folder;
@@ -22,13 +24,21 @@ import com.undertheriver.sgsg.user.exception.PasswordValidationException;
 
 @Service
 public class FolderService {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     private final FolderRepository folderRepository;
 
     private final UserRepository userRepository;
+
     private final Integer folderLimit;
 
-    public FolderService(FolderRepository folderRepository,
-        UserRepository userRepository, AppProperties appProperties) {
+    public FolderService(
+        BCryptPasswordEncoder bCryptPasswordEncoder,
+        FolderRepository folderRepository,
+        UserRepository userRepository,
+        AppProperties appProperties
+    ) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.folderRepository = folderRepository;
         this.userRepository = userRepository;
         this.folderLimit = appProperties.getFolder().getLimit();
