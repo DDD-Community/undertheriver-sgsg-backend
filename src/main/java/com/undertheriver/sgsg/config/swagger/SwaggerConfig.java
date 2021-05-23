@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.undertheriver.sgsg.common.annotation.LoginUserId;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -24,6 +27,7 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
+            .ignoredParameterTypes(LoginUserId.class)
             .securitySchemes(List.of(apiKey()))
             .useDefaultResponseMessages(false)
             .securityContexts(List.of(securityContext()))
