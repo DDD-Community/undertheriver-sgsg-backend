@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.undertheriver.sgsg.common.exception.BadRequestException;
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
@@ -26,8 +27,6 @@ import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.repository.MemoRepository;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
@@ -45,25 +44,25 @@ class MemoServiceTest {
     @Autowired
     private MemoRepository memoRepository;
 
-    private User user;
-    private Folder folder;
-    private FolderDto.CreateFolderReq createFolderReq1;
-    private MemoDto.CreateMemoReq createMemoReq1;
-    private MemoDto.CreateMemoReq createMemoNoFolderReq1;
+    private User createUser() {
+        return User.builder()
+            .name("황성찬")
+            .userRole(UserRole.USER)
+            .profileImageUrl("http://naver.com/test.png")
+            .email("dbfpzk142@gmail.com")
+            .build();
+    }
 
-	@BeforeEach
-	public void beforeEach() {
-		user = User.builder()
-			.name("김홍빈")
-			.userRole(UserRole.USER)
-			.profileImageUrl("http://naver.com/test.png")
-			.email("fusis1@naver.com")
-			.build();
-		user = userRepository.save(user);
-
-        createFolderReq1 = FolderDto.CreateFolderReq.builder()
+    private Folder createFolder() {
+        return Folder.builder()
             .title("폴더 테스트")
-            .color(FolderColor.RED)
+            .color(FolderColor.BLUE)
+            .build();
+    }
+
+    private Memo createMemo() {
+        return Memo.builder()
+            .content("테스트 메모")
             .build();
     }
 
@@ -71,9 +70,13 @@ class MemoServiceTest {
     @Test
     public void create() {
         // given
-        Long folderId = folderService.save(user.getId(), createFolderReq1);
-        folder = folderRepository.findById(folderId).get();
-        createMemoReq1 = MemoDto.CreateMemoReq.builder()
+        User user = createUser();
+        userRepository.save(user);
+
+        Folder folder = createFolder();
+        folderRepository.save(folder);
+
+        MemoDto.CreateMemoReq request = MemoDto.CreateMemoReq.builder()
             .folderId(folder.getId())
             .folderTitle(folder.getTitle())
             .folderColor(folder.getColor())
@@ -81,29 +84,27 @@ class MemoServiceTest {
             .build();
 
         // when
-        Long actualMemoId = memoService.save(user.getId(), createMemoReq1);
+        Long actualMemoId = memoService.save(user.getId(), request);
 
         // then
-        assertTrue(
-            folder.getMemos()
-                .stream()
-                .anyMatch(expectedMemo ->
-                    expectedMemo.getId() == actualMemoId)
-        );
+        assertNotNull(actualMemoId);
     }
 
     @DisplayName("폴더가 없을 때 폴더를 먼저 생성 후 메모를 생성할 수 있다.")
     @Test
     public void createEvenIfNoFolder() {
         // given
-        createMemoNoFolderReq1 = MemoDto.CreateMemoReq.builder()
-            .folderTitle(createFolderReq1.getTitle())
-            .folderColor(createFolderReq1.getColor())
-            .memoContent(FOLDER_TITLE_TEST)
+        User user = createUser();
+        userRepository.save(user);
+
+        MemoDto.CreateMemoReq noFolderRequest = MemoDto.CreateMemoReq.builder()
+            .folderTitle("테스트 폴더")
+            .folderColor(FolderColor.BLUE)
+            .memoContent("테스트 메모")
             .build();
 
         // when
-        Long actualMemoId = memoService.save(user.getId(), createMemoNoFolderReq1);
+        Long actualMemoId = memoService.save(user.getId(), noFolderRequest);
 
         // then
         Memo actualMemo = memoRepository.findById(actualMemoId)
@@ -119,25 +120,28 @@ class MemoServiceTest {
     @Test
     public void updateMemo() {
         // given
+        User user = createUser();
+        userRepository.save(user);
+
+        Folder folder = createFolder();
+        folderRepository.save(folder);
+
+        Memo memo = createMemo();
+        memoRepository.save(memo);
+        folder.addMemo(memo);
+
         String expectedContent = "다나가";
         String expectedThumbnailUrl = "https://sgsg.site";
         Boolean expectedFavorite = true;
-        Memo memo = Memo.builder()
-            .content("안녕")
-            .build();
-        memo = memoRepository.save(memo);
-
-        Long folderId = folderService.save(user.getId(), createFolderReq1);
-
-        MemoDto.UpdateMemoReq req = MemoDto.UpdateMemoReq.builder()
-            .folderId(folderId)
+        MemoDto.UpdateMemoReq request = MemoDto.UpdateMemoReq.builder()
+            .folderId(folder.getId())
             .content(expectedContent)
             .thumbnailUrl(expectedThumbnailUrl)
             .favorite(expectedFavorite)
             .build();
 
         // when
-        memoService.update(memo.getId(), req);
+        memoService.update(memo.getId(), request);
         String actualContent = memo.getContent();
         String actualThumbnailUrl = memo.getThumbnailUrl();
         Boolean actualFavorite = memo.getFavorite();
@@ -155,7 +159,9 @@ class MemoServiceTest {
         int folderSize = 10;
         int memoSizePerFolder = 5;
         int expectedMemoSize = folderSize * memoSizePerFolder;
-        givenReadMemos(folderSize, memoSizePerFolder);
+        User user = createUser();
+        userRepository.save(user);
+        givenReadAllApi(user, folderSize, memoSizePerFolder);
 
         // when
         List<MemoDto.ReadMemoRes> actualMemos = memoService.readAll(user.getId(), null);
@@ -172,7 +178,9 @@ class MemoServiceTest {
         int folderSize = 10;
         int memoSizePerFolder = 5;
         int expectedMemoSize = folderSize * memoSizePerFolder;
-        List<Folder> folders = givenReadMemos(folderSize, memoSizePerFolder);
+        User user = createUser();
+        userRepository.save(user);
+        List<Folder> folders = givenReadAllApi(user, folderSize, memoSizePerFolder);
         Long folderId = folders.get(0).getId();
 
         // when
@@ -183,16 +191,14 @@ class MemoServiceTest {
         assertEquals(expectedMemoSize / folderSize, actualMemoSize);
     }
 
-    private List<Folder> givenReadMemos(int folderSize, int memoSizePerFolder) {
+    private List<Folder> givenReadAllApi(User user, int folderSize, int memoSizePerFolder) {
         List<Folder> folders = new ArrayList<>();
         for (int i = 0; i < folderSize; i++) {
-            Folder f = Folder.builder()
+            Folder folder = Folder.builder()
+                .title("테스트")
                 .user(user)
-                .title("폴더 제목" + i)
-                .color(FolderColor.RED)
                 .build();
-
-            folders.add(f);
+            folders.add(folder);
         }
         folderRepository.saveAll(folders);
 
@@ -218,98 +224,98 @@ class MemoServiceTest {
             }
         }
         memoRepository.saveAll(memos);
+
         return folders;
     }
 
     @DisplayName("메모를 삭제할 수 있다.")
     @Test
     public void delete() {
-	    // given
-        Memo memo = Memo.builder()
-            .content("테스트")
-            .build();
-        Memo persistedMemo = memoRepository.save(memo);
+        // given
+        User user = createUser();
+        userRepository.save(user);
+
+        Folder folder = createFolder();
+        folderRepository.save(folder);
+        user.addFolder(folder);
+
+        Memo memo = createMemo();
+        memoRepository.save(memo);
+        folder.addMemo(memo);
 
         // when
-        memoService.delete(persistedMemo.getId());
+        memoService.delete(memo.getId());
 
         // then
-        assertTrue(persistedMemo.getDeleted());
+        assertTrue(memo.getDeleted());
     }
-    
+
     @DisplayName("메모를 즐겨찾기할 수 있다.")
     @Test
     public void favorite1() {
         // given
-        Folder folder = Folder.builder()
-            .title("")
-            .color(FolderColor.BLUE)
-            .user(user)
-            .build();
-        Folder persistedFolder = folderRepository.save(folder);
+        User user = createUser();
+        userRepository.save(user);
 
-        Memo memo = Memo.builder()
-            .content("테스트")
-            .thumbnailUrl("")
-            .folder(persistedFolder)
-            .build();
-        Memo persistedMemo = memoRepository.save(memo);
+        Folder folder = createFolder();
+        folderRepository.save(folder);
+        user.addFolder(folder);
+
+        Memo memo = createMemo();
+        memoRepository.save(memo);
+        folder.addMemo(memo);
 
         // when
-        memoService.favorite(user.getId(), persistedMemo.getId());
+        memoService.favorite(user.getId(), memo.getId());
 
         // then
-        assertTrue(persistedMemo.getFavorite());
+        assertTrue(memo.getFavorite());
     }
 
     @DisplayName("메모 즐겨찾기를 취소할 수 있다.")
     @Test
     public void favorite2() {
         // given
-        Folder folder = Folder.builder()
-            .title("")
-            .color(FolderColor.BLUE)
-            .user(user)
-            .build();
-        Folder persistedFolder = folderRepository.save(folder);
+        User user = createUser();
+        userRepository.save(user);
 
-        Memo memo = Memo.builder()
-            .content("테스트")
-            .thumbnailUrl("")
-            .folder(persistedFolder)
-            .build();
-        Memo persistedMemo = memoRepository.save(memo);
+        Folder folder = createFolder();
+        folderRepository.save(folder);
+        user.addFolder(folder);
+
+        Memo memo = createMemo();
+        memoRepository.save(memo);
+        folder.addMemo(memo);
 
         // when
-        memoService.unfavorite(user.getId(), persistedMemo.getId());
+        memoService.unfavorite(user.getId(), memo.getId());
 
         // then
-        assertFalse(persistedMemo.getFavorite());
+        assertFalse(memo.getFavorite());
     }
 
     @DisplayName("사용자의 메모가 아니면 즐겨찾기를 취소할 수 없다.")
     @Test
     public void favorite3() {
         // given
-        Folder folder = Folder.builder()
-            .title("")
-            .color(FolderColor.BLUE)
-            .user(user)
-            .build();
-        Folder persistedFolder = folderRepository.save(folder);
+        User user = createUser();
+        User user2 = createUser();
+        userRepository.saveAll(Arrays.asList(user, user2));
 
-        Memo memo = Memo.builder()
-            .content("테스트")
-            .thumbnailUrl("")
-            .folder(persistedFolder)
-            .build();
-        Memo persistedMemo = memoRepository.save(memo);
-        Long wrongUserId = 777L;
+        Folder folder = createFolder();
+        folderRepository.save(folder);
+        user.addFolder(folder);
+
+        Memo memo = createMemo();
+        memoRepository.save(memo);
+        folder.addMemo(memo);
+
+        Long wrongUserId = user2.getId();
 
         // when
         BadRequestException thrown = assertThrows(
             BadRequestException.class,
-            () -> memoService.unfavorite(wrongUserId, persistedMemo.getId())
+            () -> memoService.unfavorite(wrongUserId, memo.getId())
         );
 
         // then
@@ -320,38 +326,16 @@ class MemoServiceTest {
     @Test
     public void readAllMemosByFolder2() {
         // given
-        User user = User.builder()
-            .name("김홍빈")
-            .userRole(UserRole.USER)
-            .profileImageUrl("http://naver.com/test.png")
-            .email("fusis1@naver.com")
-            .build();
-        user = userRepository.save(user);
+        User user = createUser();
+        userRepository.save(user);
 
-        Folder folder = Folder.builder()
-            .color(FolderColor.RED)
-            .title("테스트 폴더")
-            .build();
-
-        Folder secretFolder = Folder.builder()
-            .color(FolderColor.RED)
-            .title("비밀 폴더")
-            .build();
-        folder.secret();
-        folderRepository.saveAll(Arrays.asList(folder, secretFolder));
-        user.addFolder(folder);
+        Folder secretFolder = createFolder();
+        secretFolder.secret();
+        folderRepository.save(secretFolder);
         user.addFolder(secretFolder);
 
-        Memo memo = Memo.builder()
-            .content("테스트 메모")
-            .build();
-
-        Memo secretMemo = Memo.builder()
-            .content("비밀 메모")
-            .build();
-        memoRepository.saveAll(Arrays.asList(memo, secretMemo));
-        folder.addMemo(memo);
-        secretFolder.addMemo(secretMemo);
+        Memo memo = createMemo();
+        memoRepository.save(memo);
 
         String expectedMemoContent = "";
 
