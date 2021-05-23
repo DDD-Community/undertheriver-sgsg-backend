@@ -11,17 +11,3 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
-
-const:
-  folder:
-    limit: 20
-
-paging:
-  folder_config:
-    limit: 20
-    max_limit: 50
-    min_page: 1
-  memo_config:
-    limit: 20
-    max_limit: 50
-    min_page: 1
