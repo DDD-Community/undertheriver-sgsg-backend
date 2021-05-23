@@ -3,22 +3,18 @@ package com.undertheriver.sgsg.foler.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.undertheriver.sgsg.config.AppProperties;
-import com.undertheriver.sgsg.foler.domain.FolderOrderBy;
-import com.undertheriver.sgsg.user.domain.User;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
-import com.undertheriver.sgsg.config.PagingConfig;
+import com.undertheriver.sgsg.config.AppProperties;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
+import com.undertheriver.sgsg.foler.domain.FolderOrderBy;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
+import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 public class FolderService {
