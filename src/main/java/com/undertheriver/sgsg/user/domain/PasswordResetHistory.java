@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
-@Where(clause = "deleted IS NOT NULL")
+@Where(clause = "deleted IS NULL")
 public class PasswordResetHistory extends BaseEntity {
 
     @Id
@@ -38,6 +38,6 @@ public class PasswordResetHistory extends BaseEntity {
     }
 
     public boolean isExpired(LocalDateTime currentTime) {
-        return this.expiredAt.isAfter(currentTime);
+        return currentTime.isAfter(this.expiredAt);
     }
 }
