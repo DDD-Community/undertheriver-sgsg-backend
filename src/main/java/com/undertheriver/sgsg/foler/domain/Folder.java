@@ -28,6 +28,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table(indexes = @Index(name = "folder_idx_user", columnList = "user"))
 @Entity
@@ -49,6 +50,8 @@ public class Folder extends BaseEntity {
 
     @OneToMany(mappedBy = "folder")
     private Set<Memo> memos = new LinkedHashSet<>();
+    
+    private Boolean secret;
 
     @Builder
     public Folder(String title, FolderColor color, User user) {
@@ -68,6 +71,18 @@ public class Folder extends BaseEntity {
 
     public void mapUser(User user) {
         this.user = user;
+    }
+
+    public void secret() {
+        secret = true;
+    }
+
+    public void unsecret() {
+        secret = false;
+    }
+
+    public boolean hasBy(Long userId) {
+        return user.getId().equals(userId);
     }
 
     @Override

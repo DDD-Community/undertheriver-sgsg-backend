@@ -31,25 +31,30 @@ public class MemoController {
 
     private final MemoService memoService;
 
-    @ApiOperation(value = "메모 저장")
+    @ApiOperation(value = "메모 저장", notes = "일치하는 폴더가 없을 시 바디에 folderId 필드를 제거해주세요.")
     @PostMapping
-    public ApiResult<?> save(@LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq body) {
-        long id = memoService.save(userId, body);
-        URI location = URI.create("/folders/" + id);
+    public ApiResult<?> save(
+        @LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq request
+    ) {
+        long id = memoService.save(userId, request);
+        URI location = URI.create("/v1/memos" + id);
         return ApiResult.OK(location);
     }
 
     @ApiOperation(value = "메모 수정")
     @PutMapping("/{memoId}")
-    public ApiResult<MemoDto.UpdateMemoRes> update(@PathVariable Long memoId, @RequestBody MemoDto.UpdateMemoReq body) {
-        MemoDto.UpdateMemoRes res = memoService.update(memoId, body);
+    public ApiResult<MemoDto.UpdateMemoRes> update(
+        @PathVariable Long memoId, @RequestBody MemoDto.UpdateMemoReq request
+    ) {
+        MemoDto.UpdateMemoRes res = memoService.update(memoId, request);
         return ApiResult.OK(res);
     }
 
     @ApiOperation(value = "메모 조회")
     @GetMapping
     public ApiResult<List<MemoDto.ReadMemoRes>> readAll(
-        @LoginUserId Long userId, @RequestParam(required = false) Long folderId) {
+        @LoginUserId Long userId, @RequestParam(required = false) Long folderId
+    ) {
         List<MemoDto.ReadMemoRes> res = memoService.readAll(userId, folderId);
         return ApiResult.OK(res);
     }
@@ -58,6 +63,26 @@ public class MemoController {
     @DeleteMapping("/{memoId}")
     public ApiResult<?> delete(@PathVariable Long memoId) {
         memoService.delete(memoId);
+        return ApiResult.OK();
+    }
+    
+    @ApiOperation(value = "메모 즐겨찾기")
+    @PostMapping("/{memoId}/favorite")
+    public ApiResult<?> favorite(
+        @LoginUserId Long userId,
+        @PathVariable Long memoId
+    ) {
+        memoService.favorite(userId, memoId);
+        return ApiResult.OK();
+    }
+
+    @ApiOperation(value = "메모 즐겨찾기 취소")
+    @PostMapping("/{memoId}/unfavorite")
+    public ApiResult<?> unfavorite(
+        @LoginUserId Long userId,
+        @PathVariable Long memoId
+    ) {
+        memoService.unfavorite(userId, memoId);
         return ApiResult.OK();
     }
 }

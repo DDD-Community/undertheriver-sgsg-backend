@@ -2,14 +2,11 @@ package com.undertheriver.sgsg.common.dto;
 
 import java.util.Map;
 
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-
 import org.springframework.data.domain.Sort;
 
-import com.undertheriver.sgsg.config.PagingConfig;
-
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter

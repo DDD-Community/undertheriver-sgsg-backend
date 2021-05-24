@@ -5,9 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import com.undertheriver.sgsg.config.AppProperties;
-import com.undertheriver.sgsg.config.PagingConfig;
 
-@EnableConfigurationProperties({PagingConfig.class, AppProperties.class})
+@EnableConfigurationProperties({AppProperties.class})
 @SpringBootApplication
 public class SgsgApplication {
     public static void main(String[] args) {

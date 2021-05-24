@@ -1,9 +1,11 @@
 package com.undertheriver.sgsg.foler.domain.dto;
 
+import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,12 +49,14 @@ public class FolderDto {
         private Long id;
         private String title;
         private FolderColor color;
+        private Integer memoCount;
 
         @Builder
-        public ReadFolderRes(Long id, String title, FolderColor color) {
+        public ReadFolderRes(Long id, String title, FolderColor color, Integer memoCount) {
             this.id = id;
             this.title = title;
             this.color = color;
+            this.memoCount = memoCount;
         }
 
         public static ReadFolderRes toDto(Folder folder) {
@@ -60,6 +64,7 @@ public class FolderDto {
                 .id(folder.getId())
                 .title(folder.getTitle())
                 .color(folder.getColor())
+                .memoCount(folder.getMemos().size())
                 .build();
         }
     }
@@ -73,5 +78,12 @@ public class FolderDto {
         public GetNextFolderColorRes(FolderColor nextColor) {
             this.nextColor = nextColor;
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class UnsecretReq {
+        private String password;
     }
 }

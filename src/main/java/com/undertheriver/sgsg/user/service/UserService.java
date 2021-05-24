@@ -1,6 +1,6 @@
 package com.undertheriver.sgsg.user.service;
 
-import static com.undertheriver.sgsg.user.exception.PasswordUpdateFailException.*;
+import static com.undertheriver.sgsg.user.exception.PasswordValidationException.*;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,8 @@ import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.user.controller.dto.FolderPasswordRequest;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
-import com.undertheriver.sgsg.user.exception.PasswordUpdateFailException;
+import com.undertheriver.sgsg.user.exception.PasswordValidationException;
+
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)
@@ -44,10 +45,10 @@ public class UserService {
         User user = getOne(userId);
 
         if (!user.hasFolderPassword()) {
-            throw new PasswordUpdateFailException(NO_PASSWORD);
+            throw new PasswordValidationException(NO_PASSWORD);
         }
         if (!bCryptPasswordEncoder.matches(request.getCurrentPassword(), user.getFolderPassword())) {
-            throw new PasswordUpdateFailException(PASSWORD_NOT_MATCH);
+            throw new PasswordValidationException(PASSWORD_NOT_MATCH);
         }
 
         user.updateFolderPassword(request.getNewPassword());
