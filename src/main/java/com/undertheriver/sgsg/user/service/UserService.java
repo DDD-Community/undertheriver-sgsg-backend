@@ -11,7 +11,6 @@ import com.undertheriver.sgsg.user.controller.dto.FolderPasswordRequest;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
 import com.undertheriver.sgsg.user.exception.PasswordUpdateFailException;
-
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)
@@ -25,11 +24,6 @@ public class UserService {
 
     public User findById(Long id) {
         return getOne(id);
-    }
-
-    private User getOne(Long id) {
-        return userRepository.findById(id)
-            .orElseThrow(ModelNotFoundException::new);
     }
 
     public void deleteUser(Long id) {
@@ -57,5 +51,10 @@ public class UserService {
         }
 
         user.updateFolderPassword(request.getNewPassword());
+    }
+
+    private User getOne(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(ModelNotFoundException::new);
     }
 }
