@@ -12,17 +12,15 @@ import org.junit.jupiter.params.provider.CsvSource;
 class PasswordResetHistoryTest {
 
     @DisplayName("유효시간이 지나면 true 아니면 false를 출력한다")
-    @CsvSource(value = {"-10,true", "10,false"})
+    @CsvSource(value = {"2000-01-01T11:50:55, true", "2100-05-05T11:50:55, false"})
     @ParameterizedTest
-    void isExpired(long weight, boolean expect) {
+    void isExpired(String date, boolean expect) {
         PasswordResetHistory history = PasswordResetHistory.builder()
-            .expiredAt(now())
+            .expiredAt(LocalDateTime.parse(date))
             .initializationCredential("TEST")
             .userId(1L)
             .build();
 
-        LocalDateTime currentTime = now().plusMinutes(weight);
-
-        assertThat(history.isExpired(currentTime)).isEqualTo(expect);
+        assertThat(history.isExpired(now())).isEqualTo(expect);
     }
 }
