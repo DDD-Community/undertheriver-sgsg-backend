@@ -17,10 +17,8 @@ import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.core.ApiResult;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.service.MemoService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class MemoController {
 
     private final MemoService memoService;
 
-    @ApiOperation(value = "메모 저장")
+    @ApiOperation(value = "메모 저장", notes = "일치하는 폴더가 없을 시 바디에 folderId 필드를 제거해주세요.")
     @PostMapping
     public ApiResult<?> save(
         @LoginUserId Long userId, @RequestBody MemoDto.CreateMemoReq request
@@ -65,7 +63,7 @@ public class MemoController {
         memoService.delete(memoId);
         return ApiResult.OK();
     }
-    
+
     @ApiOperation(value = "메모 즐겨찾기")
     @PostMapping("/{memoId}/favorite")
     public ApiResult<?> favorite(

@@ -22,7 +22,6 @@ import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.user.domain.vo.UserSecretFolderPassword;
 import com.undertheriver.sgsg.user.exception.PasswordCreateFailException;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,14 +35,11 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final List<UserApiClient> userApiClients = new ArrayList<>();
-
+    @OneToMany(mappedBy = "user")
+    private final List<Folder> folders = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToMany(mappedBy = "user")
-    private List<Folder> folders = new ArrayList<>();
-
     @Embedded
     private UserSecretFolderPassword userSecretFolderPassword;
 
@@ -60,11 +56,12 @@ public class User extends BaseEntity {
 
     @Builder
     private User(String email, String profileImageUrl, String name,
-        UserRole userRole) {
+        UserRole userRole, UserSecretFolderPassword userSecretFolderPassword) {
         this.email = email;
         this.profileImageUrl = profileImageUrl;
         this.name = name;
         this.userRole = userRole;
+        this.userSecretFolderPassword = userSecretFolderPassword;
     }
 
     public void saveApiClient(String oAuthId, String oAuthName) {

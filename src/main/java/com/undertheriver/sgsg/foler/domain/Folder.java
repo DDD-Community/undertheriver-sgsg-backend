@@ -1,12 +1,8 @@
 package com.undertheriver.sgsg.foler.domain;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -23,7 +19,6 @@ import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.user.domain.User;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,21 +29,18 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Folder extends BaseEntity {
+    @OneToMany(mappedBy = "folder")
+    private final Set<Memo> memos = new LinkedHashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
-
     @Enumerated(EnumType.STRING)
     private FolderColor color;
-
     @ManyToOne
     @JoinColumn(name = "user")
     private User user;
-
-    @OneToMany(mappedBy = "folder")
-    private Set<Memo> memos = new LinkedHashSet<>();
+    private Boolean secret;
 
     @Builder
     public Folder(String title, FolderColor color, User user) {
@@ -68,6 +60,18 @@ public class Folder extends BaseEntity {
 
     public void mapUser(User user) {
         this.user = user;
+    }
+
+    public void secret() {
+        secret = true;
+    }
+
+    public void unsecret() {
+        secret = false;
+    }
+
+    public boolean hasBy(Long userId) {
+        return user.getId().equals(userId);
     }
 
     @Override

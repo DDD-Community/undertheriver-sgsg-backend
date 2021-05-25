@@ -1,10 +1,8 @@
 package com.undertheriver.sgsg.foler.controller;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +18,6 @@ import com.undertheriver.sgsg.core.ApiResult;
 import com.undertheriver.sgsg.foler.domain.FolderOrderBy;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.service.FolderService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -73,6 +70,27 @@ public class FolderController {
     @DeleteMapping("/{folderId}")
     public ApiResult<?> delete(@PathVariable Long folderId) {
         folderService.delete(folderId);
+        return ApiResult.OK();
+    }
+
+    @ApiOperation("폴더를 비밀 상태로 변경")
+    @PostMapping("/{folderId}/secret")
+    public ApiResult<?> secret(
+        @LoginUserId Long userId,
+        @PathVariable Long folderId
+    ) {
+        folderService.secret(userId, folderId);
+        return ApiResult.OK();
+    }
+
+    @ApiOperation("폴더 비밀 상태 취소")
+    @PostMapping("/{folderId}/unsecret")
+    public ApiResult<?> unsecret(
+        @LoginUserId Long userId,
+        @PathVariable Long folderId,
+        @RequestBody FolderDto.UnsecretReq request
+    ) {
+        folderService.unsecret(userId, folderId, request);
         return ApiResult.OK();
     }
 }

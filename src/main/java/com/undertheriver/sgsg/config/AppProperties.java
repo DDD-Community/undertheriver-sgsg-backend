@@ -14,6 +14,8 @@ public class AppProperties {
     private final Auth auth = new Auth();
     private final OAuth2 oauth2 = new OAuth2();
     private final Encrypt encrypt = new Encrypt();
+    private final Swagger swagger = new Swagger();
+    private final Folder folder = new Folder();
 
     @Getter
     @Setter
@@ -37,5 +39,18 @@ public class AppProperties {
             this.authorizedRedirectUris = authorizedRedirectUris;
             return this;
         }
+    }
+
+    @Getter
+    @Setter
+    public static class Swagger {
+        private List<String> serverDescription = new ArrayList<>();
+        private List<String> serverUrl = new ArrayList<>();
+    }
+
+    @Getter
+    @Setter
+    public static class Folder {
+        private Integer limit;
     }
 }

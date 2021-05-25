@@ -1,4 +1,4 @@
-package com.undertheriver.sgsg.config;
+package com.undertheriver.sgsg.config.swagger;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.HttpAuthenticationScheme;
 import springfox.documentation.service.SecurityReference;
@@ -16,12 +18,14 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
+@EnableOpenApi
 @Configuration
 public class SwaggerConfig {
 
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
+            .ignoredParameterTypes(LoginUserId.class)
             .securitySchemes(List.of(apiKey()))
             .useDefaultResponseMessages(false)
             .securityContexts(List.of(securityContext()))

@@ -18,7 +18,6 @@ import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.repository.MemoRepository;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -91,7 +90,7 @@ public class MemoService {
     }
 
     public void favorite(Long userId, Long memoId) {
-        Memo memo =  memoRepository.findById(memoId)
+        Memo memo = memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);
 
         validateUserHasMemo(userId, memo);
@@ -100,7 +99,7 @@ public class MemoService {
     }
 
     public void unfavorite(Long userId, Long memoId) {
-        Memo memo =  memoRepository.findById(memoId)
+        Memo memo = memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);
 
         validateUserHasMemo(userId, memo);
@@ -109,7 +108,7 @@ public class MemoService {
     }
 
     private void validateUserHasMemo(Long userId, Memo memo) {
-        if (memo.ownBy(userId)) {
+        if (memo.hasBy(userId)) {
             throw new BadRequestException(UNMACHED_USER);
         }
     }
