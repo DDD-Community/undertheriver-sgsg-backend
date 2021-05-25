@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: auth, app, db, mail
+    include: auth, app, db, mail, test
   h2:
     console:
       enabled: true
