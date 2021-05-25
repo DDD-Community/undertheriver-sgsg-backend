@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
+import com.undertheriver.sgsg.common.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -37,7 +38,7 @@ public class MailService {
             mimeMessageHelper.setSubject(title);
             mimeMessageHelper.setText(template, true);
         } catch (MessagingException e) {
-            throw new IllegalArgumentException();
+            throw new BadRequestException(String.format("이메일전송에 실패했습니다. email=%s", recipientEmail));
         }
 
         javaMailSender.send(message);
