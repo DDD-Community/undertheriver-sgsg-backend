@@ -11,7 +11,6 @@ import com.undertheriver.sgsg.user.controller.dto.FolderPasswordRequest;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
 import com.undertheriver.sgsg.user.exception.PasswordValidationException;
-
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true)

@@ -302,7 +302,6 @@ class FolderServiceTest {
 
         Long wrongUserId = user2.getId();
 
-
         FolderDto.UnsecretReq request = new FolderDto.UnsecretReq("1234");
 
         // when

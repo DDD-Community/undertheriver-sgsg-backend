@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,7 +30,7 @@ public class Memo extends BaseEntity {
 
     @Lob
     private String content;
-    
+
     private Boolean favorite;
 
     private String thumbnailUrl;

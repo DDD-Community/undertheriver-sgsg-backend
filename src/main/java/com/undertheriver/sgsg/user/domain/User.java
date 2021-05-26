@@ -35,14 +35,11 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final List<UserApiClient> userApiClients = new ArrayList<>();
-
     @OneToMany(mappedBy = "user")
     private final List<Folder> folders = new ArrayList<>();
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Embedded
     private UserSecretFolderPassword userSecretFolderPassword;
 

@@ -125,7 +125,6 @@ public class FolderService {
         folder.unsecret();
     }
 
-
     private void validateFolderPassword(Long userId, String rawPassword) {
         User user = userRepository.findById(userId)
             .orElseThrow(ModelNotFoundException::new);
