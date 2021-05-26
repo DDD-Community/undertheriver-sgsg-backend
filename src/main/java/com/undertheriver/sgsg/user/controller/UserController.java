@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.core.ApiResult;
 import com.undertheriver.sgsg.user.controller.dto.FolderPasswordRequest;
-import com.undertheriver.sgsg.user.controller.dto.UserRequestDto;
+import com.undertheriver.sgsg.user.controller.dto.InitializePasswordRequest;
 import com.undertheriver.sgsg.user.controller.dto.UserResponseDto;
 import com.undertheriver.sgsg.user.domain.User;
+import com.undertheriver.sgsg.user.service.UserFolderPasswordResetService;
 import com.undertheriver.sgsg.user.service.UserService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
+    private final UserFolderPasswordResetService userFolderPasswordResetService;
 
     @ApiOperation(value = "회원 조회")
     @GetMapping
@@ -52,7 +52,7 @@ public class UserController {
     @PostMapping("/folder-password")
     public ApiResult<Object> createFolderPassword(
         @LoginUserId Long userId, @RequestBody FolderPasswordRequest.CreateRequest request
-    ){
+    ) {
         userService.createFolderPassword(userId, request);
         return ApiResult.OK();
     }
@@ -63,6 +63,25 @@ public class UserController {
         @LoginUserId Long userId, @RequestBody FolderPasswordRequest.UpdateRequest request
     ) {
         userService.updateFolderPassword(userId, request);
+        return ApiResult.OK();
+    }
+
+    @ApiOperation(value = "폴더 비밀번호 초기화 요청")
+    @PostMapping("/request-password-initialize")
+    public ApiResult<Void> requestInitializePassword(
+        @LoginUserId Long userId
+    ) {
+        userFolderPasswordResetService.requestInitializePassword(userId);
+        return ApiResult.OK();
+    }
+
+    @ApiOperation(value = "폴더 비밀번호 초기화")
+    @PostMapping("/password-initialize")
+    public ApiResult<Void> initializePassword(
+        @LoginUserId Long userId,
+        @RequestBody InitializePasswordRequest initializePasswordRequest
+    ) {
+        userFolderPasswordResetService.initializePassword(userId, initializePasswordRequest.getKey());
         return ApiResult.OK();
     }
 }

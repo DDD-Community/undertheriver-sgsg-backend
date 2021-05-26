@@ -23,35 +23,45 @@ import io.restassured.RestAssured;
 @Sql(scripts = "/query/user-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public abstract class AcceptanceTest {
 
-	@LocalServerPort
-	protected int port;
+    @LocalServerPort
+    protected int port;
 
-	@Autowired
-	private JwtProvider jwtProvider;
+    @Autowired
+    protected ObjectMapper objectMapper;
 
-	@Autowired
-	protected ObjectMapper objectMapper;
+    @Autowired
+    private JwtProvider jwtProvider;
 
-	private String token;
+    private String token;
 
-	@BeforeEach
-	void setUp() {
-		User user = User.builder()
-			.email("test@test.com")
-			.profileImageUrl("http://naver.com/adf.png")
-			.userRole(UserRole.USER)
-			.name("TEST")
-			.build();
+    private User user;
 
-		token = jwtProvider.createToken(1L, user.getUserRole());
+    protected String getToken() {
+        return token;
+    }
 
-		if (RestAssured.port == RestAssured.UNDEFINED_PORT) {
-			RestAssured.port = port;
-		}
-	}
+    protected User getUser() {
+        return user;
+    }
 
-	protected <T> T getOne(String url, Class<T> classType) {
-		//@formatter:off
+    @BeforeEach
+    void setUp() {
+        user = User.builder()
+            .email("test@test.com")
+            .profileImageUrl("http://naver.com/adf.png")
+            .userRole(UserRole.USER)
+            .name("TEST")
+            .build();
+
+        token = jwtProvider.createToken(1L, user.getUserRole());
+
+        if (RestAssured.port == RestAssured.UNDEFINED_PORT) {
+            RestAssured.port = port;
+        }
+    }
+
+    protected <T> T getOne(String url, Class<T> classType) {
+        //@formatter:off
 		return
 			given()
 			.when()
@@ -68,10 +78,10 @@ public abstract class AcceptanceTest {
 					.jsonPath()
 						.getObject("response", classType);
 		//@formatter:on
-	}
+    }
 
-	protected <T> List<T> getAll(String url, Class<T> classType) {
-		//@formatter:off
+    protected <T> List<T> getAll(String url, Class<T> classType) {
+        //@formatter:off
 		return
 			given()
 			.when()
@@ -88,10 +98,10 @@ public abstract class AcceptanceTest {
 					.jsonPath()
 						.getList("response", classType);
 		//@formatter:on
-	}
+    }
 
-	protected void post(String url, String json) {
-		//@formatter:off
+    protected void post(String url, String json) {
+        //@formatter:off
 		given()
 			.body(json)
 			.when()
@@ -105,10 +115,10 @@ public abstract class AcceptanceTest {
 			.all()
 			.statusCode(HttpStatus.SC_OK);
 		//@formatter:on
-	}
+    }
 
-	protected void delete(String url) {
-		//@formatter:off
+    protected void delete(String url) {
+        //@formatter:off
 		given()
 		.when()
 			.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -121,10 +131,10 @@ public abstract class AcceptanceTest {
 				.all()
 			.statusCode(HttpStatus.SC_OK);
 		//@formatter:on
-	}
+    }
 
-	protected void put(String url, String json) {
-		//@formatter:off
+    protected void put(String url, String json) {
+        //@formatter:off
 		given()
 			.body(json)
 		.when()
@@ -138,6 +148,6 @@ public abstract class AcceptanceTest {
 				.all()
 			.statusCode(HttpStatus.SC_OK);
 		//@formatter:on
-	}
+    }
 }
 

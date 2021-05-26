@@ -27,11 +27,6 @@ public class UserService {
         return getOne(id);
     }
 
-    private User getOne(Long id) {
-        return userRepository.findById(id)
-            .orElseThrow(ModelNotFoundException::new);
-    }
-
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
             .orElseThrow(ModelNotFoundException::new);
@@ -57,5 +52,10 @@ public class UserService {
         }
 
         user.updateFolderPassword(request.getNewPassword());
+    }
+
+    private User getOne(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(ModelNotFoundException::new);
     }
 }
