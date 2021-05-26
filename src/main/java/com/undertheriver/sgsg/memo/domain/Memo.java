@@ -20,7 +20,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(indexes = @Index(name = "fk_folder", columnList = "folder"))
+@Table(indexes = {
+    @Index(name = "memo_idx_folder", columnList = "folder"),
+    @Index(name = "memo_idx_folder_favorite", columnList = "folder, favorite")
+})
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
