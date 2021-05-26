@@ -1,6 +1,7 @@
 package com.undertheriver.sgsg.memo.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,6 +25,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Memo extends BaseEntity {
 
+    private static final String EMPTY_STRING = "";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -35,7 +38,7 @@ public class Memo extends BaseEntity {
 
     private String thumbnailUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder")
     private Folder folder;
 
@@ -70,6 +73,13 @@ public class Memo extends BaseEntity {
         return !folder.getUser()
             .getId()
             .equals(userId);
+    }
+
+    public String fetchContent() {
+        if (folder.isSecret()) {
+            return EMPTY_STRING;
+        }
+        return content;
     }
 
     @Override
