@@ -26,7 +26,6 @@ class UserControllerTest extends AcceptanceTest {
         );
     }
 
-
     @DisplayName("초기 비밀번호를 설정할 수 있다.")
     @Test
     void name1() throws JsonProcessingException {
@@ -38,7 +37,7 @@ class UserControllerTest extends AcceptanceTest {
         UserResponseDto.UserDetailResponse response = getOne("/v1/users/me", UserResponseDto.UserDetailResponse.class);
 
         assertThat(response.getHasFolderPassword()).isTrue();
-     }
+    }
 
     @DisplayName("비밀번호를 변경할 수 있다.")
     @Test
@@ -57,5 +56,4 @@ class UserControllerTest extends AcceptanceTest {
 
         assertThat(response.getHasFolderPassword()).isTrue();
     }
-
 }
