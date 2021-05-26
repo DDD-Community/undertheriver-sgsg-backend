@@ -1,25 +1,7 @@
 spring:
   profiles:
-    include: auth, app
-  h2:
-    console:
-      enabled: true
-  datasource:
-    url: jdbc:h2:mem:testdb;IFEXISTS=FALSE;
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-    show-sql: true
-    hibernate:
-      ddl-auto: create-drop
+    include: auth, app, mail, db
 debug: true
-
-
 logging:
   level:
     org:
@@ -31,9 +13,10 @@ spring:
   config:
     activate:
       on-profile: develop
+debug: false
 ---
-
 spring:
   config:
     activate:
       on-profile: production
+debug: false

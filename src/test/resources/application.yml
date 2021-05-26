@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: auth, app
+    include: auth, app, db, mail, test
   h2:
     console:
       enabled: true
@@ -11,3 +11,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+  datasource:
+    url: jdbc:h2:mem:testdb;IFEXISTS=FALSE;
+    username: sa
+    password:
+    driverClassName: org.mariadb.jdbc.Driver
