@@ -59,7 +59,7 @@ public class FolderService {
     }
 
     private boolean foldersExistMoreThanLimit(Long userId) {
-        Integer folderCount = folderRepository.countByUserIdAndDeletedFalseOrDeletedNull(userId);
+        Integer folderCount = folderRepository.countByUserId(userId);
         return folderCount >= folderLimit;
     }
 
@@ -92,7 +92,7 @@ public class FolderService {
 
     @Transactional(readOnly = true)
     public FolderDto.GetNextFolderColorRes getNextColor(Long userId) {
-        Integer folderCount = folderRepository.countByUserIdAndDeletedFalseOrDeletedNull(userId);
+        Integer folderCount = folderRepository.countByUserId(userId);
         FolderColor nextColor = FolderColor.getNextColor(folderCount);
         return FolderDto.GetNextFolderColorRes.builder()
             .nextColor(nextColor)

@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Where;
+
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.memo.domain.Memo;
@@ -30,6 +32,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "deleted IS NULL")
 public class Folder extends BaseEntity {
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL)
     private final Set<Memo> memos = new LinkedHashSet<>();
