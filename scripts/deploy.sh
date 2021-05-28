@@ -19,9 +19,9 @@ fi
 
 echo "> $JAR_PATH 배포"
 if [ "$DEPLOYMENT_GROUP_NAME" == "backend-develop" ]; then
-  nohup java -jar -Dspring.profiles.active=develop "$JAR_PATH" >>/home/ubuntu/deploy.log 2>&1 &
+  nohup java -jar -Dspring.profiles.active=develop -Duser.timezone=KST "$JAR_PATH" >>/home/ubuntu/deploy.log 2>&1 &
 elif [ "$DEPLOYMENT_GROUP_NAME" == "backend-production" ]; then
-  nohup java -jar -Dspring.profiles.active=production "$JAR_PATH" >>/home/ubuntu/deploy.log 2>&1 &
+  nohup java -jar -Dspring.profiles.active=production -Duser.timezone=KST "$JAR_PATH" >>/home/ubuntu/deploy.log 2>&1 &
 fi
 
 echo "[$(date)] server deploy" >>/home/ubuntu/deploy.log
