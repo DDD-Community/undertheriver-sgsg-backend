@@ -5,7 +5,7 @@ services:
     container_name: sgsg-application
     environment:
       TZ: "Asia/Seoul"
-    build: .
+    image: sagak/server:latest
     ports:
       - 8080:8080
     volumes:
