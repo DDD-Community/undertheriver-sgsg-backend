@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  springboot:
+    container_name: sgsg-application
+    environment:
+      TZ: "Asia/Seoul"
+    build: .
+    ports:
+      - 8080:8080
+    volumes:
+    - ~/frontend/build:~/frontend/build
+    - ~/deploy.log:~/deploy.log
+
+  nginx:
+    container_name: nginx-reverseproxy
+    image: nginx:1.14
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
