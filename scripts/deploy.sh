@@ -1,7 +1,11 @@
 #!/bin/bash
 
 LOG_PATH=/home/ubuntu/deploy.log
-echo "> 도커 컨테이너 종료" >>$LOG_PATH
-docker-compose down >>$LOG_PATH
-echo "> 도커 컨테이너 빌드/실행" >>$LOG_PATH
-docker-compose up -d --build >>$LOG_PATH
+
+if [ !$(sudo docker container ls | grep nginx) ]; then
+  echo "> NGINX 컨테이너 실행" >> $LOG_PATH
+  docker-compose up nginx -d --build
+fi
+
+echo "> SPRINGBOOT 컨테이너 실행" >> $LOG_PATH
+docker-compose restart -f springboot -d --build
