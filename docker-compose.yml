@@ -6,8 +6,6 @@ services:
     environment:
       TZ: "Asia/Seoul"
     image: sagak/server:latest
-    ports:
-      - 8080:8080
     volumes:
       - /home/ubuntu/deploy.log:/home/ubuntu/deploy.log
 
