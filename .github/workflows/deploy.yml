@@ -50,6 +50,11 @@ jobs:
           name: source
           path: .
 
+  docker-build-push-develop:
+    needs: [ build ]
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
       - name: 도커 허브 로그인
         uses: docker/login-action@v1
         with:
@@ -66,7 +71,7 @@ jobs:
           tags: sagak/server:latest
 
   deploy-develop:
-    needs: [ build ]
+    needs: [ docker-build-push-develop ]
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
