@@ -17,6 +17,7 @@ services:
       - 80:80
       - 443:443
     volumes:
+      - /etc/nginx/service-url.inc:/etc/nginx/service-url.inc
       - /etc/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt:/etc/letsencrypt
       - /home/ubuntu/frontend/build:/home/ubuntu/frontend/build
