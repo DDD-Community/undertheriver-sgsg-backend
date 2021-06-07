@@ -44,7 +44,7 @@ jobs:
         run: ./gradlew build
 
       - name: 소스코드 업로드
-        if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master') }}
+        # if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master') }}
         uses: actions/upload-artifact@v2
         with:
           name: source
@@ -55,6 +55,11 @@ jobs:
     # if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
+      - name: 소스코드 다운로드
+        uses: actions/download-artifact@v2
+        with:
+          name: source
+
       - name: 도커 허브 로그인
         uses: docker/login-action@v1
         with:
