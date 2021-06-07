@@ -8,6 +8,7 @@ services:
     image: sagak/server:latest
     volumes:
       - /home/ubuntu/deploy.log:/home/ubuntu/deploy.log
+      - /home/ubuntu/server/undertheriver-sgsg-backend/src/main/resources:/home/ubuntu/server/undertheriver-sgsg-backend/src/main/resources
 
   nginx:
     container_name: nginx

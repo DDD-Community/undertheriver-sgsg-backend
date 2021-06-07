@@ -52,7 +52,7 @@ jobs:
 
   docker-build-push-develop:
     needs: [ build ]
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    # if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: 도커 허브 로그인
