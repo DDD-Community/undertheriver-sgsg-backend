@@ -21,15 +21,17 @@ else
   TARGET_PORT=8080
 fi
 
-NEW_CONTAINER=sgsg-application-${TARGET_PORT}
+SERVICE_NAME=sgsg-application
+CURRENT_CONTAINER=${SERVICE_NAME}-${CURRENT_PORT}
+NEW_CONTAINER=${SERVICE_NAME}-${TARGET_PORT}
 echo "> SPRINGBOOT 컨테이너 실행 | PORT: ${TARGET_PORT}"
-sudo docker-compose run -d -p ${TARGET_PORT}:8080 --name sgsg-application-${TARGET_PORT} springboot
+sudo docker-compose run -d -p ${TARGET_PORT}:8080 --name ${NEW_CONTAINER} springboot
 
 if [ !$(health_check ${TARGET_PORT}) ]; then
   echo "> 리버스 프록시 설정 변경"
-  echo "set \$service_url http://127.0.0.1:${TARGET_PORT};" | sudo tee /etc/nginx/service-url.inc
+  echo "set \$resolver_ip 127.0.0.11; set \$service_url http://${NEW_CONTAINER}:8080;" | sudo tee /etc/nginx/service-url.inc
   echo "> 엔진엑스 리로드"
   sudo docker exec -it nginx service nginx reload
   echo "> 이전 버전 컨테이너 종료"
-  sudo docker rm -f sgsg-application-${CURRENT_PORT}
+  sudo docker rm -f CURRENT_CONTAINER
 fi
