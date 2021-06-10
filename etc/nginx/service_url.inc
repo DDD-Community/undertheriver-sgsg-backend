@@ -1,0 +1,1 @@
+set $service_url http://was8080:8080;
