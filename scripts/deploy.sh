@@ -9,7 +9,8 @@ if [ !$(sudo docker container ls | grep nginx) ]; then
   sudo docker-compose up -d --build nginx
 fi
 
-CURRENT_PORT=$(cat /etc/nginx/service-url.inc | grep -Po '[0-9]+' | tail -1)
+SERVICE_PREFIX=was
+CURRENT_PORT=$(sudo docker ps | grep ${SERVICE_PREFIX} | grep -Po '[0-9]+' | tail -1)
 echo "> 현재 사용중인 포트: ${CURRENT_PORT}"
 
 TARGET_PORT=0
@@ -21,17 +22,16 @@ else
   TARGET_PORT=8080
 fi
 
-SERVICE_NAME=sgsg-application
-CURRENT_CONTAINER=${SERVICE_NAME}-${CURRENT_PORT}
-NEW_CONTAINER=${SERVICE_NAME}-${TARGET_PORT}
+NEW_SERVICE_NAME=${SERVICE_PREFIX}${TARGET_PORT}
+CURRENT_SERVICE_NAME=${SERVICE_PREFIX}${CURRENT_PORT}
 echo "> SPRINGBOOT 컨테이너 실행 | PORT: ${TARGET_PORT}"
-sudo docker-compose run -d -p ${TARGET_PORT}:8080 --name ${NEW_CONTAINER} springboot
+sudo docker-compose up -d --build ${NEW_SERVICE_NAME}
 
-if [ !$(health_check ${TARGET_PORT}) ]; then
+if [ !$(health_check ${TARGET_PORT} | grep "성공" | wc -l) -ge 1]; then
   echo "> 리버스 프록시 설정 변경"
-  echo "set \$resolver_ip 127.0.0.11; set \$service_url http://${NEW_CONTAINER}:8080;" | sudo tee /etc/nginx/service-url.inc
+  echo "set \$service_url http://${NEW_SERVICE_NAME}:8080;" | sudo tee /etc/nginx/service-url.inc
   echo "> 엔진엑스 리로드"
   sudo docker exec -it nginx service nginx reload
   echo "> 이전 버전 컨테이너 종료"
-  sudo docker rm -f CURRENT_CONTAINER
+  sudo docker rm -f ${CURRENT_SERVICE_NAME}
 fi

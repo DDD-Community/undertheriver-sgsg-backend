@@ -1,11 +1,24 @@
 version: "3"
 
 services:
-  springboot:
-    container_name: sgsg-application
+  was8080:
+    container_name: was-8080
+    image: .
+    ports:
+      - 8080:8080
     environment:
       TZ: "Asia/Seoul"
-    image: sagak/server:latest
+    volumes:
+        - /home/ubuntu/deploy.log:/home/ubuntu/deploy.log
+        - /home/ubuntu/server/src/main/resources:/home/ubuntu/server/src/main/resources
+
+  was8081:
+    container_name: was-8081
+    image: .
+    ports:
+      - 8081:8080
+    environment:
+      TZ: "Asia/Seoul"
     volumes:
       - /home/ubuntu/deploy.log:/home/ubuntu/deploy.log
       - /home/ubuntu/server/src/main/resources:/home/ubuntu/server/src/main/resources
