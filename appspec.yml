@@ -5,6 +5,10 @@ files:
   - source: /
     destination: /home/ubuntu/server
 hooks:
+  BeforeInstall:
+    - location: scripts/copy.sh
+      timeout: 60
+      runas: root
   AfterInstall:
     - location: scripts/deploy.sh
       timeout: 60
