@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Table(indexes = {
     @Index(name = "memo_idx_folder", columnList = "folder"),
-    @Index(name = "memo_idx_folder_favorite", columnList = "folder, favorite")
+    @Index(name = "memo_idx_folder_createdAt_favorite", columnList = "folder, createdAt, favorite")
 })
 @Entity
 @Getter
