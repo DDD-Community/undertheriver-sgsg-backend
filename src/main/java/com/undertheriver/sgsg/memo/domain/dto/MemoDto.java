@@ -1,17 +1,15 @@
 package com.undertheriver.sgsg.memo.domain.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
-import com.undertheriver.sgsg.foler.domain.Folder;
-import com.undertheriver.sgsg.memo.domain.Memo;
-
 import org.springframework.lang.Nullable;
 
+import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
+import com.undertheriver.sgsg.memo.domain.Memo;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -91,11 +89,11 @@ public class MemoDto {
         @NotNull
         private Long folderId;
         @NotNull
-        private LocalDate createdAt;
+        private LocalDateTime createdAt;
 
         @Builder
         public UpdateMemoRes(
-            Long memoId, String content, Boolean favorite, String thumbnailUrl, Long folderId, LocalDate createdAt) {
+            Long memoId, String content, Boolean favorite, String thumbnailUrl, Long folderId, LocalDateTime createdAt) {
             this.memoId = memoId;
             this.content = content;
             this.favorite = favorite;
@@ -120,7 +118,7 @@ public class MemoDto {
     public static class ReadMemoRes {
         private Long memoId;
         private String memoContent;
-        private LocalDate createdAt;
+        private LocalDateTime createdAt;
         private String thumbnailUrl;
         private Boolean favorite;
         private Long folderId;
@@ -128,7 +126,7 @@ public class MemoDto {
         private FolderColor folderColor;
 
         @Builder
-        public ReadMemoRes(Long memoId, String memoContent, LocalDate createdAt, String thumbnailUrl,
+        public ReadMemoRes(Long memoId, String memoContent, LocalDateTime createdAt, String thumbnailUrl,
             Boolean favorite, Long folderId, String folderTitle, FolderColor folderColor) {
             this.memoId = memoId;
             this.memoContent = memoContent;
