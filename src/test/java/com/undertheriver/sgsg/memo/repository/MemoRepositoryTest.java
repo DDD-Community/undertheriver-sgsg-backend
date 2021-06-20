@@ -2,8 +2,6 @@ package com.undertheriver.sgsg.memo.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,29 +30,13 @@ class MemoRepositoryTest {
     @Test
     public void test() {
         // given
-        User user = User.builder()
-            .name("김홍빈")
-            .userRole(UserRole.USER)
-            .profileImageUrl("http://naver.com/test.png")
-            .email("fusis1@naver.com")
-            .build();
+        User user = createUser();
         userRepository.save(user);
-
-        Folder folder = Folder.builder()
-            .user(user)
-            .title("안녕")
-            .build();
+        Folder folder = createFolder(user);
         folderRepository.save(folder);
-
-        Memo memo1 = Memo.builder()
-            .folder(folder)
-            .content("안녕1")
-            .build();
-        Memo expected = Memo.builder()
-            .folder(folder)
-            .content("안녕2")
-            .build();
-        memoRepository.save(memo1);
+        Memo memo = createMemo(folder, "안녕", null);
+        Memo expected = createMemo(folder, "안녕2", null);
+        memoRepository.save(memo);
         memoRepository.save(expected);
 
         // when
@@ -64,4 +46,47 @@ class MemoRepositoryTest {
         assertEquals(expected, actual);
     }
 
+    @DisplayName("메모를 즐겨찾기 된 순, 생성된 순으로 조회할 수 있다.")
+    @Test
+    public void test2() {
+        // given
+        User user = createUser();
+        userRepository.save(user);
+        Folder folder = createFolder(user);
+        folderRepository.save(folder);
+        Memo expected = createMemo(folder, "안녕", true);
+        Memo memo = createMemo(folder, "안녕2", null);
+        memoRepository.save(expected);
+        memoRepository.save(memo);
+
+        // when
+        Memo actual = memoRepository.findAllByUser(user.getId()).get(0);
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    private User createUser() {
+        return User.builder()
+            .name("김홍빈")
+            .userRole(UserRole.USER)
+            .profileImageUrl("http://naver.com/test.png")
+            .email("fusis1@naver.com")
+            .build();
+    }
+
+    private Folder createFolder(User user) {
+        return Folder.builder()
+            .user(user)
+            .title("안녕")
+            .build();
+    }
+
+    private Memo createMemo(Folder folder, String content, Boolean favorite) {
+        return Memo.builder()
+            .folder(folder)
+            .content(content)
+            .favorite(favorite)
+            .build();
+    }
 }
