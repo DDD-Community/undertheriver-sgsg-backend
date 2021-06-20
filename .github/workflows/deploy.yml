@@ -28,7 +28,7 @@ jobs:
       - name: Github 서브모듈 체크아웃
         uses: actions/checkout@v2
         with:
-          repository: khb1109/sgsg-private
+          repository: hongbin-dev/sgsg-private
           token: ${{ secrets.SGSG_PRIVATE_PAT }}
           path: src/main/resources/config
 
