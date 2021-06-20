@@ -26,6 +26,7 @@ NEW_CONTAINER_NAME=${SERVICE}${TARGET_PORT}
 CURRENT_CONTAINER_NAME=${SERVICE}${CURRENT_PORT}
 echo "> SPRINGBOOT 컨테이너 실행 | PORT: ${TARGET_PORT}"
 sudo docker-compose run -d -p ${TARGET_PORT}:8080 --name ${NEW_CONTAINER_NAME} ${SERVICE}
+nohup docker logs -f ${NEW_CONTAINER_NAME} >> /home/ubuntu/deploy.log 2>&1 &
 
 if [ !$(health_check ${TARGET_PORT} | grep "성공" | wc -l) -ge 1]; then
   echo "> 리버스 프록시 설정 변경"
