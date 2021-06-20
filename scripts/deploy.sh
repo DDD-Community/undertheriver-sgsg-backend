@@ -1,7 +1,7 @@
 #!/bin/bash
 ABSPATH=$(readlink -f $0)
 ABSDIR=$(dirname $ABSPATH)
-source ${ABSDIR}/health_check.sh
+source ${ABSDIR}/health.sh
 
 if [ !$(sudo docker container ls | grep nginx) ]; then
   echo "> NGINX 컨테이너 실행"
