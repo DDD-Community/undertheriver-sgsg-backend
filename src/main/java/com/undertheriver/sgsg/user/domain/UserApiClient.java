@@ -11,8 +11,9 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.undertheriver.sgsg.common.domain.BaseEntity;
+import org.hibernate.annotations.Where;
 
+import com.undertheriver.sgsg.common.domain.BaseEntity;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
     @Index(name = "user_api_clients_idx_oauth_id", columnList = "oauth_id")}
 )
 @NoArgsConstructor
+@Where(clause = "deleted IS NULL")
 public class UserApiClient extends BaseEntity {
 
     @Id
