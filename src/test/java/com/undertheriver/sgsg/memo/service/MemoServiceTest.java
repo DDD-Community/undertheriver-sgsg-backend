@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.undertheriver.sgsg.common.exception.BadRequestException;
+import com.undertheriver.sgsg.common.exception.FolderValidationException;
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
@@ -112,6 +113,35 @@ class MemoServiceTest {
         Long expectedFolderId = folderService.read(actualFolderId).getId();
 
         assertEquals(expectedFolderId, actualFolderId);
+    }
+
+    @DisplayName("메모 생성 시 폴더가 없을 때 폴더 이름은 중복 생성될 수 없다.")
+    @Test
+    public void create2() {
+        // given
+        Folder folder = Folder.builder()
+            .title(createFolderReq1.getTitle())
+            .color(FolderColor.BLUE)
+            .user(user)
+            .build();
+        folderRepository.save(folder);
+        user.addFolder(folder);
+
+        createMemoNoFolderReq1 = MemoDto.CreateMemoReq.builder()
+            .folderTitle(createFolderReq1.getTitle())
+            .folderColor(createFolderReq1.getColor())
+            .memoContent(FOLDER_TITLE_TEST)
+            .build();
+
+        // when
+        FolderValidationException actual = assertThrows(
+            FolderValidationException.class,
+            () -> memoService.save(user.getId(), createMemoNoFolderReq1)
+        );
+
+
+        // then
+        assertEquals(FolderValidationException.DUPLICATE_FOLDER_NAME, actual.getMessage());
     }
 
     @DisplayName("메모를 수정할 수 있다.")
