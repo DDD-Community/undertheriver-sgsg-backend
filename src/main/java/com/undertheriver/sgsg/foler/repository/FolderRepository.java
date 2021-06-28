@@ -1,6 +1,7 @@
 package com.undertheriver.sgsg.foler.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,5 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
 
     Integer countByUserId(Long userId);
 
+    Optional<Folder> findFirstByUserIdAndTitle(Long userId, String title);
 }

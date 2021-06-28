@@ -1,6 +1,7 @@
 package com.undertheriver.sgsg.foler.service;
 
 import static com.undertheriver.sgsg.common.exception.BadRequestException.*;
+import static com.undertheriver.sgsg.common.exception.FolderValidationException.*;
 import static com.undertheriver.sgsg.user.exception.PasswordValidationException.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.undertheriver.sgsg.common.exception.BadRequestException;
+import com.undertheriver.sgsg.common.exception.FolderValidationException;
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.config.AppProperties;
 import com.undertheriver.sgsg.foler.domain.Folder;
@@ -46,16 +48,27 @@ public class FolderService {
 
     @Transactional
     public Long save(Long userId, FolderDto.CreateFolderReq req) {
-        if (foldersExistMoreThanLimit(userId)) {
-            throw new IndexOutOfBoundsException(
-                String.format("폴더는 최대 %d개까지 생성할 수 있습니다!", folderLimit));
-        }
+        validateLimit(userId);
+        validateDuplicate(userId, req.getTitle());
 
         User user = userRepository.findById(userId)
             .orElseThrow(ModelNotFoundException::new);
         Folder folder = folderRepository.save(req.toEntity());
         user.addFolder(folder);
         return folder.getId();
+    }
+
+    private void validateLimit(Long userId) {
+        if (foldersExistMoreThanLimit(userId)) {
+            throw new FolderValidationException(TOO_MANY_FOLDER);
+        }
+    }
+
+    private void validateDuplicate(Long userId, String title) {
+        boolean duplicated = folderRepository.findFirstByUserIdAndTitle(userId, title).isPresent();
+        if (duplicated) {
+            throw new FolderValidationException(DUPLICATE_FOLDER_NAME);
+        }
     }
 
     private boolean foldersExistMoreThanLimit(Long userId) {
