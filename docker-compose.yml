@@ -5,9 +5,6 @@ services:
     image: .
     environment:
       TZ: "Asia/Seoul"
-    volumes:
-        - /home/ubuntu/deploy.log:/home/ubuntu/deploy.log
-        - /home/ubuntu/server/src/main/resources:/home/ubuntu/server/src/main/resources
 
   nginx:
     container_name: nginx
