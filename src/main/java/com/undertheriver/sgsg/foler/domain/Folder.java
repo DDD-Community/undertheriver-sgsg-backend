@@ -21,12 +21,16 @@ import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.user.domain.User;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(indexes = @Index(name = "folder_idx_user", columnList = "user"))
+@Table(indexes = {
+    @Index(name = "folder_idx_user", columnList = "user"),
+    @Index(name = "folder_idx_user_title", columnList = "user, title")
+})
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
