@@ -142,27 +142,17 @@ public class MemoDto {
         }
 
         public static ReadMemoRes toDto(Memo memo) {
-            Folder folder = memo.getFolder();
             return ReadMemoRes.builder()
                 .memoId(memo.getId())
                 .memoContent(memo.fetchContent())
                 .createdAt(memo.getCreatedAt())
                 .thumbnailUrl(memo.getThumbnailUrl())
-                .folderId(folder.getId())
-                .folderTitle(folder.getTitle())
-                .folderColor(folder.getColor())
+                .folderId(memo.getFolderId())
+                .folderTitle(memo.getFolderTitle())
+                .folderColor(memo.getFolderColor())
                 .favorite(memo.getFavorite())
-                .secret(folder.isSecret())
+                .secret(memo.isSecret())
                 .build();
-        }
-
-        private static String setMemoContent(Memo memo) {
-            Folder folder = memo.getFolder();
-            if (folder.isSecret()) {
-                return "";
-            }
-
-            return memo.getContent();
         }
     }
 

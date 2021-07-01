@@ -15,6 +15,7 @@ import org.hibernate.annotations.Where;
 
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.Folder;
+import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -83,6 +84,22 @@ public class Memo extends BaseEntity {
             return EMPTY_STRING;
         }
         return content;
+    }
+
+    public Long getFolderId() {
+        return folder.getId();
+    }
+
+    public String getFolderTitle() {
+        return folder.getTitle();
+    }
+
+    public FolderColor getFolderColor() {
+        return folder.getColor();
+    }
+
+    public Boolean isSecret() {
+        return folder.isSecret();
     }
 
     @Override
