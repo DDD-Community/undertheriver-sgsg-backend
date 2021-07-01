@@ -79,25 +79,27 @@ public class Memo extends BaseEntity {
             .equals(userId);
     }
 
-    public MemoDto.ReadMemoRes toReadMemoRes() {
-        return MemoDto.ReadMemoRes.builder()
-            .memoId(id)
-            .memoContent(fetchContent())
-            .createdAt(getCreatedAt())
-            .thumbnailUrl(thumbnailUrl)
-            .favorite(favorite)
-            .folderId(folder.getId())
-            .folderTitle(folder.getTitle())
-            .folderColor(folder.getColor())
-            .secret(folder.isSecret())
-            .build();
-    }
-
-    private String fetchContent() {
+    public String fetchContent() {
         if (folder.isSecret()) {
             return EMPTY_STRING;
         }
         return content;
+    }
+
+    public Long getFolderId() {
+        return folder.getId();
+    }
+
+    public String getFolderTitle() {
+        return folder.getTitle();
+    }
+
+    public FolderColor getFolderColor() {
+        return folder.getColor();
+    }
+
+    public Boolean isSecret() {
+        return folder.isSecret();
     }
 
     @Override
