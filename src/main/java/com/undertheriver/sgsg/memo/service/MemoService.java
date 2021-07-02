@@ -1,6 +1,7 @@
 package com.undertheriver.sgsg.memo.service;
 
 import static com.undertheriver.sgsg.common.exception.BadRequestException.*;
+import static com.undertheriver.sgsg.common.exception.FolderValidationException.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.undertheriver.sgsg.common.exception.BadRequestException;
+import com.undertheriver.sgsg.common.exception.FolderValidationException;
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
+import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.repository.MemoRepository;
@@ -28,10 +31,11 @@ public class MemoService {
     private final MemoRepository memoRepository;
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
+    private final FolderService folderService;
 
     @Transactional
     public Long save(Long userId, MemoDto.CreateMemoReq body) {
-        Folder folder = createOrReadFolder(body);
+        Folder folder = createOrReadFolder(userId, body);
         User user = userRepository.findById(userId)
             .orElseThrow(ModelNotFoundException::new);
         user.addFolder(folder);
@@ -40,14 +44,18 @@ public class MemoService {
         return memo.getId();
     }
 
-    private Folder createOrReadFolder(MemoDto.CreateMemoReq body) {
+    private Folder createOrReadFolder(Long userId, MemoDto.CreateMemoReq body) {
         if (body.hasFolderId()) {
-            Long folderId = body.getFolderId();
-            return folderRepository.findById(folderId)
-                .orElseThrow(ModelNotFoundException::new);
+            return getOneFolder(body.getFolderId());
         }
 
+        folderService.validateDuplicate(userId, body.getFolderTitle());
         return folderRepository.save(body.toFolderEntity());
+    }
+
+    private Folder getOneFolder(Long folderId) {
+        return folderRepository.findById(folderId)
+            .orElseThrow(ModelNotFoundException::new);
     }
 
     @Transactional
@@ -91,7 +99,7 @@ public class MemoService {
     }
 
     public void favorite(Long userId, Long memoId) {
-        Memo memo =  memoRepository.findById(memoId)
+        Memo memo = memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);
 
         validateUserHasMemo(userId, memo);
@@ -100,7 +108,7 @@ public class MemoService {
     }
 
     public void unfavorite(Long userId, Long memoId) {
-        Memo memo =  memoRepository.findById(memoId)
+        Memo memo = memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);
 
         validateUserHasMemo(userId, memo);

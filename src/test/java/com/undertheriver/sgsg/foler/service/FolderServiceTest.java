@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.undertheriver.sgsg.common.exception.BadRequestException;
+import com.undertheriver.sgsg.common.exception.FolderValidationException;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
@@ -120,9 +121,9 @@ class FolderServiceTest {
         assertEquals(expectedFolderId, actualFolderId);
     }
 
-    @DisplayName("Folder를 20개 이상일 때 저장할 수 없다.")
+    @DisplayName("Folder 제한 개수 이상 생성할 수 없다.")
     @Test
-    public void saveFailed() {
+    public void saveValidation1() {
         // given
         User user = createUser("1234");
         userRepository.save(user);
@@ -140,13 +141,41 @@ class FolderServiceTest {
             .build();
 
         // when
-        IndexOutOfBoundsException thrown = assertThrows(
-            IndexOutOfBoundsException.class,
+        FolderValidationException thrown = assertThrows(
+            FolderValidationException.class,
             () -> folderService.save(user.getId(), createFolderReq)
         );
 
         // then
-        assertEquals("폴더는 최대 20개까지 생성할 수 있습니다!", thrown.getMessage());
+        assertEquals(FolderValidationException.TOO_MANY_FOLDER, thrown.getMessage());
+    }
+
+
+    @DisplayName("Folder 이름은 중복될 수 없다.")
+    @Test
+    public void saveValidation2() {
+        // given
+        User user = createUser("1234");
+        userRepository.save(user);
+
+        String folderTitle = "중복";
+        Folder folder = createFolder(folderTitle);
+        folderRepository.save(folder);
+        user.addFolder(folder);
+
+        FolderDto.CreateFolderReq createFolderReq = FolderDto.CreateFolderReq.builder()
+            .title(folderTitle)
+            .color(FolderColor.RED)
+            .build();
+
+        // when
+        FolderValidationException thrown = assertThrows(
+            FolderValidationException.class,
+            () -> folderService.save(user.getId(), createFolderReq)
+        );
+
+        // then
+        assertEquals(FolderValidationException.DUPLICATE_FOLDER_NAME, thrown.getMessage());
     }
 
     @DisplayName("Folder를 수정할 수 있다")
