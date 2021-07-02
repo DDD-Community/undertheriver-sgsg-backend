@@ -24,6 +24,7 @@ import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
 import com.undertheriver.sgsg.user.exception.PasswordValidationException;
 
+@Transactional(readOnly = true)
 @Service
 public class FolderService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -64,9 +65,9 @@ public class FolderService {
         }
     }
 
-    private void validateDuplicate(Long userId, String title) {
-        boolean duplicated = folderRepository.findFirstByUserIdAndTitle(userId, title).isPresent();
-        if (duplicated) {
+    public void validateDuplicate(Long userId, String title) {
+        boolean isDuplicated = folderRepository.findFirstByUserIdAndTitle(userId, title).isPresent();
+        if (isDuplicated) {
             throw new FolderValidationException(DUPLICATE_FOLDER_NAME);
         }
     }
@@ -76,7 +77,6 @@ public class FolderService {
         return folderCount >= folderLimit;
     }
 
-    @Transactional(readOnly = true)
     public List<FolderDto.ReadFolderRes> readAll(Long userId, FolderOrderBy orderBy) {
         if (orderBy == null) {
             orderBy = FolderOrderBy.CREATED_AT;
@@ -88,7 +88,6 @@ public class FolderService {
             .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public Folder read(Long folderId) {
         return folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
