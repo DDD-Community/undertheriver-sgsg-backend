@@ -1,5 +1,8 @@
 package com.undertheriver.sgsg.memo.domain;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +30,7 @@ import lombok.NoArgsConstructor;
 @Where(clause = "deleted IS NULL")
 public class Memo extends BaseEntity {
 
+    public static final String MEMO_LIST_VIEW_TIME_PATTERN = "MM.dd";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -73,6 +77,13 @@ public class Memo extends BaseEntity {
         return !folder.getUser()
             .getId()
             .equals(userId);
+    }
+
+    public String memoListViewDateTime() {
+        LocalDateTime createdAt = super.getCreatedAt();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(MEMO_LIST_VIEW_TIME_PATTERN);
+        return createdAt.format(formatter);
+
     }
 
     @Override

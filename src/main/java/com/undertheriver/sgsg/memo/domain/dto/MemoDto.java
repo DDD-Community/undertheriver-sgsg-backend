@@ -89,11 +89,11 @@ public class MemoDto {
         @NotNull
         private Long folderId;
         @NotNull
-        private LocalDateTime createdAt;
+        private String createdAt;
 
         @Builder
         public UpdateMemoRes(
-            Long memoId, String content, Boolean favorite, String thumbnailUrl, Long folderId, LocalDateTime createdAt) {
+            Long memoId, String content, Boolean favorite, String thumbnailUrl, Long folderId, String createdAt) {
             this.memoId = memoId;
             this.content = content;
             this.favorite = favorite;
@@ -108,7 +108,7 @@ public class MemoDto {
                 .content(memo.getContent())
                 .favorite(memo.getFavorite())
                 .thumbnailUrl(memo.getThumbnailUrl())
-                .createdAt(memo.getCreatedAt())
+                .createdAt(memo.memoListViewDateTime())
                 .folderId(folderId)
                 .build();
         }
@@ -118,7 +118,7 @@ public class MemoDto {
     public static class ReadMemoRes {
         private Long memoId;
         private String memoContent;
-        private LocalDateTime createdAt;
+        private String createdAt;
         private String thumbnailUrl;
         private Boolean favorite;
         private Long folderId;
@@ -126,7 +126,7 @@ public class MemoDto {
         private FolderColor folderColor;
 
         @Builder
-        public ReadMemoRes(Long memoId, String memoContent, LocalDateTime createdAt, String thumbnailUrl,
+        public ReadMemoRes(Long memoId, String memoContent, String createdAt, String thumbnailUrl,
             Boolean favorite, Long folderId, String folderTitle, FolderColor folderColor) {
             this.memoId = memoId;
             this.memoContent = memoContent;
@@ -143,7 +143,7 @@ public class MemoDto {
             return ReadMemoRes.builder()
                 .memoId(memo.getId())
                 .memoContent(memo.getContent())
-                .createdAt(memo.getCreatedAt())
+                .createdAt(memo.memoListViewDateTime())
                 .thumbnailUrl(memo.getThumbnailUrl())
                 .folderId(f.getId())
                 .folderTitle(f.getTitle())
