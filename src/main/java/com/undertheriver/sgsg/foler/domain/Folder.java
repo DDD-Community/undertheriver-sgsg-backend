@@ -1,6 +1,7 @@
 package com.undertheriver.sgsg.foler.domain;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -48,11 +49,7 @@ public class Folder extends BaseEntity {
     private Boolean secret;
 
     public boolean isSecret() {
-        if (secret == null) {
-            return false;
-        }
-
-        return secret;
+        return Objects.equals(secret, Boolean.TRUE);
     }
 
     @Builder
