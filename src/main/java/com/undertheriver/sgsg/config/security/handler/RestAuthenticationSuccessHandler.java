@@ -71,7 +71,7 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
             .map(Cookie::getValue);
 
         if (redirectUri.isPresent() && isNotSameHost(redirectUri.get())) {
-            throw new BadRequestException("승인되지 않은 URL입니다");
+            throw new BadRequestException("승인되지 않은 URI입니다");
         }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
