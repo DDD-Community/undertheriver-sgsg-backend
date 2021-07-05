@@ -17,10 +17,8 @@ import com.undertheriver.sgsg.common.annotation.LoginUserId;
 import com.undertheriver.sgsg.core.ApiResult;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import com.undertheriver.sgsg.memo.service.MemoService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -65,7 +63,7 @@ public class MemoController {
         memoService.delete(memoId);
         return ApiResult.OK();
     }
-    
+
     @ApiOperation(value = "메모 즐겨찾기")
     @PostMapping("/{memoId}/favorite")
     public ApiResult<?> favorite(

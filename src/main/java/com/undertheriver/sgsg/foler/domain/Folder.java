@@ -1,11 +1,14 @@
 package com.undertheriver.sgsg.foler.domain;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +39,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "deleted IS NULL")
 public class Folder extends BaseEntity {
-    @OneToMany(mappedBy = "folder")
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL)
     private final Set<Memo> memos = new LinkedHashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +47,14 @@ public class Folder extends BaseEntity {
     private String title;
     @Enumerated(EnumType.STRING)
     private FolderColor color;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user")
     private User user;
     private Boolean secret;
+
+    public boolean isSecret() {
+        return Objects.equals(secret, Boolean.TRUE);
+    }
 
     @Builder
     public Folder(String title, FolderColor color, User user) {

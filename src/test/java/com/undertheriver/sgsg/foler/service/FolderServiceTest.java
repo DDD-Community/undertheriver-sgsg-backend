@@ -245,7 +245,7 @@ class FolderServiceTest {
         folderService.secret(user.getId(), folder.getId());
 
         // then
-        assertTrue(folder.getSecret());
+        assertTrue(folder.isSecret());
     }
 
     @DisplayName("폴더를 비밀 상태를 취소할 있다.")
@@ -266,7 +266,7 @@ class FolderServiceTest {
         folderService.unsecret(user.getId(), folder.getId(), request);
 
         // then
-        assertFalse(folder.getSecret());
+        assertFalse(folder.isSecret());
     }
 
     @DisplayName("폴더 비밀번호를 설정하지 않았을 때는 비밀 상태를 취소할 없다.")
@@ -330,7 +330,6 @@ class FolderServiceTest {
         user.addFolder(folder);
 
         Long wrongUserId = user2.getId();
-
 
         FolderDto.UnsecretReq request = new FolderDto.UnsecretReq("1234");
 

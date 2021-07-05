@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.Where;
 
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.Folder;
+import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,7 +35,9 @@ import lombok.NoArgsConstructor;
 @Where(clause = "deleted IS NULL")
 public class Memo extends BaseEntity {
 
-    public static final String MEMO_LIST_VIEW_TIME_PATTERN = "MM.dd";
+    private static final String EMPTY_STRING = "";
+    private static final String MEMO_LIST_VIEW_TIME_PATTERN = "MM.dd";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -45,7 +49,7 @@ public class Memo extends BaseEntity {
 
     private String thumbnailUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder")
     private Folder folder;
 
@@ -80,6 +84,29 @@ public class Memo extends BaseEntity {
         return !folder.getUser()
             .getId()
             .equals(userId);
+    }
+
+    public String fetchContent() {
+        if (folder.isSecret()) {
+            return EMPTY_STRING;
+        }
+        return content;
+    }
+
+    public Long getFolderId() {
+        return folder.getId();
+    }
+
+    public String getFolderTitle() {
+        return folder.getTitle();
+    }
+
+    public FolderColor getFolderColor() {
+        return folder.getColor();
+    }
+
+    public Boolean isSecret() {
+        return folder.isSecret();
     }
 
     public String memoListViewDateTime() {

@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import com.undertheriver.sgsg.foler.domain.Folder;
-
 import lombok.Getter;
 import lombok.Setter;
 
