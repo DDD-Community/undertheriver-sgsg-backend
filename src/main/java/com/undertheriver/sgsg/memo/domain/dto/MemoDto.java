@@ -1,7 +1,5 @@
 package com.undertheriver.sgsg.memo.domain.dto;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotNull;
 
 import org.springframework.lang.Nullable;
@@ -16,9 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 public class MemoDto {
-    @Setter
     @Getter
-    @NoArgsConstructor
     public static class CreateMemoReq {
         @Nullable
         private Long folderId;
@@ -28,18 +24,24 @@ public class MemoDto {
         private FolderColor folderColor;
         @NotNull
         private String memoContent;
+        @Nullable
+        private String thumbnailUrl;
 
         @Builder
-        public CreateMemoReq(Long folderId, String folderTitle, FolderColor folderColor, String memoContent) {
+        public CreateMemoReq(
+            Long folderId, String folderTitle, FolderColor folderColor, String memoContent, String thumbnailUrl
+        ) {
             this.folderId = folderId;
             this.folderTitle = folderTitle;
             this.folderColor = folderColor;
             this.memoContent = memoContent;
+            this.thumbnailUrl = thumbnailUrl;
         }
 
         public Memo toMemoEntity() {
             return Memo.builder()
                 .content(memoContent)
+                .thumbnailUrl(thumbnailUrl)
                 .build();
         }
 
