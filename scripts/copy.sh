@@ -1,2 +1,3 @@
 mkdir -p /etc/nginx
-cp /etc/nginx/nginx.conf /etc/nginx/service_url.inc /etc/nginx
+yes | cp /etc/nginx/nginx.conf /etc/nginx
+yes | cp /etc/nginx/service_url.inc /etc/nginx
