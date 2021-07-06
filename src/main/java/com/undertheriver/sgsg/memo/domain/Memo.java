@@ -49,16 +49,25 @@ public class Memo extends BaseEntity {
 
     private String thumbnailUrl;
 
+    private String thumbnailFaviconUrl;
+
+    private String thumbnailTitle;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder")
     private Folder folder;
 
     @Builder
-    public Memo(String content, Boolean favorite, String thumbnailUrl, Folder folder) {
+    protected Memo(
+        String content, Boolean favorite, String thumbnailUrl, Folder folder, String thumbnailTitle,
+        String thumbnailFaviconUrl
+    ) {
         this.content = content;
         this.favorite = favorite;
         this.thumbnailUrl = thumbnailUrl;
         this.folder = folder;
+        this.thumbnailTitle = thumbnailTitle;
+        this.thumbnailFaviconUrl = thumbnailFaviconUrl;
     }
 
     public void mapFolder(Folder folder) {
@@ -69,6 +78,8 @@ public class Memo extends BaseEntity {
         this.content = dto.getContent();
         this.favorite = dto.getFavorite();
         this.thumbnailUrl = dto.getThumbnailUrl();
+        this.thumbnailTitle = dto.getThumbnailTitle();
+        this.thumbnailFaviconUrl = dto.getThumbnailFaviconUrl();
         this.mapFolder(folder);
     }
 

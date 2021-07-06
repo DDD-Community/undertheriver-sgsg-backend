@@ -7,11 +7,8 @@ import org.springframework.lang.Nullable;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.memo.domain.Memo;
-
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 public class MemoDto {
     @Getter
@@ -27,21 +24,31 @@ public class MemoDto {
         @Nullable
         private String thumbnailUrl;
 
+        @Nullable
+        private String thumbnailTitle;
+        @Nullable
+        private String thumbnailFaviconUrl;
+
         @Builder
         public CreateMemoReq(
-            Long folderId, String folderTitle, FolderColor folderColor, String memoContent, String thumbnailUrl
+            Long folderId, String folderTitle, FolderColor folderColor, String memoContent, String thumbnailUrl,
+            String thumbnailTitle, String thumbnailFaviconUrl
         ) {
             this.folderId = folderId;
             this.folderTitle = folderTitle;
             this.folderColor = folderColor;
             this.memoContent = memoContent;
             this.thumbnailUrl = thumbnailUrl;
+            this.thumbnailTitle = thumbnailTitle;
+            this.thumbnailFaviconUrl = thumbnailFaviconUrl;
         }
 
         public Memo toMemoEntity() {
             return Memo.builder()
                 .content(memoContent)
                 .thumbnailUrl(thumbnailUrl)
+                .thumbnailTitle(thumbnailTitle)
+                .thumbnailFaviconUrl(thumbnailFaviconUrl)
                 .build();
         }
 
@@ -68,13 +75,23 @@ public class MemoDto {
         @NotNull
         private Long folderId;
 
+        @Nullable
+        private String thumbnailTitle;
+
+        @Nullable
+        private String thumbnailFaviconUrl;
+
         @Builder
         public UpdateMemoReq(
-            String content, Boolean favorite, String thumbnailUrl, Long folderId) {
+            String content, Boolean favorite, String thumbnailUrl, Long folderId, String thumbnailTitle,
+            String thumbnailFaviconUrl
+        ) {
             this.content = content;
             this.favorite = favorite;
             this.thumbnailUrl = thumbnailUrl;
             this.folderId = folderId;
+            this.thumbnailTitle = thumbnailTitle;
+            this.thumbnailFaviconUrl = thumbnailFaviconUrl;
         }
     }
 
@@ -93,15 +110,25 @@ public class MemoDto {
         @NotNull
         private String createdAt;
 
+        @Nullable
+        private String thumbnailTitle;
+
+        @Nullable
+        private String thumbnailFaviconUrl;
+
         @Builder
         public UpdateMemoRes(
-            Long memoId, String content, Boolean favorite, String thumbnailUrl, Long folderId, String createdAt) {
+            Long memoId, String content, Boolean favorite, String thumbnailUrl, Long folderId, String createdAt,
+            String thumbnailTitle,
+            String thumbnailFaviconUrl) {
             this.memoId = memoId;
             this.content = content;
             this.favorite = favorite;
             this.thumbnailUrl = thumbnailUrl;
             this.folderId = folderId;
             this.createdAt = createdAt;
+            this.thumbnailTitle = thumbnailTitle;
+            this.thumbnailFaviconUrl = thumbnailFaviconUrl;
         }
 
         public static UpdateMemoRes toDto(Memo memo, Long folderId) {
@@ -112,6 +139,8 @@ public class MemoDto {
                 .thumbnailUrl(memo.getThumbnailUrl())
                 .createdAt(memo.memoListViewDateTime())
                 .folderId(folderId)
+                .thumbnailTitle(memo.getThumbnailTitle())
+                .thumbnailFaviconUrl(memo.getThumbnailFaviconUrl())
                 .build();
         }
     }
@@ -127,10 +156,15 @@ public class MemoDto {
         private String folderTitle;
         private FolderColor folderColor;
         private Boolean secret;
+        private String thumbnailTitle;
+        private String thumbnailFaviconUrl;
 
         @Builder
-        public ReadMemoRes(Long memoId, String memoContent, String createdAt, String thumbnailUrl,
-            Boolean favorite, Long folderId, String folderTitle, FolderColor folderColor, Boolean secret) {
+        public ReadMemoRes(
+            Long memoId, String memoContent, String createdAt, String thumbnailUrl,
+            Boolean favorite, Long folderId, String folderTitle, FolderColor folderColor, Boolean secret,
+            String thumbnailTitle, String thumbnailFaviconUrl
+        ) {
             this.memoId = memoId;
             this.memoContent = memoContent;
             this.createdAt = createdAt;
@@ -140,6 +174,8 @@ public class MemoDto {
             this.folderTitle = folderTitle;
             this.folderColor = folderColor;
             this.secret = secret;
+            this.thumbnailTitle = thumbnailTitle;
+            this.thumbnailFaviconUrl = thumbnailFaviconUrl;
         }
 
         public static ReadMemoRes toDto(Memo memo) {
@@ -153,6 +189,8 @@ public class MemoDto {
                 .folderColor(memo.getFolderColor())
                 .favorite(memo.getFavorite())
                 .secret(memo.isSecret())
+                .thumbnailTitle(memo.getThumbnailTitle())
+                .thumbnailFaviconUrl(memo.getThumbnailFaviconUrl())
                 .build();
         }
     }
