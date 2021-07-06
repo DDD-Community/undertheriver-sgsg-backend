@@ -2,7 +2,7 @@ version: "3"
 
 services:
   springboot:
-    image: .
+    image: sagak/server:latest
     environment:
       TZ: "Asia/Seoul"
 
