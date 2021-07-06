@@ -3,7 +3,7 @@ ABSPATH=$(readlink -f $0)
 ABSDIR=$(dirname $ABSPATH)
 source ${ABSDIR}/health.sh
 
-if [ !$(sudo docker container ls | grep nginx) ]; then
+if [[ -z $(sudo docker container ls | grep nginx) ]]; then
   echo "> NGINX 컨테이너 실행"
   sudo service nginx stop
   sudo docker-compose up -d --build nginx
@@ -14,9 +14,9 @@ CURRENT_PORT=$(sudo docker ps | grep ${SERVICE} | grep -Po '[0-9]+' | tail -1)
 echo "> 현재 사용중인 포트: ${CURRENT_PORT}"
 
 TARGET_PORT=0
-if [ ${CURRENT_PORT} -eq 8080 ]; then
+if [[ ${CURRENT_PORT} -eq 8080 ]]; then
   TARGET_PORT=8081
-elif [ ${CURRENT_PORT} -eq 8081 ]; then
+elif [[ ${CURRENT_PORT} -eq 8081 ]]; then
   TARGET_PORT=8080
 else
   TARGET_PORT=8080
@@ -28,7 +28,7 @@ echo "> SPRINGBOOT 컨테이너 실행 | PORT: ${TARGET_PORT}"
 sudo docker-compose run -d -p ${TARGET_PORT}:8080 --name ${NEW_CONTAINER_NAME} ${SERVICE}
 nohup docker logs -f ${NEW_CONTAINER_NAME} >> /home/ubuntu/deploy.log 2>&1 &
 
-if [ !$(health_check ${TARGET_PORT} | grep "성공" | wc -l) -ge 1]; then
+if [[ -n $(health_check ${TARGET_PORT} | grep "성공" ) ]]; then
   echo "> 리버스 프록시 설정 변경"
   echo "set \$service_url http://${NEW_CONTAINER_NAME}:8080;" | sudo tee /etc/nginx/service-url.inc
   echo "> 엔진엑스 리로드"
