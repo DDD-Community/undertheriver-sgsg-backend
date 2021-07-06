@@ -2,8 +2,6 @@ name: gradle CD
 on:
   pull_request:
     branches:
-      - main
-      - develop
       - 'feat/**'
       - 'fix/**'
       - 'hotfix/**'
@@ -11,7 +9,6 @@ on:
       - 'chore/**'
   push:
     branches:
-      - main
       - develop
       - 'feat/**'
       - 'fix/**'
@@ -43,55 +40,34 @@ jobs:
       - name: 빌드
         run: ./gradlew build
 
-      - name: 소스코드 업로드
-        if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master') }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: source
-          path: .
-
-  deploy-develop:
-    needs: [ build ]
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 소스코드 다운로드
-        uses: actions/download-artifact@v2
-        with:
-          name: source
-
       - name: aws 세팅
+        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: $ {{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
       - name: S3 업로드
+        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/develop/build.zip --source .
 
       - name: code deploy
+        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --file-exists-behavior RETAIN --deployment-group-name backend-develop --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/develop/build.zip
 
-  deploy-master:
-    needs: [ build ]
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: 소스코드 다운로드
-        uses: actions/download-artifact@v2
+      - name: 도커 허브 로그인
+        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
+        uses: docker/login-action@v1
         with:
-          name: source
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: aws 세팅
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: 도커 이미지 빌드 & 푸시
+        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
+        uses: docker/build-push-action@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-
-      - name: S3 업로드
-        run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/production/build.zip --source .
-
-      - name: code deploy
-        run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --file-exists-behavior RETAIN --deployment-group-name backend-production --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/production/build.zip
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: sagak/server:latest

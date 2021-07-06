@@ -1,0 +1,1 @@
+set $service_url http://springboot:8080;
