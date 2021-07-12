@@ -23,7 +23,6 @@ public class MemoDto {
         private String memoContent;
         @Nullable
         private String thumbnailUrl;
-
         @Nullable
         private String thumbnailTitle;
         @Nullable
