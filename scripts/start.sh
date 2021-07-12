@@ -7,8 +7,8 @@ DOCKER_COMPOSE_FILE_PATH=/home/ubuntu/server/docker-compose.yml
 
 if [[ -z $(sudo docker container ls | grep nginx) ]]; then
   echo "> NGINX 컨테이너 실행"
-  sudo service nginx stop
-  sudo docker-compose up -d --build nginx
+  service nginx stop
+  docker-compose up -d --build nginx
 fi
 
 SERVICE=springboot
@@ -26,19 +26,25 @@ fi
 
 NEW_CONTAINER_NAME=${SERVICE}${TARGET_PORT}
 CURRENT_CONTAINER_NAME=${SERVICE}${CURRENT_PORT}
+echo "> SPRINGBOOT 도커 이미지 빌드"
+docker-compose -f ${DOCKER_COMPOSE_FILE_PATH} \
+               build --no-cache springboot
 echo "> SPRINGBOOT 컨테이너 실행 | PORT: ${TARGET_PORT}"
-sudo docker-compose -f ${DOCKER_COMPOSE_FILE_PATH} \
-                    run -d -p ${TARGET_PORT}:8080 \
-                    --name ${NEW_CONTAINER_NAME} ${SERVICE}
+docker-compose -f ${DOCKER_COMPOSE_FILE_PATH} \
+               run -d -p ${TARGET_PORT}:8080 \
+               --name ${NEW_CONTAINER_NAME} ${SERVICE}
 
 nohup docker logs -f ${NEW_CONTAINER_NAME} >> /home/ubuntu/deploy.log 2>&1 &
 
 if [[ -n $(health_check ${TARGET_PORT} | grep "성공" ) ]]; then
   echo "> 리버스 프록시 설정 변경"
-  echo "set \$service_url http://${NEW_CONTAINER_NAME}:8080;" | sudo tee /etc/nginx/service-url.inc
+  echo "set \$service_url http://${NEW_CONTAINER_NAME}:8080;" | tee /etc/nginx/service-url.inc
   echo "> 엔진엑스 리로드"
   docker-compose -f ${DOCKER_COMPOSE_FILE_PATH} \
                  exec -T nginx nginx -s reload
   echo "> 이전 버전 컨테이너 종료"
-  sudo docker rm -f ${CURRENT_CONTAINER_NAME}
+  docker rm -f ${CURRENT_CONTAINER_NAME}
+
+  echo "> 이전 버전 도커 이미지 제거"
+  docker image prune -f
 fi
