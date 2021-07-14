@@ -92,9 +92,7 @@ public class Memo extends BaseEntity {
     }
 
     public boolean hasBy(Long userId) {
-        return !folder.getUser()
-            .getId()
-            .equals(userId);
+        return folder.hasBy(userId);
     }
 
     public String fetchContent() {

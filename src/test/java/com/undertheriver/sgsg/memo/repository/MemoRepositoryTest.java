@@ -77,7 +77,7 @@ class MemoRepositoryTest {
 
     private Folder createFolder(User user) {
         return Folder.builder()
-            .user(user)
+            .userId(user.getId())
             .title("안녕")
             .build();
     }
