@@ -43,7 +43,7 @@
 ![](https://images.velog.io/images/prayme/post/4e03b86f-58ec-49f9-9824-a5e02f598944/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%EA%B5%AC%EC%84%B1%EB%8F%84.png)
 
 ## ERD (이미지를 클릭해주세요!)
-![](https://images.velog.io/images/prayme/post/d1a469c4-6e06-4b3e-90d2-370fc329aa2e/erd.png)
+![](https://images.velog.io/images/prayme/post/9865b000-709b-45c2-8dcd-e2363065c9ac/erd.png)
 
 ## 트러블 슈팅
 
