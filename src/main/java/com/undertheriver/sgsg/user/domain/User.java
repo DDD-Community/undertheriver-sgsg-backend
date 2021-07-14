@@ -38,8 +38,7 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private final List<UserApiClient> userApiClients = new ArrayList<>();
-    @OneToMany(mappedBy = "user")
-    private final List<Folder> folders = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -79,11 +78,6 @@ public class User extends BaseEntity {
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         return this;
-    }
-
-    public void addFolder(Folder folder) {
-        this.folders.add(folder);
-        folder.mapUser(this);
     }
 
     public Boolean hasFolderPassword() {
