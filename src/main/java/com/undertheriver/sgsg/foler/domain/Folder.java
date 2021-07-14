@@ -5,10 +5,12 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,8 +33,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Table(indexes = {
-    @Index(name = "folder_idx_user", columnList = "user"),
-    @Index(name = "folder_idx_user_title", columnList = "user, title")
+    @Index(name = "folder_idx_user", columnList = "userId"),
+    @Index(name = "folder_idx_user_title", columnList = "userId, title")
 })
 @Entity
 @Getter
@@ -47,9 +49,13 @@ public class Folder extends BaseEntity {
     private String title;
     @Enumerated(EnumType.STRING)
     private FolderColor color;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
-    private User user;
+
+    @ManyToOne(
+        targetEntity = User.class,
+        cascade = CascadeType.ALL,
+        optional = false
+    )
+    private Long userId;
     private Boolean secret;
 
     public boolean isSecret() {
@@ -57,10 +63,10 @@ public class Folder extends BaseEntity {
     }
 
     @Builder
-    public Folder(String title, FolderColor color, User user) {
+    public Folder(String title, FolderColor color, Long userId) {
         this.title = title;
         this.color = color;
-        this.user = user;
+        this.userId = userId;
     }
 
     public void update(FolderDto.UpdateFolderTitleReq dto) {
@@ -72,10 +78,6 @@ public class Folder extends BaseEntity {
         memo.mapFolder(this);
     }
 
-    public void mapUser(User user) {
-        this.user = user;
-    }
-
     public void secret() {
         secret = true;
     }
@@ -85,7 +87,7 @@ public class Folder extends BaseEntity {
     }
 
     public boolean hasBy(Long userId) {
-        return user.getId().equals(userId);
+        return this.userId.equals(userId);
     }
 
     @Override
