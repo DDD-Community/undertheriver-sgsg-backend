@@ -25,7 +25,7 @@ public class FolderRepositoryTest {
     @Autowired
     private FolderRepository folderRepository;
 
-    @DisplayName("유저가 가진 폴더 중 제목이 일치하는 가장 첫 번째 폴더를 조회할 수 있다.")
+    @DisplayName("유저는 폴더 중 제목이 일치하는 가장 첫 번째 폴더를 조회할 수 있다.")
     @Test
     public void test() {
         // given
@@ -36,16 +36,17 @@ public class FolderRepositoryTest {
             .email("fusis1@naver.com")
             .build();
         userRepository.save(user);
+        Long userId = user.getId();
 
         String expected = "";
         Folder folder = Folder.builder()
             .title(expected)
+            .userId(userId)
             .build();
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         // when
-        String actual = folderRepository.findFirstByUserIdAndTitle(user.getId(), folder.getTitle())
+        String actual = folderRepository.findFirstByUserIdAndTitle(userId, folder.getTitle())
             .get().getTitle();
 
         // then

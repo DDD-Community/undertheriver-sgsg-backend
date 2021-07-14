@@ -37,7 +37,6 @@ public class MemoService {
         Folder folder = createOrReadFolder(userId, body);
         User user = userRepository.findById(userId)
             .orElseThrow(ModelNotFoundException::new);
-        user.addFolder(folder);
         Memo memo = memoRepository.save(body.toMemoEntity());
         folder.addMemo(memo);
         return memo.getId();
@@ -116,7 +115,7 @@ public class MemoService {
     }
 
     private void validateUserHasMemo(Long userId, Memo memo) {
-        if (memo.hasBy(userId)) {
+        if (!memo.hasBy(userId)) {
             throw new BadRequestException(UNMACHED_USER);
         }
     }

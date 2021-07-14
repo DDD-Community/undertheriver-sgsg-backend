@@ -50,11 +50,6 @@ public class Folder extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private FolderColor color;
 
-    @ManyToOne(
-        targetEntity = User.class,
-        cascade = CascadeType.ALL,
-        optional = false
-    )
     private Long userId;
     private Boolean secret;
 

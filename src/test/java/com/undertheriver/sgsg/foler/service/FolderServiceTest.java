@@ -50,12 +50,11 @@ class FolderServiceTest {
         // given
         User user = createUser("1234");
         userRepository.save(user);
+        Long userId = user.getId();
 
-        Folder moreMemoFolder = createFolder("테스트 폴더");
-        Folder lessMemoFolder = createFolder("테스트 폴더2");
+        Folder moreMemoFolder = createFolder("테스트 폴더", userId);
+        Folder lessMemoFolder = createFolder("테스트 폴더2", userId);
         folderRepository.saveAll(Arrays.asList(moreMemoFolder, lessMemoFolder));
-        user.addFolder(moreMemoFolder);
-        user.addFolder(lessMemoFolder);
 
         Memo memo1 = createMemo("메모1", null);
         Memo memo2 = createMemo("메모2", null);
@@ -81,13 +80,11 @@ class FolderServiceTest {
         // given
         User user = createUser("1234");
         userRepository.save(user);
+        Long userId = user.getId();
 
-        Folder folder1 = createFolder("가나다");
-        Folder folder2 = createFolder("다나가");
+        Folder folder1 = createFolder("가나다", userId);
+        Folder folder2 = createFolder("다나가", userId);
         folderRepository.saveAll(Arrays.asList(folder1, folder2));
-        user.addFolder(folder1);
-        user.addFolder(folder2);
-
         String expectedTitle = folder1.getTitle();
 
         // when
@@ -104,13 +101,11 @@ class FolderServiceTest {
         // given
         User user = createUser("1234");
         userRepository.save(user);
+        Long userId = user.getId();
 
-        Folder folder1 = createFolder("가나다");
-        Folder folder2 = createFolder("가나다");
+        Folder folder1 = createFolder("가나다", userId);
+        Folder folder2 = createFolder("가나다", userId);
         folderRepository.saveAll(Arrays.asList(folder1, folder2));
-        user.addFolder(folder1);
-        user.addFolder(folder2);
-
         Long expectedFolderId = folder1.getId();
 
         // when
@@ -127,13 +122,13 @@ class FolderServiceTest {
         // given
         User user = createUser("1234");
         userRepository.save(user);
+        Long userId = user.getId();
 
         List<Folder> folderList = new ArrayList<>();
         for (int i = 0; i < 21; i++) {
-            folderList.add(createFolder("테스트 폴더 %d" + i));
+            folderList.add(createFolder(String.format("테스트 폴더 %d", i), userId));
         }
         folderRepository.saveAll(folderList);
-        folderList.forEach(user::addFolder);
 
         FolderDto.CreateFolderReq createFolderReq = FolderDto.CreateFolderReq.builder()
             .title("테스트")
@@ -159,9 +154,8 @@ class FolderServiceTest {
         userRepository.save(user);
 
         String folderTitle = "중복";
-        Folder folder = createFolder(folderTitle);
+        Folder folder = createFolder(folderTitle, user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         FolderDto.CreateFolderReq createFolderReq = FolderDto.CreateFolderReq.builder()
             .title(folderTitle)
@@ -182,7 +176,7 @@ class FolderServiceTest {
     @Test
     public void updateFolder() {
         // given
-        Folder folder = createFolder("가나다");
+        Folder folder = createFolder("가나다", null);
         folderRepository.save(folder);
 
         FolderDto.UpdateFolderTitleReq req = FolderDto.UpdateFolderTitleReq.builder()
@@ -197,21 +191,6 @@ class FolderServiceTest {
         assertEquals(expectedTitle, actualTitle);
     }
 
-    @DisplayName("다음 생성할 폴더 색상을 알려준다.")
-    @Test
-    public void nextColorTestCase() {
-        // given
-        FolderColor[] colors = FolderColor.values();
-        FolderColor expectedColor = FolderColor.values()[0];
-        int multipleOfFolderColorLength = colors.length;
-
-        // when
-        FolderColor actualColor = FolderColor.getNextColor(multipleOfFolderColorLength);
-
-        // then
-        assertEquals(actualColor, expectedColor);
-    }
-
     @DisplayName("폴더를 삭제할 수 있다.")
     @Test
     public void delete() {
@@ -219,9 +198,8 @@ class FolderServiceTest {
         User user = createUser("1234");
         userRepository.save(user);
 
-        Folder folder = createFolder("테스트");
+        Folder folder = createFolder("테스트", user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         // when
         folderService.delete(folder.getId());
@@ -237,9 +215,8 @@ class FolderServiceTest {
         User user = createUser("1234");
         userRepository.save(user);
 
-        Folder folder = createFolder("테스트");
+        Folder folder = createFolder("테스트", user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         // when
         folderService.secret(user.getId(), folder.getId());
@@ -256,9 +233,8 @@ class FolderServiceTest {
         User user = createUser(rawPassword);
         userRepository.save(user);
 
-        Folder folder = createFolder("테스트 폴더");
+        Folder folder = createFolder("테스트 폴더", user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         FolderDto.UnsecretReq request = new FolderDto.UnsecretReq(rawPassword);
 
@@ -276,9 +252,8 @@ class FolderServiceTest {
         User user = createNoPasswordUser();
         userRepository.save(user);
 
-        Folder folder = createFolder("테스트");
+        Folder folder = createFolder("테스트", user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         FolderDto.UnsecretReq request = new FolderDto.UnsecretReq("1234");
 
@@ -300,9 +275,8 @@ class FolderServiceTest {
         User user = createUser("1234");
         userRepository.save(user);
 
-        Folder folder = createFolder("테스트");
+        Folder folder = createFolder("테스트", user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         FolderDto.UnsecretReq request = new FolderDto.UnsecretReq("4321");
 
@@ -325,9 +299,8 @@ class FolderServiceTest {
         User user2 = createUser("1234");
         userRepository.saveAll(Arrays.asList(user, user2));
 
-        Folder folder = createFolder("테스트");
+        Folder folder = createFolder("테스트", user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         Long wrongUserId = user2.getId();
 
@@ -365,10 +338,11 @@ class FolderServiceTest {
             .build();
     }
 
-    private Folder createFolder(String title) {
+    private Folder createFolder(String title, Long userId) {
         return Folder.builder()
             .title(title)
             .color(FolderColor.BLUE)
+            .userId(userId)
             .build();
     }
 

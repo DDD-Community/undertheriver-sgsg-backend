@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
 import com.undertheriver.sgsg.common.type.UserRole;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
-import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
 import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.memo.domain.Memo;
@@ -54,10 +52,11 @@ class MemoServiceTest {
             .build();
     }
 
-    private Folder createFolder() {
+    private Folder createFolder(Long userId) {
         return Folder.builder()
             .title("폴더 테스트")
             .color(FolderColor.BLUE)
+            .userId(userId)
             .build();
     }
 
@@ -74,7 +73,7 @@ class MemoServiceTest {
         User user = createUser();
         userRepository.save(user);
 
-        Folder folder = createFolder();
+        Folder folder = createFolder(user.getId());
         folderRepository.save(folder);
 
         MemoDto.CreateMemoReq request = MemoDto.CreateMemoReq.builder()
@@ -117,25 +116,19 @@ class MemoServiceTest {
         assertEquals(expectedFolderId, actualFolderId);
     }
 
-    @DisplayName("메모 생성 시 폴더가 없을 때 폴더 이름은 중복 생성될 수 없다.")
+    @DisplayName("메모 생성 때 생성되는 폴더의 이름도 중복될 수 없다.")
     @Test
     public void create2() {
         // given
         User user = createUser();
         userRepository.save(user);
+        Long userId = user.getId();
 
-        String title = "테스트 1";
-        Folder folder = Folder.builder()
-            .title(title)
-            .color(FolderColor.BLUE)
-            .user(user)
-            .build();
-
+        Folder folder = createFolder(userId);
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         MemoDto.CreateMemoReq request = MemoDto.CreateMemoReq.builder()
-            .folderTitle(title)
+            .folderTitle("폴더 테스트")
             .folderColor(FolderColor.GREEN)
             .memoContent(FOLDER_TITLE_TEST)
             .build();
@@ -143,7 +136,7 @@ class MemoServiceTest {
         // when
         FolderValidationException actual = assertThrows(
             FolderValidationException.class,
-            () -> memoService.save(user.getId(), request)
+            () -> memoService.save(userId, request)
         );
 
 
@@ -158,7 +151,7 @@ class MemoServiceTest {
         User user = createUser();
         userRepository.save(user);
 
-        Folder folder = createFolder();
+        Folder folder = createFolder(user.getId());
         folderRepository.save(folder);
 
         Memo memo = createMemo();
@@ -229,11 +222,7 @@ class MemoServiceTest {
     private List<Folder> givenReadAllApi(User user, int folderSize, int memoSizePerFolder) {
         List<Folder> folders = new ArrayList<>();
         for (int i = 0; i < folderSize; i++) {
-            Folder folder = Folder.builder()
-                .title("테스트")
-                .user(user)
-                .build();
-            folders.add(folder);
+            folders.add(createFolder(user.getId()));
         }
         folderRepository.saveAll(folders);
 
@@ -270,9 +259,8 @@ class MemoServiceTest {
         User user = createUser();
         userRepository.save(user);
 
-        Folder folder = createFolder();
+        Folder folder = createFolder(user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         Memo memo = createMemo();
         memoRepository.save(memo);
@@ -291,17 +279,17 @@ class MemoServiceTest {
         // given
         User user = createUser();
         userRepository.save(user);
+        Long userId = user.getId();
 
-        Folder folder = createFolder();
+        Folder folder = createFolder(userId);
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         Memo memo = createMemo();
         memoRepository.save(memo);
         folder.addMemo(memo);
 
         // when
-        memoService.favorite(user.getId(), memo.getId());
+        memoService.favorite(userId, memo.getId());
 
         // then
         assertTrue(memo.getFavorite());
@@ -314,9 +302,8 @@ class MemoServiceTest {
         User user = createUser();
         userRepository.save(user);
 
-        Folder folder = createFolder();
+        Folder folder = createFolder(user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         Memo memo = createMemo();
         memoRepository.save(memo);
@@ -337,9 +324,8 @@ class MemoServiceTest {
         User user2 = createUser();
         userRepository.saveAll(Arrays.asList(user, user2));
 
-        Folder folder = createFolder();
+        Folder folder = createFolder(user.getId());
         folderRepository.save(folder);
-        user.addFolder(folder);
 
         Memo memo = createMemo();
         memoRepository.save(memo);
@@ -364,10 +350,9 @@ class MemoServiceTest {
         User user = createUser();
         userRepository.save(user);
 
-        Folder secretFolder = createFolder();
+        Folder secretFolder = createFolder(user.getId());
         secretFolder.secret();
         folderRepository.save(secretFolder);
-        user.addFolder(secretFolder);
 
         Memo memo = createMemo();
         memoRepository.save(memo);
