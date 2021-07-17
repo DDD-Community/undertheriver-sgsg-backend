@@ -1,23 +1,12 @@
-name: gradle CD
+name: CI/CD
 on:
-  pull_request:
-    branches:
-      - 'feat/**'
-      - 'fix/**'
-      - 'hotfix/**'
-      - 'refactor/**'
-      - 'chore/**'
   push:
     branches:
-      - develop
-      - 'feat/**'
-      - 'fix/**'
-      - 'hotfix/**'
-      - 'refactor/**'
-      - 'chore/**'
+      - 'develop'
+
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: Github 업스트림 체크아웃
         uses: actions/checkout@v2
@@ -40,8 +29,7 @@ jobs:
       - name: 빌드
         run: ./gradlew build
 
-      - name: aws 세팅
-        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
+      - name: aws 로그인
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -49,22 +37,19 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: S3 업로드
-        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/develop/build.zip --source .
 
-      - name: code deploy
-        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
+
+      - name: code deploy 실행
         run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --file-exists-behavior RETAIN --deployment-group-name backend-develop --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/develop/build.zip
 
       - name: 도커 허브 로그인
-        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: 도커 이미지 빌드 & 푸시
-        if: ${{ github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
         uses: docker/build-push-action@v2
         with:
           context: .
