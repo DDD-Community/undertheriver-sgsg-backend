@@ -13,9 +13,10 @@ public enum FolderColor {
         this.colorCode = colorCode;
     }
 
-    public static FolderColor getNextColor(int folderRowSize) {
-        FolderColor[] values = FolderColor.values();
-        int nextColorOrdinary = folderRowSize % FolderColor.values().length;
-        return values[nextColorOrdinary];
+    public static FolderColor nextColorFrom(int folderRowSize) {
+        FolderColor[] colors = FolderColor.values();
+        int next = folderRowSize % colors.length;
+        return colors[next];
     }
+
 }

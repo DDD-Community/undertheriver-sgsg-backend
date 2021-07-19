@@ -55,7 +55,6 @@ public class FolderService {
         User user = userRepository.findById(userId)
             .orElseThrow(ModelNotFoundException::new);
         Folder folder = folderRepository.save(req.toEntity());
-        user.addFolder(folder);
         return folder.getId();
     }
 
@@ -105,7 +104,7 @@ public class FolderService {
     @Transactional(readOnly = true)
     public FolderDto.GetNextFolderColorRes getNextColor(Long userId) {
         Integer folderCount = folderRepository.countByUserId(userId);
-        FolderColor nextColor = FolderColor.getNextColor(folderCount);
+        FolderColor nextColor = FolderColor.nextColorFrom(folderCount);
         return FolderDto.GetNextFolderColorRes.builder()
             .nextColor(nextColor)
             .build();
