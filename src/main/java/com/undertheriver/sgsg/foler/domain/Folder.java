@@ -5,18 +5,13 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -25,7 +20,6 @@ import org.hibernate.annotations.Where;
 import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.memo.domain.Memo;
-import com.undertheriver.sgsg.user.domain.User;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,8 +27,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Table(indexes = {
-    @Index(name = "folder_idx_user", columnList = "userId"),
-    @Index(name = "folder_idx_user_title", columnList = "userId, title")
+    @Index(name = "folder_idx_user", columnList = "user"),
+    @Index(name = "folder_idx_user_title", columnList = "user, title")
 })
 @Entity
 @Getter
@@ -50,7 +44,7 @@ public class Folder extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private FolderColor color;
 
-    private Long userId;
+    private Long user;
     private Boolean secret;
 
     public boolean isSecret() {
@@ -58,10 +52,10 @@ public class Folder extends BaseEntity {
     }
 
     @Builder
-    public Folder(String title, FolderColor color, Long userId) {
+    public Folder(String title, FolderColor color, Long user) {
         this.title = title;
         this.color = color;
-        this.userId = userId;
+        this.user = user;
     }
 
     public void update(FolderDto.UpdateFolderTitleReq dto) {
@@ -82,7 +76,7 @@ public class Folder extends BaseEntity {
     }
 
     public boolean hasBy(Long userId) {
-        return this.userId.equals(userId);
+        return this.user.equals(userId);
     }
 
     @Override

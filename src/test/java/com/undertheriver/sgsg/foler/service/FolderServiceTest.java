@@ -342,7 +342,7 @@ class FolderServiceTest {
         return Folder.builder()
             .title(title)
             .color(FolderColor.BLUE)
-            .userId(userId)
+            .user(userId)
             .build();
     }
 
