@@ -28,7 +28,7 @@ public class FolderDto {
             return Folder.builder()
                 .title(this.title)
                 .color(this.color)
-                .userId(this.userId)
+                .user(this.userId)
                 .build();
         }
     }

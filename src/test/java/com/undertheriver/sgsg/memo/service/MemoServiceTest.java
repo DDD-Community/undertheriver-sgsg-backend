@@ -56,7 +56,7 @@ class MemoServiceTest {
         return Folder.builder()
             .title("폴더 테스트")
             .color(FolderColor.BLUE)
-            .userId(userId)
+            .user(userId)
             .build();
     }
 

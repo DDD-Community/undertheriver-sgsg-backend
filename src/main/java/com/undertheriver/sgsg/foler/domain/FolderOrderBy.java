@@ -22,7 +22,7 @@ public enum FolderOrderBy {
         switch (this) {
             case NAME:
             case CREATED_AT:
-                return folderRepository.findAllByUserId(userId, sort);
+                return folderRepository.findAllByUser(userId, sort);
             case MEMO:
                 return folderRepository.findAllOrderByMemos(userId);
             default:

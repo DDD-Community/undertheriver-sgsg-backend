@@ -65,14 +65,14 @@ public class FolderService {
     }
 
     public void validateDuplicate(Long userId, String title) {
-        boolean isDuplicated = folderRepository.findFirstByUserIdAndTitle(userId, title).isPresent();
+        boolean isDuplicated = folderRepository.findFirstByUserAndTitle(userId, title).isPresent();
         if (isDuplicated) {
             throw new FolderValidationException(DUPLICATE_FOLDER_NAME);
         }
     }
 
     private boolean foldersExistMoreThanLimit(Long userId) {
-        Integer folderCount = folderRepository.countByUserId(userId);
+        Integer folderCount = folderRepository.countByUser(userId);
         return folderCount >= folderLimit;
     }
 
@@ -103,7 +103,7 @@ public class FolderService {
 
     @Transactional(readOnly = true)
     public FolderDto.GetNextFolderColorRes getNextColor(Long userId) {
-        Integer folderCount = folderRepository.countByUserId(userId);
+        Integer folderCount = folderRepository.countByUser(userId);
         FolderColor nextColor = FolderColor.nextColorFrom(folderCount);
         return FolderDto.GetNextFolderColorRes.builder()
             .nextColor(nextColor)

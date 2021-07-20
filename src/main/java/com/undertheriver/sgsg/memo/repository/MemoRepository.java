@@ -12,7 +12,7 @@ import com.undertheriver.sgsg.memo.domain.Memo;
 public interface MemoRepository extends JpaRepository<Memo, Long> {
 
     @Query(value = "SELECT m FROM Memo m "
-        + "JOIN Folder f ON f.userId = :userId "
+        + "JOIN Folder f ON f.user = :userId "
         + "WHERE f.id = m.folder.id "
         + "ORDER BY m.favorite DESC, m.createdAt DESC ")
     List<Memo> findAllByUser(Long userId);

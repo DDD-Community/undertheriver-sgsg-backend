@@ -2,9 +2,6 @@ package com.undertheriver.sgsg.foler.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +38,12 @@ public class FolderRepositoryTest {
         String expected = "";
         Folder folder = Folder.builder()
             .title(expected)
-            .userId(userId)
+            .user(userId)
             .build();
         folderRepository.save(folder);
 
         // when
-        String actual = folderRepository.findFirstByUserIdAndTitle(userId, folder.getTitle())
+        String actual = folderRepository.findFirstByUserAndTitle(userId, folder.getTitle())
             .get().getTitle();
 
         // then
