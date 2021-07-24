@@ -35,8 +35,6 @@ public class MemoService {
     @Transactional
     public Long save(Long userId, MemoDto.CreateMemoReq body) {
         Folder folder = createOrReadFolder(userId, body);
-        User user = userRepository.findById(userId)
-            .orElseThrow(ModelNotFoundException::new);
         Memo memo = memoRepository.save(body.toMemoEntity());
         folder.addMemo(memo);
         return memo.getId();
@@ -48,7 +46,7 @@ public class MemoService {
         }
 
         folderService.validateDuplicate(userId, body.getFolderTitle());
-        return folderRepository.save(body.toFolderEntity());
+        return folderRepository.save(body.toFolderEntity(userId));
     }
 
     private Folder getOneFolder(Long folderId) {

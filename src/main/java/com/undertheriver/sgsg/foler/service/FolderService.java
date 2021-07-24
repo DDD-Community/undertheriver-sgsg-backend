@@ -52,8 +52,6 @@ public class FolderService {
         validateLimit(userId);
         validateDuplicate(userId, req.getTitle());
 
-        User user = userRepository.findById(userId)
-            .orElseThrow(ModelNotFoundException::new);
         Folder folder = folderRepository.save(req.toEntity());
         return folder.getId();
     }
