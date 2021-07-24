@@ -51,10 +51,11 @@ public class MemoDto {
                 .build();
         }
 
-        public Folder toFolderEntity() {
+        public Folder toFolderEntity(Long user) {
             return Folder.builder()
                 .title(folderTitle)
                 .color(folderColor)
+                .user(user)
                 .build();
         }
 
