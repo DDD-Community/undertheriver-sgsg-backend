@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - 'develop'
-      - 'chore/refactor_cors_config'
 
 jobs:
   build:
