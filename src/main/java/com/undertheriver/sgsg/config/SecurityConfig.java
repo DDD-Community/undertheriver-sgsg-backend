@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.undertheriver.sgsg.auth.service.CustomOAuth2UserService;
+import com.undertheriver.sgsg.config.security.filter.CorsFilter;
 import com.undertheriver.sgsg.config.security.filter.TokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AccessDeniedHandler customAccessDeniedHandler;
 
+    private final CorsFilter corsFilter;
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
@@ -58,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.anyRequest().authenticated()
 		.and()
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterAfter(corsFilter, UsernamePasswordAuthenticationFilter.class)
 			.exceptionHandling()
 				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 				.accessDeniedHandler(customAccessDeniedHandler)
