@@ -15,9 +15,9 @@
         </td>
         <td width="400">
             <ul>
-                <li>TODO</li>
-                <li>TODO</li>
-                <li>TODO</li>
+                <li>유저 기능 개발</li>
+                <li>인증/인가 개발</li>
+                <li>메일링 기능 개발</li>
             </ul>
         </td>
     </tr>
@@ -30,9 +30,7 @@
         <td width="300">
             <ul>
                 <li>메모, 사각 박스 기능 개발</li>
-                <li>무중단 배포 구성</li>
-                <li>배포 환경 도커 이미지 빌드</li>
-                <li>AWS 관리</li>
+                <li>무중단 배포 파이프라인 구성</li>
             </ul>
         </td>
     </tr>
@@ -47,6 +45,6 @@
 
 ## 트러블 슈팅
 
-> [CORS 정복기 by 성찬]() - 작성예정
+> [CORS 정복기 by 성찬](https://velog.io/@prayme/CORS-%EC%A0%95%EB%B3%B5%EA%B8%B0#%EC%9E%98-%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EC%A7%80-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0)
 
 > [무중단 배포 적용기 by 성찬]() - 작성예정
