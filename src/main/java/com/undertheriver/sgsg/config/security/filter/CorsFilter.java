@@ -28,11 +28,17 @@ import lombok.extern.slf4j.Slf4j;
 public class CorsFilter extends OncePerRequestFilter {
 
     private List<String> allowedOrigins;
+    private String allowedMethods;
+    private String allowedHeaders;
+    private Integer maxAge;
 
     public CorsFilter(
         AppProperties appProperties
     ) {
         allowedOrigins = appProperties.allowedOrigins();
+        allowedHeaders = appProperties.allowedHeaders();
+        allowedMethods = appProperties.allowedMethods();
+        maxAge = appProperties.maxAge();
     }
 
     @Override
@@ -47,9 +53,9 @@ public class CorsFilter extends OncePerRequestFilter {
             validate(origin);
 
             response.addHeader("Access-Control-Allow-Origin", origin);
-            response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");
-            response.addHeader("Access-Control-Allow-Headers", "Authorization");
-            response.setIntHeader("Access-Control-Max-Age", 3600);
+            response.addHeader("Access-Control-Allow-Methods", allowedMethods);
+            response.addHeader("Access-Control-Allow-Headers", allowedHeaders);
+            response.setIntHeader("Access-Control-Max-Age", maxAge);
 
         } catch (BadRequestException e) {
             logger.info(e.getMessage());
