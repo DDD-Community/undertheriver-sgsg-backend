@@ -14,24 +14,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.undertheriver.sgsg.common.exception.BadRequestException;
+import com.undertheriver.sgsg.config.AppProperties;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-@RequiredArgsConstructor
 public class CorsFilter extends OncePerRequestFilter {
 
-    private static final List<String> ALLOWED_ORIGINS = new ArrayList<>(
-        Arrays.asList(
-            "https://sgsg.space",
-            "http://localhost:3000"
-        )
-    );
+    private List<String> allowedOrigins;
+
+    public CorsFilter(
+        AppProperties appProperties
+    ) {
+        allowedOrigins = appProperties.allowedOrigins();
+    }
 
     @Override
     protected void doFilterInternal(
@@ -57,7 +59,7 @@ public class CorsFilter extends OncePerRequestFilter {
     }
 
     private void validate(String origin) {
-        if (!ALLOWED_ORIGINS.contains(origin)) {
+        if (!allowedOrigins.contains(origin)) {
             String message = String.format(NOT_ALLOWED_ORIGIN, origin);
             throw new BadRequestException(message);
         }

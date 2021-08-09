@@ -16,6 +16,7 @@ public class AppProperties {
     private final Encrypt encrypt = new Encrypt();
     private final Swagger swagger = new Swagger();
     private final Folder folder = new Folder();
+    private final Cors cors = new Cors();
 
     @Getter
     @Setter
@@ -52,5 +53,14 @@ public class AppProperties {
     @Setter
     public static class Folder {
         private Integer limit;
+    }
+    
+    @Setter
+    private static class Cors {
+        private List<String> allowedOrigins = new ArrayList<>();
+    }
+
+    public List<String> allowedOrigins() {
+        return cors.allowedOrigins;
     }
 }
