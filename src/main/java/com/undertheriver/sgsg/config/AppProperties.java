@@ -2,6 +2,7 @@ package com.undertheriver.sgsg.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -16,6 +17,7 @@ public class AppProperties {
     private final Encrypt encrypt = new Encrypt();
     private final Swagger swagger = new Swagger();
     private final Folder folder = new Folder();
+    private final Cors cors = new Cors();
 
     @Getter
     @Setter
@@ -52,5 +54,29 @@ public class AppProperties {
     @Setter
     public static class Folder {
         private Integer limit;
+    }
+    
+    @Setter
+    private static class Cors {
+        private List<String> allowedOrigins = new ArrayList<>();
+        private String allowedHeaders;
+        private String allowedMethods;
+        private Integer maxAge;
+    }
+
+    public List<String> allowedOrigins() {
+        return cors.allowedOrigins;
+    }
+
+    public String allowedHeaders() {
+        return cors.allowedHeaders;
+    }
+
+    public String allowedMethods() {
+        return cors.allowedMethods;
+    }
+
+    public Integer maxAge() {
+        return cors.maxAge;
     }
 }
