@@ -88,12 +88,14 @@ public class MemoService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public void delete(Long memoId) {
         Memo memo = memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);
         memo.delete();
     }
 
+    @Transactional
     public void favorite(Long userId, Long memoId) {
         Memo memo = memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);
@@ -103,6 +105,7 @@ public class MemoService {
         memo.favorite();
     }
 
+    @Transactional
     public void unfavorite(Long userId, Long memoId) {
         Memo memo = memoRepository.findById(memoId)
             .orElseThrow(ModelNotFoundException::new);

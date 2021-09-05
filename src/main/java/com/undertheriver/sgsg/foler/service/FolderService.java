@@ -99,7 +99,6 @@ public class FolderService {
             .toDto(folder);
     }
 
-    @Transactional(readOnly = true)
     public FolderDto.GetNextFolderColorRes getNextColor(Long userId) {
         Integer folderCount = folderRepository.countByUser(userId);
         FolderColor nextColor = FolderColor.nextColorFrom(folderCount);
@@ -108,12 +107,14 @@ public class FolderService {
             .build();
     }
 
+    @Transactional
     public void delete(Long folderId) {
         Folder folder = folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
         folder.delete();
     }
 
+    @Transactional
     public void secret(Long userId, Long folderId) {
         Folder folder = folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
@@ -123,6 +124,7 @@ public class FolderService {
         folder.secret();
     }
 
+    @Transactional
     public void unsecret(Long userId, Long folderId, FolderDto.UnsecretReq request) {
         validateFolderPassword(userId, request.getPassword());
 
