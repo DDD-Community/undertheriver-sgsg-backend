@@ -25,14 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
-public class CorsFilter extends OncePerRequestFilter {
+public class CorsHeaderFilter extends OncePerRequestFilter {
 
     private List<String> allowedOrigins;
     private String allowedMethods;
     private String allowedHeaders;
     private Integer maxAge;
 
-    public CorsFilter(
+    public CorsHeaderFilter(
         AppProperties appProperties
     ) {
         allowedOrigins = appProperties.allowedOrigins();
