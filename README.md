@@ -30,7 +30,8 @@
         <td width="300">
             <ul>
                 <li>메모, 사각 박스 기능 개발</li>
-                <li>무중단 배포 파이프라인 구성</li>
+                <li>CI/CD 파이프라인 구성</li>
+                <li>AWS 인프라 관리</li>
             </ul>
         </td>
     </tr>
@@ -38,7 +39,7 @@
 
 
 ## 프로젝트 아키텍처
-![](https://images.velog.io/images/prayme/post/4e03b86f-58ec-49f9-9824-a5e02f598944/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%EA%B5%AC%EC%84%B1%EB%8F%84.png)
+![](https://media.vlpt.us/images/prayme/post/3e5aaabc-6953-40c9-a951-0a93e949c7e1/image.png)
 
 ## ERD (이미지를 클릭해주세요!)
 ![](https://images.velog.io/images/prayme/post/9865b000-709b-45c2-8dcd-e2363065c9ac/erd.png)
@@ -47,4 +48,4 @@
 
 > [CORS 정복기 by 성찬](https://velog.io/@prayme/CORS-%EC%A0%95%EB%B3%B5%EA%B8%B0#%EC%9E%98-%EB%8F%99%EC%9E%91%ED%95%98%EB%8A%94%EC%A7%80-%ED%99%95%EC%9D%B8%ED%95%98%EA%B8%B0)
 
-> [무중단 배포 적용기 by 성찬]() - 작성예정
+> [아키텍처 개선기 by 성찬](https://velog.io/@prayme/%EC%82%AC%EC%9D%B4%EB%93%9C-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98-%EA%B0%9C%EC%84%A0%EA%B8%B0)

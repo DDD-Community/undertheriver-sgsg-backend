@@ -15,9 +15,10 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
 
 import com.undertheriver.sgsg.auth.service.CustomOAuth2UserService;
-import com.undertheriver.sgsg.config.security.filter.CorsFilter;
+import com.undertheriver.sgsg.config.security.filter.CorsHeaderFilter;
 import com.undertheriver.sgsg.config.security.filter.TokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AccessDeniedHandler customAccessDeniedHandler;
 
-    private final CorsFilter corsFilter;
+    private final CorsHeaderFilter corsHeaderFilter;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -54,14 +55,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //@formatter:off
-		http.authorizeRequests()
+		http.cors()
+		.and()
+			.authorizeRequests()
 			.antMatchers("/login/oauth2/code/*").permitAll()
 			.antMatchers("/oauth2/authorization/*").permitAll()
 			.antMatchers("/health").permitAll()
 			.anyRequest().authenticated()
 		.and()
 			.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-			.addFilterAfter(corsFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(corsHeaderFilter, CorsFilter.class)
 			.exceptionHandling()
 				.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 				.accessDeniedHandler(customAccessDeniedHandler)

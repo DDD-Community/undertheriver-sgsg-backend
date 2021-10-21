@@ -29,19 +29,19 @@ jobs:
       - name: 빌드
         run: ./gradlew build
 
-      - name: aws 로그인
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: ZIP 파일 생성
+        run: |
+          mkdir -p deploy
+          cp build/libs/*.jar deploy/application.jar
+          cp -r .ebextensions deploy/.ebextensions
+          cd deploy && zip -r deploy.zip .
+
+      - name: 현재 시간 가져오기
+        uses: 1466587594/get-current-time@v2
+        id: current-time
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-
-      - name: S3 업로드
-        run: aws deploy push --application-name undertheriver-sgsg --s3-location s3://sgsg-deploy/backend/develop/build.zip --source .
-
-
-      - name: code deploy 실행
-        run: aws deploy create-deployment --application-name undertheriver-sgsg --deployment-config-name CodeDeployDefault.OneAtATime --file-exists-behavior RETAIN --deployment-group-name backend-develop --s3-location bucket=sgsg-deploy,bundleType=zip,key=backend/develop/build.zip
+          format: YYYY-MM-DDTHH-mm-ss
+          utcOffset: "+09:00"
 
       - name: 도커 허브 로그인
         uses: docker/login-action@v1
@@ -56,3 +56,14 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: sagak/server:latest
+
+      - name: 배포
+        uses: einaregilsson/beanstalk-deploy@v18
+        with:
+          aws_access_key: ${{ secrets.AWS_BEANSTALK_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_BEANSTALK_SECRET_KEY }}
+          application_name: sgsg-springboot-application2
+          environment_name: sgsg-springboot-application2
+          version_label: deploy-${{steps.current-time.outputs.formattedTime}}
+          region: ap-northeast-2
+          deployment_package: .ebextensions/Dockerrun.aws.json
