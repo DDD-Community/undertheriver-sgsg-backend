@@ -1,0 +1,15 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Authentication": {
+    "Bucket": "sgsg-deploy",
+    "Key": "backend/docker/.dockercfg"
+  },
+  "Image": {
+    "Name": "sagak/server:latest"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "8080"
+    }
+  ]
+}
