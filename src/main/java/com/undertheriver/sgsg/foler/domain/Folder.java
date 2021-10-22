@@ -67,6 +67,11 @@ public class Folder extends BaseEntity {
         memo.mapFolder(this);
     }
 
+    public void delete() {
+        deleted = true;
+        memos.forEach(Memo::delete);
+    }
+
     public void secret() {
         secret = true;
     }

@@ -20,6 +20,7 @@ import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.foler.domain.FolderOrderBy;
 import com.undertheriver.sgsg.foler.domain.dto.FolderDto;
 import com.undertheriver.sgsg.foler.repository.FolderRepository;
+import com.undertheriver.sgsg.memo.domain.Memo;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
 import com.undertheriver.sgsg.user.exception.PasswordValidationException;
@@ -88,6 +89,10 @@ public class FolderService {
     public Folder read(Long folderId) {
         return folderRepository.findById(folderId)
             .orElseThrow(ModelNotFoundException::new);
+    }
+
+    public List<Folder> getAllBy(Long userId) {
+        return folderRepository.findAllByUser(userId, null);
     }
 
     @Transactional

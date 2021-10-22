@@ -1,8 +1,10 @@
 package com.undertheriver.sgsg.user.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -95,6 +97,10 @@ public class User extends BaseEntity {
     public String getFolderPassword() {
         return this.getUserSecretFolderPassword()
             .getEncryptedPassword();
+    }
+
+    public void delete() {
+        deleted = true;
     }
 
     public void updateFolderPassword(String newPassword) {

@@ -122,7 +122,10 @@ public class Memo extends BaseEntity {
         LocalDateTime createdAt = super.getCreatedAt();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(MEMO_LIST_VIEW_TIME_PATTERN);
         return createdAt.format(formatter);
+    }
 
+    public void delete() {
+        deleted = true;
     }
 
     @Override
