@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 public class MemoService {
     private final MemoRepository memoRepository;
     private final FolderRepository folderRepository;
-    private final UserRepository userRepository;
     private final FolderService folderService;
 
     @Transactional

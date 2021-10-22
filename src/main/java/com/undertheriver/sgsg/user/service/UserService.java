@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.undertheriver.sgsg.common.exception.ModelNotFoundException;
+import com.undertheriver.sgsg.foler.domain.Folder;
+import com.undertheriver.sgsg.foler.service.FolderService;
 import com.undertheriver.sgsg.user.controller.dto.FolderPasswordRequest;
 import com.undertheriver.sgsg.user.domain.User;
 import com.undertheriver.sgsg.user.domain.UserRepository;
@@ -22,6 +24,8 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final FolderService folderService;
+
     public User findById(Long id) {
         return getOne(id);
     }
@@ -29,6 +33,9 @@ public class UserService {
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
             .orElseThrow(ModelNotFoundException::new);
+
+        folderService.getAllBy(user.getId())
+            .forEach(Folder::delete);
         user.delete();
     }
 
