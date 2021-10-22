@@ -99,10 +99,6 @@ public class User extends BaseEntity {
             .getEncryptedPassword();
     }
 
-    public void delete() {
-        deleted = true;
-    }
-
     public void updateFolderPassword(String newPassword) {
         this.userSecretFolderPassword.changePassword(newPassword);
     }

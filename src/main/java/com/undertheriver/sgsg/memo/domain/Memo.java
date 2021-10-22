@@ -20,6 +20,7 @@ import com.undertheriver.sgsg.common.domain.BaseEntity;
 import com.undertheriver.sgsg.foler.domain.Folder;
 import com.undertheriver.sgsg.foler.domain.FolderColor;
 import com.undertheriver.sgsg.memo.domain.dto.MemoDto;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -122,10 +123,6 @@ public class Memo extends BaseEntity {
         LocalDateTime createdAt = super.getCreatedAt();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(MEMO_LIST_VIEW_TIME_PATTERN);
         return createdAt.format(formatter);
-    }
-
-    public void delete() {
-        deleted = true;
     }
 
     @Override
