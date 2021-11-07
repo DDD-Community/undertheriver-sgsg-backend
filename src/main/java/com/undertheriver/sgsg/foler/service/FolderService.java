@@ -5,6 +5,7 @@ import static com.undertheriver.sgsg.common.exception.FolderValidationException.
 import static com.undertheriver.sgsg.user.exception.PasswordValidationException.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -76,12 +77,11 @@ public class FolderService {
     }
 
     public List<FolderDto.ReadFolderRes> readAll(Long userId, FolderOrderBy orderBy) {
-        if (orderBy == null) {
-            orderBy = FolderOrderBy.CREATED_AT;
+        if (Objects.isNull(orderBy)) {
+            orderBy = FolderOrderBy.DEFAULT;
         }
 
-        return orderBy.findFolders(userId, folderRepository)
-            .stream()
+        return folderRepository.findAllByUser(userId, orderBy.getSort()).stream()
             .map(FolderDto.ReadFolderRes::toDto)
             .collect(Collectors.toList());
     }
