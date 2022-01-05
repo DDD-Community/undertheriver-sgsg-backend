@@ -59,12 +59,13 @@ jobs:
           tags: sagak/server:latest
 
       - name: 배포
-        uses: einaregilsson/beanstalk-deploy@v18
+        uses: einaregilsson/beanstalk-deploy@v20
         with:
           aws_access_key: ${{ secrets.AWS_BEANSTALK_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_BEANSTALK_SECRET_KEY }}
           application_name: sgsg-springboot-application2
           environment_name: sgsg-springboot-application2
           version_label: deploy-${{steps.current-time.outputs.formattedTime}}
+          wait_for_deployment: false
           region: ap-northeast-2
           deployment_package: .ebextensions/Dockerrun.aws.json
